@@ -3,7 +3,7 @@
 
 ### Development
 
-1. This project uses [Poetry](https://python-poetry.org/) to manage dependencies. You can find instructions for installing the latest Poetry [here](https://python-poetry.org/docs/master/#installation). Install all needed packages with:
+1. This project uses [Poetry](https://python-poetry.org/) to manage dependencies. If you don't yet have Poetry, the latest installation instructions can be found [here](https://python-poetry.org/docs/master/#installation). Install all needed packages with:
    ```bash
    poetry install
    ```
@@ -13,4 +13,4 @@
    poetry run python -m ipykernel install --user --name frequency-is-freedom
    poetry run jupyter lab
    ```
-   And then select the newly created kernel, `frequency-is-freedom`.# frequency-is-freedom
+   And then select the newly created kernel, `frequency-is-freedom`.
