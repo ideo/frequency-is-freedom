@@ -2,7 +2,7 @@ import streamlit as st
 
 import src.logic as lg
 from src.text import TEXT
-from src.isochrones import generate_isochrone
+from src.isochrones import generate_isochrone, download_graph_from_address
 
 
 st.set_page_config(
@@ -39,13 +39,21 @@ lg.bus_time_metrics(bus_times, people_times)
 
 
 # Walking Isochrone
-st.subheader("Walking Isochrone")
-my_apartment = (41.897999, -87.675908)
-mode = "walk"
-initial_radius = 1.25   #miles
-trip_times = [5, 10, 15, 20, 25]
 
-fig = generate_isochrone(my_apartment, mode, initial_radius, trip_times)
+st.text_input("Address", key="address", value="626 W Jackson Blvd, Chicago, IL 60661")
+initial_radius = 2.75
+graph, lat_lng = download_graph_from_address(st.session_state["address"], 
+    radius=initial_radius)
+
+
+st.subheader("Walking Isochrone")
+# my_apartment = (41.897999, -87.675908)
+mode = "walk"
+   #miles
+trip_times = [15, 30, 45, 60]
+fig = generate_isochrone(lat_lng, mode, trip_times, 
+    _graph=graph, 
+    address=st.session_state["address"])
 st.pyplot(fig)
 
 

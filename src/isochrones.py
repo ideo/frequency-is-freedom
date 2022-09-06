@@ -3,6 +3,26 @@ import networkx as nx
 import streamlit as st
 
 
+@st.experimental_memo
+def download_graph_from_address(address, radius, mode="walk"):
+    """
+    TODO: We will need to check to see if the the address is in Chicago.
+    --
+    radius (float, int):    
+        graph radius in miles
+    """
+    meters_to_a_mile = 1609
+    radius *= meters_to_a_mile
+
+    graph, lat_lng = ox.graph_from_address(address, 
+        dist=radius, 
+        network_type=mode,
+        return_coords=True,
+        truncate_by_edge=True,
+        simplify=True)
+    return graph, lat_lng
+
+
 def load_graph_around_location(location, radius=1609, network_type="walk"):
     """
     location (tuple, list): (lat, lng) of center point
@@ -46,7 +66,7 @@ def add_travel_time_to_graph_data(graph, mode="walk"):
 
 
 @st.experimental_memo
-def generate_isochrone(location, mode, initial_radius, trip_times, reachable_node_size=2):
+def generate_isochrone(location, mode, trip_times, reachable_node_size=2, initial_radius=None, _graph=None, address=None):
     """
     location (tuple, list):         
         (lat, lng)
@@ -59,11 +79,14 @@ def generate_isochrone(location, mode, initial_radius, trip_times, reachable_nod
     reachable_node_size (float, int):
         [optional] size of reachable nodes in final plot
     """
+    graph = _graph
 
     # Get the graph
-    meters_to_a_mile = 1609
-    initial_radius *= meters_to_a_mile
-    graph = load_graph_around_location(location, radius=initial_radius, network_type=mode)
+    if graph is None:
+        meters_to_a_mile = 1609
+        initial_radius *= meters_to_a_mile
+        graph = load_graph_around_location(location, radius=initial_radius, network_type=mode)
+
     graph = add_travel_time_to_graph_data(graph, mode=mode)
     
     # Set a color scheme
@@ -76,22 +99,34 @@ def generate_isochrone(location, mode, initial_radius, trip_times, reachable_nod
     # Color the nodes according to travel time
     center_node = get_nearest_node(graph, location)
     node_colors = {}
+    edge_colors = {}
     for trip_time, color in zip(sorted(trip_times, reverse=True), iso_colors):
         subgraph = nx.ego_graph(graph, center_node, radius=trip_time, distance='travel_time')
         for node in subgraph.nodes():
             node_colors[node] = color
+        for edge in subgraph.edges():
+            edge_colors[edge] = color
 
     # node color 
     nc = [node_colors[node] if node in node_colors else 'none' for node in graph.nodes()]
+    ec = [edge_colors[edge] if edge in edge_colors else 'none' for edge in graph.edges()]
     
     # node size
-    ns = [reachable_node_size if node in node_colors else 0 for node in graph.nodes()]
+    # ns = [reachable_node_size if node in node_colors else 0 for node in graph.nodes()]
+    ns = [0 for _ in graph.nodes()]
     
     # Plot
-    fig, ax = ox.plot_graph(graph, node_color=nc, node_size=ns, node_alpha=0.8, node_zorder=2,
-                            bgcolor='k', edge_linewidth=0.2, edge_color='#999999')
+    fig, ax = ox.plot_graph(graph, 
+        node_color=nc, node_size=ns, node_alpha=0.8, node_zorder=2,
+        edge_color=ec,
+        # edge_color='#999999',
+        bgcolor='k', edge_linewidth=0.2)
 
-    ax.set_title("Reachable on Foot from My Apartment")
+    if address is None:
+        ttl = "Reachable on Foot Within an Hour"
+    else:
+        ttl = f"Reachable on Foot Within an Hour of\n{address}"
+    ax.set_title(ttl)
     return fig
 
 
