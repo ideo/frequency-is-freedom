@@ -3,7 +3,13 @@ import streamlit as st
 import src.logic as lg
 from src.text import TEXT
 
+
+st.set_page_config(
+    page_title="Frequency is Freedom", 
+    page_icon="img/branding_5ctabus.gif")
+    
 st.markdown("# Frequency is Freedom")
+
 
 lg.write_text("How Long Do You Wait For The Bus")
 

@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 from numpy import random
-# random = random.RandomState(42)
+random = random.RandomState(42)
 
 from .text import TEXT
 
@@ -49,7 +49,6 @@ def bus_time_metrics(bus_times, people_times):
     col2.metric("Avg. Passenger Wait", f"{round(avg_wait_time, 1)} min")
 
 
-
 def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
     # Let's zoom in to two hours, between
     ten_am = 60 * 10
@@ -71,7 +70,6 @@ def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
     df = pd.DataFrame()
     df["Arrivals"] = times
     df["Category"] = category
-    print(df)
 
     histogram_spec = {
         "mark": "bar",
