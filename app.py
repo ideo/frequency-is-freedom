@@ -6,8 +6,8 @@ from src.text import TEXT
 
 st.set_page_config(
     page_title="Frequency is Freedom", 
-    page_icon="img/branding_5ctabus.gif")
-    
+    page_icon="img/usdot_bus_icon.png")
+
 st.markdown("# Frequency is Freedom")
 
 
