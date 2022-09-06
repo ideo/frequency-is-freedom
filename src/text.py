@@ -14,7 +14,7 @@ When choosing a student at random, you are more likely to get a student in a lar
     "To test this, we can simulate a bus and measure how long simulated people have to wait for it. Our simulated bus runs 24 hours a day and the little simulated people show up at all times. (They work inside a computer and never get any time off.)"
 ],
 
-"Citations & Further Reading": [
+"Citations & Helpful References": [
     """
 1. [The Waiting Time Paradox, or, Why Is My Bus Always Late?](https://jakevdp.github.io/blog/2018/09/13/waiting-time-paradox/) by Jake VanderPlas
     """,

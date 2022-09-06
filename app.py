@@ -56,4 +56,5 @@ fig = generate_isochrone(lat_lng, mode, trip_times,
 st.pyplot(fig)
 
 
-lg.write_text("Citations & Further Reading", header_level=5)
+st.markdown("---")
+lg.write_text("Citations & Helpful References", header_level=5)
