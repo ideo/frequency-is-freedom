@@ -12,6 +12,8 @@ streamlit = "^1.12.2"
 numpy = "^1.23.2"
 pandas = "^1.4.4"
 htbuilder = "^0.6.0"
+osmnx = "^1.2.2"
+scikit-learn = "^1.1.2"
 
 [tool.poetry.dev-dependencies]
 watchdog = "^2.1.9"

@@ -18,6 +18,17 @@ def write_text(section_title, header_level=3):
 
 # Simulated Bus Arrival Times
 def generate_bus_and_people_times(bus_frequency, num_days=7, people_per_day=1000):
+    """
+    Originally, I generated bus times by sampling from a poisson distribution 
+    and adding those wait times up consecutively to get the bus arrival times. 
+    This produced bus times that averaged to the right frequency, but the 
+    average wait times for people came to half the bus frequency. I was 
+    perplexed, and still don't quite understand why, but plenty of research has 
+    confirmed that the probabalistically correct wait times should equal the 
+    bus arrival rate, and that sampling bus arrival times randomly from a 
+    uniform distribution gets the same distribution as sampling from a poisson 
+    distribution.
+    """
     bus_frequency = 15 #minutes
     time_length = num_days * 24 * 60 #one week
     num_buses = time_length // bus_frequency

@@ -2,6 +2,7 @@ import streamlit as st
 
 import src.logic as lg
 from src.text import TEXT
+from src.isochrones import generate_isochrone
 
 
 st.set_page_config(
@@ -35,6 +36,17 @@ bus_times, people_times = lg.generate_bus_and_people_times(
 )
 lg.plot_simulated_arrival_times(bus_times, people_times)
 lg.bus_time_metrics(bus_times, people_times)
+
+
+# Walking Isochrone
+st.subheader("Walking Isochrone")
+my_apartment = (41.897999, -87.675908)
+mode = "walk"
+initial_radius = 1.25   #miles
+trip_times = [5, 10, 15, 20, 25]
+
+fig = generate_isochrone(my_apartment, mode, initial_radius, trip_times)
+st.pyplot(fig)
 
 
 lg.write_text("Citations & Further Reading", header_level=5)

@@ -14,3 +14,11 @@
    poetry run jupyter lab
    ```
    And then select the newly created kernel, `frequency-is-freedom`.
+
+
+### To-Do List
+- [ ] ~Geocode tool to return the lat/lng of an address within Chicago~
+- [ ] Use `osmnx.graph.graph_from_address` to get the starting graph from an address. It can geocode for you, returning a lat/lng
+- [ ] Can we download just a graph of a Chicago first, keep that in memory, and use that as a starting point?
+- [ ] Use `osmnx.plot.plot_figure_ground` to make very pretty plots like [these](https://i0.wp.com/geoffboeing.com/wp-content/uploads/2017/04/square-mile-street-networks.jpg?ssl=1). 
+- [ ] Can I instead color the edges of the graph?
