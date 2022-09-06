@@ -97,7 +97,7 @@ def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
             "color": {
                 "field": "Category", 
                 "type": "nominal", 
-                "scale": {"scheme": ["#00000F", "#1f77b4"]},
+                "scale": {"range": ["#31333f", "#1f77b4"]},
             },
         }
     }
@@ -113,7 +113,7 @@ def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
             "color": {
                 "field": "Category", 
                 "type": "nominal", 
-                "scale": {"scheme": ["#00000F", "#1f77b4"]},
+                "scale": {"range": ["#31333f", "#1f77b4"]},
             },
         }
     }
