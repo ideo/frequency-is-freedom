@@ -21,6 +21,9 @@ When choosing a student at random, you are more likely to get a student in a lar
     """
 2. [The Inspection Paradox is Everywhere](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709) by Allen Downey
     """,
+    """
+3. [Isochrone Maps with OSMnx + Python](https://geoffboeing.com/2017/08/isochrone-maps-osmnx-python/) by Geoff Boeing
+    """,
 ]
 
 }

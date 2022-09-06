@@ -39,7 +39,6 @@ lg.bus_time_metrics(bus_times, people_times)
 
 
 # Walking Isochrone
-
 st.text_input("Address", key="address", value="626 W Jackson Blvd, Chicago, IL 60661")
 initial_radius = 2.75
 graph, lat_lng = download_graph_from_address(st.session_state["address"], 
