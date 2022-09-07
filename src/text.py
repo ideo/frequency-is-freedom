@@ -24,6 +24,12 @@ When choosing a student at random, you are more likely to get a student in a lar
     """
 3. [Isochrone Maps with OSMnx + Python](https://geoffboeing.com/2017/08/isochrone-maps-osmnx-python/) by Geoff Boeing
     """,
+    """
+4. [The Mobility Database](https://database.mobilitydata.org/) and [GTFS Schedule Reference](https://gtfs.org/schedule/reference/)
+    """,
+    """
+5. [Isochrone Maps with R and OpenTripPlanner](https://xang1234.github.io/isochrone/) by David Ten, for his very helpful diagram of the GTFS schema.
+    """,
 ]
 
 }
