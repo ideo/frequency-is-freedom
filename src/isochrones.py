@@ -1,6 +1,7 @@
 import osmnx as ox
 import networkx as nx
 import streamlit as st
+import matplotlib.pyplot as plt
 
 
 @st.experimental_memo
@@ -47,10 +48,18 @@ def get_nearest_node(graph, location):
     When we speak we tend to say "lat long", implying latitude comes first. 
     But since latitude goes north/south and longidtude goes east/west, in 
     an X-Y coordinate system, longitude comes first. 
+
+    TKTK Explain
     """
     lat = location[0]
     lng = location[1]
     nearest_node = ox.distance.nearest_nodes(graph, lng, lat)
+    
+    # assert isinstance(nearest_node, int)
+    if not isinstance(nearest_node, int):
+        nearest_node = nearest_node[0]
+
+    print(nearest_node)
     return nearest_node
 
 
@@ -125,9 +134,11 @@ def generate_isochrone(location, mode, trip_times, reachable_node_size=2, initia
     if address is None:
         ttl = "Reachable on Foot Within an Hour"
     else:
-        ttl = f"Reachable on Foot Within an Hour of\n{address}"
-    ax.set_title(ttl)
-    return fig
+        ttl = f"Reachable on Foot Within an Hour of {address}"
+    # ax.set_title(ttl)
+    temp_filename = "plots/isochrone.png"
+    plt.savefig(temp_filename, dpi=300)
+    return fig, ttl
 
 
 if __name__ == "__main__":

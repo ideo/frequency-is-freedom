@@ -50,10 +50,12 @@ st.subheader("Walking Isochrone")
 mode = "walk"
    #miles
 trip_times = [15, 30, 45, 60]
-fig = generate_isochrone(lat_lng, mode, trip_times, 
+fig, ttl = generate_isochrone(lat_lng, mode, trip_times, 
     _graph=graph, 
     address=st.session_state["address"])
+st.markdown(f"##### {ttl}")
 st.pyplot(fig)
+lg.isochrone_download_button()
 
 
 st.markdown("---")

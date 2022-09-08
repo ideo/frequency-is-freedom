@@ -132,3 +132,12 @@ def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
         "layer": [histogram_spec, rule_spec]
     }
     st.vega_lite_chart(data=df, spec=spec, use_container_width=True)
+
+
+def isochrone_download_button():
+    street_address = st.session_state["address"].split(",")[0]
+    with open("plots/isochrone.png", "rb") as image_file:
+        st.download_button("Download Map", 
+            data=image_file,
+            file_name=f"{street_address}.png",
+            mime="image/png")
