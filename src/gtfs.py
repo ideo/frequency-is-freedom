@@ -5,24 +5,21 @@ import osmnx as ox
 import pandas as pd
 import networkx as nx
 
-from isochrones import get_nearest_node
+from src.filepaths import DATAFRAME_PATH
 
 
-REPO_ROOT_DIR = Path(__file__).parent.parent
-DATA_DIR = REPO_ROOT_DIR / "data"
-GRAPH_PATH = DATA_DIR / "chicago.pkl"
-DATAFRAME_PATH = DATA_DIR / "average_travel_times_btwn_stops.csv"
 
+# def download_chicago():
+#     network_type = "all"
+#     chicago = ox.graph_from_place("Chicago, Illinois",
+#         network_type=network_type,
+#         retain_all=False,
+#         truncate_by_edge=True,
+#         simplify=True)
 
-def download_chicago():
-    network_type = "all"
-    chicago = ox.graph_from_place("Chicago, Illinois",
-        network_type=network_type,
-        retain_all=False,
-        truncate_by_edge=True,
-        simplify=True)
-    nx.write_gpickle(chicago, GRAPH_PATH)
-    print("✓")
+#     # TODO: Add travel times here
+#     nx.write_gpickle(chicago, GRAPH_PATH)
+#     print("✓")
 
 
 def load_travel_times_dataframe():

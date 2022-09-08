@@ -22,3 +22,4 @@
 - [ ] Can we download just a graph of a Chicago first, keep that in memory, and use that as a starting point?
 - [ ] Use `osmnx.plot.plot_figure_ground` to make very pretty plots like [these](https://i0.wp.com/geoffboeing.com/wp-content/uploads/2017/04/square-mile-street-networks.jpg?ssl=1). 
 - [ ] Can I instead color the edges of the graph?
+- [ ] Multiple walking speeds

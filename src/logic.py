@@ -134,10 +134,17 @@ def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
     st.vega_lite_chart(data=df, spec=spec, use_container_width=True)
 
 
+def address_input():
+    address = st.text_input("Address", 
+        key="address", 
+        value="626 W Jackson Blvd, Chicago, IL 60661")
+    street_address = address.split(",")[0]
+    st.session_state["street_address"] = street_address
+
+
 def isochrone_download_button():
-    street_address = st.session_state["address"].split(",")[0]
     with open("plots/isochrone.png", "rb") as image_file:
         st.download_button("Download Map", 
             data=image_file,
-            file_name=f"{street_address}.png",
+            file_name=f"{st.session_state['street_address']}.png",
             mime="image/png")

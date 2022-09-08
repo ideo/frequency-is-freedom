@@ -2,7 +2,8 @@ import streamlit as st
 
 import src.logic as lg
 from src.text import TEXT
-from src.isochrones import generate_isochrone, download_graph_from_address
+# from src.isochrones import generate_walking_isochrone, download_graph_from_address
+import src.isochrones as iso
 
 
 st.set_page_config(
@@ -39,22 +40,21 @@ lg.bus_time_metrics(bus_times, people_times)
 
 
 # Walking Isochrone
-st.text_input("Address", key="address", value="626 W Jackson Blvd, Chicago, IL 60661")
-initial_radius = 2.75
-graph, lat_lng = download_graph_from_address(st.session_state["address"], 
+st.subheader("Walking Isochrone")
+lg.address_input()
+initial_radius = 2.75 #miles
+graph, lat_lng = iso.download_graph_from_address(st.session_state["address"], 
     radius=initial_radius)
 
-
-st.subheader("Walking Isochrone")
-# my_apartment = (41.897999, -87.675908)
 mode = "walk"
-   #miles
 trip_times = [15, 30, 45, 60]
-fig, ttl = generate_isochrone(lat_lng, mode, trip_times, 
+fig = iso.generate_walking_isochrone(lat_lng, mode, trip_times, 
     _graph=graph, 
     address=st.session_state["address"])
-st.markdown(f"##### {ttl}")
-st.pyplot(fig)
+ttl = f"Reachable on Foot Within an Hour of {st.session_state['street_address']}"
+# st.markdown(f"##### {ttl}")
+# st.pyplot(fig, bbox_inches="tight")
+st.image("plots/isochrone.png", caption=ttl)
 lg.isochrone_download_button()
 
 

@@ -3,6 +3,35 @@ import networkx as nx
 import streamlit as st
 import matplotlib.pyplot as plt
 
+from src.filepaths import GRAPH_PATH
+
+
+
+def download_citywide_graph(city="Chicago, Illinois"):
+    network_type = "all"
+    chicago = ox.graph_from_place(city,
+        network_type=network_type,
+        retain_all=False,
+        truncate_by_edge=True,
+        simplify=True)
+
+    # TODO: Add travel times here
+    nx.write_gpickle(chicago, GRAPH_PATH)
+    print("✓")
+
+
+def get_subgraph_and_reachable_stops(citywide_graph, transit_stops, trip_time, starting_lat_lon):
+    # Subgraph
+    center_node = center_node = get_nearest_node(citywide_graph, starting_lat_lon)
+    subgraph = nx.ego_graph(citywide_graph, center_node, radius=trip_time, distance='travel_time')
+    
+    # Reachable Transit Stops 
+    transit_stop_graph_ids = set(transit_stops["graph_node_id"].values)
+    reachable_stops = set(subgraph.nodes).intersection(transit_stop_graph_ids)
+    reachable_stops = list(reachable_stops)
+    
+    return subgraph, reachable_stops
+
 
 @st.experimental_memo
 def download_graph_from_address(address, radius, mode="walk"):
@@ -64,6 +93,9 @@ def get_nearest_node(graph, location):
 
 
 def add_travel_time_to_graph_data(graph, mode="walk"):
+    """
+    TODO: multiple speeds for multiple kinds of pedestrians
+    """
     speeds = {
         "walk": 4.5 #walking speed in km/hr
     }
@@ -75,7 +107,7 @@ def add_travel_time_to_graph_data(graph, mode="walk"):
 
 
 @st.experimental_memo
-def generate_isochrone(location, mode, trip_times, reachable_node_size=2, initial_radius=None, _graph=None, address=None):
+def generate_walking_isochrone(location, mode, trip_times, initial_radius=None, _graph=None):
     """
     location (tuple, list):         
         (lat, lng)
@@ -131,20 +163,29 @@ def generate_isochrone(location, mode, trip_times, reachable_node_size=2, initia
         # edge_color='#999999',
         bgcolor='k', edge_linewidth=0.2)
 
-    if address is None:
-        ttl = "Reachable on Foot Within an Hour"
-    else:
-        ttl = f"Reachable on Foot Within an Hour of {address}"
-    # ax.set_title(ttl)
     temp_filename = "plots/isochrone.png"
-    plt.savefig(temp_filename, dpi=300)
-    return fig, ttl
+    plt.savefig(temp_filename, dpi=300, bbox_inches="tight")
+    return fig
 
 
 if __name__ == "__main__":
-    my_apartment = (41.897999, -87.675908)
-    mode = "walk"
-    initial_radius = 1.5   #miles
-    trip_times = [5, 10, 15, 20, 25]
+    pass
+    # my_apartment = (41.897999, -87.675908)
+    # mode = "walk"
+    # initial_radius = 1.5   #miles
+    # trip_times = [5, 10, 15, 20, 25]
 
-    _ = generate_isochrone(my_apartment, mode, initial_radius, trip_times)
+    # _ = generate_isochrone(my_apartment, mode, initial_radius, trip_times)
+
+    # chicago = nx.read_gpickle(GRAPH_PATH)
+    # # travel_times = load_travel_times_dataframe()
+
+    # trip_time = 15 #minutes
+    # my_apartment = (41.898010150000005, -87.67613740698785)
+    # subgraph, reachable_stops = get_subgraph_and_reachable_stops(
+    #     chicago,
+    #     travel_times,
+    #     trip_time, 
+    #     my_apartment
+    # )
+    # plot_subgraph(subgraph, reachable_stops)
