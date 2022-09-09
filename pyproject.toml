@@ -15,6 +15,7 @@ htbuilder = "^0.6.0"
 osmnx = "^1.2.2"
 scikit-learn = "^1.1.2"
 geopy = "^2.2.0"
+tqdm = "^4.64.1"
 
 [tool.poetry.dev-dependencies]
 watchdog = "^2.1.9"
