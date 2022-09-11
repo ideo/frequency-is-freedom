@@ -8,13 +8,13 @@ I miss those freedoms, but I used to have those same freedoms here at home in Ch
         """,
     ],
 
-    "How Often Does the Bus Come": [
+    "How Often Does the Bus Come?": [
         """
-Below are the number of buses that come per hour for two bus stops that I'm often waiting at. These numbers feel really high to me...
+Like nearly all transit agencies, the CTA publishes scheduled and realtime service data. While anyone who lives in the city knows that the bus never runs on schedule, we can look at this data to see the service the CTA intends to run. Below is scheduled weekday service from the week of August 15th for two bus stops near my apartment. (I’ve filtered this data to only show service between 6 am and 10 pm, but the CTA does run buses and trains all night on many routes.)
         """
     ],
 
-    "How Long Do You Wait For The Bus": [
+    "How Long Do You Wait For The Bus?": [
         """
 There are may things in the world of transportation that are counterintuitive, one of them being how long you wait for the bus. If a bus arrives on average every ten minutes, you would be forgiven for thinking that the average time some spends waiting for the bus is half that, only five minutes. This would be the case is the bus arrived exactly every ten minutes, like clockwork, but it doesn’t. It arrives _on average_ every ten minutes, sometime sooner and sometimes later. And, sadly and surprisingly, the average time someone spends waiting for a bus like that is ten minutes.¹""",
         """

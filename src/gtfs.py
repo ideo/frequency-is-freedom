@@ -56,9 +56,9 @@ def clean_stop_times_table(df):
     # Filter to arrivals after 5 AM and before midnight
     df["hour_of_arrival"] = df["arrival_time"].apply(lambda ts: int(ts.split(":")[0]))
 
-    # Filter to before midnight so datetime conversion doesn't fail
-    df = df[df["hour_of_arrival"] < 24]
-    # df = df[(df["hour_of_arrival"] >= 5) & (df["hour_of_arrival"] < 24)]
+    # Filter to after 6 am and before 10 pm.
+    # df = df[df["hour_of_arrival"] < 24]
+    df = df[(df["hour_of_arrival"] >= 5) & (df["hour_of_arrival"] < 22)]
 
     # Convert to datetime
     _format = "%H:%M:%S"

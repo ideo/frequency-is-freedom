@@ -12,13 +12,13 @@ st.set_page_config(
     page_icon="img/usdot_bus_icon.png")
 
 lg.write_text("Frequency is Freedom", header_level=1)
-lg.write_text("How Often Does the Bus Come")
+lg.write_text("How Often Does the Bus Come?")
 
 trips, stop_times, stops = lg.load_needed_tables()
 lg.how_often_does_the_bus_come(stop_times, stops)
 
 
-lg.write_text("How Long Do You Wait For The Bus")
+lg.write_text("How Long Do You Wait For The Bus?")
 
 lg.write_text("One Day of Simulated Bus Service", header_level=5)
 col1, col2 = st.columns(2)
