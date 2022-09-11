@@ -17,11 +17,6 @@ lg.write_text("How Often Does the Bus Come")
 trips, stop_times, stops = lg.load_needed_tables()
 lg.how_often_does_the_bus_come(stop_times, stops)
 
-stop_id = 552
-fig = bus_arrivals_per_hour(stops, trips, stop_times, stop_id)
-st.pyplot(fig)
-
-
 
 lg.write_text("How Long Do You Wait For The Bus")
 

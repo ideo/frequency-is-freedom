@@ -63,6 +63,7 @@ def bus_stop_histogram_layer_spec(stops, stop_id, ttl):
             "x": {
                 "field": "Hour of Arrival", 
                 "type": "ordinal",
+                "axis": {"labelAngle": 0},
             },
             "y": {
                 "field": "Buses Per Hour",
