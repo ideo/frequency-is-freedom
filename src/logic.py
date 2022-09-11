@@ -112,7 +112,6 @@ def generate_bus_and_people_times(bus_frequency, num_days=7, people_per_day=1000
     uniform distribution gets the same distribution as sampling from a poisson 
     distribution.
     """
-    bus_frequency = 15 #minutes
     time_length = num_days * 24 * 60 #one week
     num_buses = time_length // bus_frequency
     num_people = people_per_day * num_days
@@ -123,24 +122,6 @@ def generate_bus_and_people_times(bus_frequency, num_days=7, people_per_day=1000
     bus_times = np.sort(bus_times)
     people_times = np.sort(people_times)
     return bus_times, people_times
-
-
-def average_wait_time(bus_times, people_times):
-    ii = np.searchsorted(bus_times, people_times, side="right")
-    wait_times = bus_times[ii] - people_times
-    return wait_times.mean()
-
-
-def bus_time_metrics(bus_times, people_times):
-    avg_btwn_time = np.mean(np.diff(bus_times))
-    avg_wait_time = average_wait_time(bus_times, people_times)
-
-    # mins_btwn = int(avg_btwn//1)
-    # secs_btwn = int(avg_btwn%60)
-    # st.metric("Average Time Between Buses", f"{mins_btwn} min {secs_btwn} sec")
-    col1, col2 = st.columns(2)
-    col1.metric("Average Time Between Buses", f"{round(avg_btwn_time, 1)} min")
-    col2.metric("Avg. Passenger Wait", f"{round(avg_wait_time, 1)} min")
 
 
 def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
@@ -216,6 +197,23 @@ def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
     }
     st.vega_lite_chart(data=df, spec=spec, use_container_width=True)
 
+
+def bus_time_metrics(bus_times, people_times):
+    avg_btwn_time = np.mean(np.diff(bus_times))
+    avg_wait_time = average_wait_time(bus_times, people_times)
+
+    col1, col2 = st.columns(2)
+    col1.metric("Average Time Between Buses", f"{round(avg_btwn_time, 1)} min")
+    col2.metric("Avg. Passenger Wait", f"{round(avg_wait_time, 1)} min")
+
+
+def average_wait_time(bus_times, people_times):
+    ii = np.searchsorted(bus_times, people_times, side="right")
+    wait_times = bus_times[ii] - people_times
+    return wait_times.mean()
+
+
+############################### Map Building ###############################
 
 def address_input():
     address = st.text_input("Address", 

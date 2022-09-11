@@ -10,8 +10,14 @@ I miss those freedoms, but I used to have those same freedoms here at home in Ch
 
     "How Often Does the Bus Come?": [
         """
-Like nearly all transit agencies, the CTA publishes scheduled and realtime service data. While anyone who lives in the city knows that the bus never runs on schedule, we can look at this data to see the service the CTA intends to run. Below is scheduled weekday service from the week of August 15th for two bus stops near my apartment. (I’ve filtered this data to only show service between 6 am and 10 pm, but the CTA does run buses and trains all night on many routes.)
+Like nearly all transit agencies, the CTA publishes scheduled and realtime service data. While anyone who lives in the city knows that the bus never runs on schedule, we can look at this data to see the service the CTA intends to run. Below is scheduled weekday service from the week of August 15th for two bus stops near my apartment. (I’ve filtered this data to only show service between 6 am and 10 pm, but the CTA does run buses and trains all night on many routes, including the 66 bus shown here.)
+        """,
+    ],
+
+    "How Often Does the Bus Come? (part two)": [
         """
+These numbers feel high to me. As expected, both buses have peaks around rush hour, but an average of 9 buses per hour for the 66 bus, which runs down Chicago Ave, feels high to me. That’s one bus nearly every 6 and half minutes. I wish the bus ran that often, because how often the bus comes determines how long I’m stuck waiting for it.
+        """,
     ],
 
     "How Long Do You Wait For The Bus?": [
