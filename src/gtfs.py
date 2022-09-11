@@ -1,7 +1,5 @@
-# from pathlib import Path
-# from json import load
 import pickle
-from warnings import warn
+import warnings
 
 import osmnx as ox
 import numpy as np
@@ -9,19 +7,58 @@ import pandas as pd
 import networkx as nx
 from tqdm import tqdm
 
-from filepaths import DATA_DIR, DATAFRAME_PATH, GTFS_PATH, GRAPH_PATH
+# from filepaths import DATA_DIR, DATAFRAME_PATH, GTFS_PATH, GRAPH_PATH
+from src.filepaths import DATA_DIR, DATAFRAME_PATH, GTFS_PATH, GRAPH_PATH
 
 
-def load_gtfs_table(table_name):
+warnings.filterwarnings("ignore")
+
+
+############################# Load & Clean Data #############################
+
+def prepare_needed_data():
+    # Load
+    trips = load_raw_gtfs_table("trips")
+    stop_times = load_raw_gtfs_table("stop_times")
+    stops = load_raw_gtfs_table("stops")
+
+    # Filter & Clean
+    trips, stop_times = filter_by_service_id(trips, stop_times)
+    stop_times = clean_stop_times_table(stop_times)
+    
+    # Save
+    save_prepared_table(trips, "trips")
+    save_prepared_table(stop_times, "stop_times")
+    save_prepared_table(stops, "stops")
+
+
+def load_raw_gtfs_table(table_name):
     filepath = GTFS_PATH / f"{table_name}.txt"
     df = pd.read_csv(filepath)
+    return df
+
+
+def save_prepared_table(df, table_name):
+    filepath = DATA_DIR / f"{table_name}_cleaned.pkl"
+    with open(filepath, "wb") as pkl_file:
+            pickle.dump(df, pkl_file)
+    print("✓")
+
+
+def load_prepared_table(table_name):
+    filepath = DATA_DIR / f"{table_name}_cleaned.pkl"
+    with open(filepath, "rb") as pkl_file:
+        df = pickle.load(pkl_file)
     return df
 
 
 def clean_stop_times_table(df):
     # Filter to arrivals after 5 AM and before midnight
     df["hour_of_arrival"] = df["arrival_time"].apply(lambda ts: int(ts.split(":")[0]))
-    df = df[(df["hour_of_arrival"] >= 5) & (df["hour_of_arrival"] < 24)]
+
+    # Filter to before midnight so datetime conversion doesn't fail
+    df = df[df["hour_of_arrival"] < 24]
+    # df = df[(df["hour_of_arrival"] >= 5) & (df["hour_of_arrival"] < 24)]
 
     # Convert to datetime
     _format = "%H:%M:%S"
@@ -29,6 +66,22 @@ def clean_stop_times_table(df):
     df["departure_time"] = pd.to_datetime(df["departure_time"], format=_format)
     return df
 
+
+def filter_by_service_id(trips, stop_times):
+    """
+    Need more EDA to determine which Service IDs to include, but for the MVP
+    we'll stick with this one. It's weekday service on 100 our of 136 routes.
+    """
+    service_ids_to_include = [
+        64901,
+    ]
+    trips_filtered = trips[trips["service_id"].isin(service_ids_to_include)]
+    trips_ids = trips_filtered["trip_id"].values
+    stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
+    return trips_filtered, stop_times_filtered
+
+
+####################### Prepare Date for IsoChrones #######################
 
 def single_trip_pairwise_travel_times(df):
     """Compute pairwise travel times between stops for a single trip"""
@@ -43,28 +96,37 @@ def single_trip_pairwise_travel_times(df):
 
 
 def average_travel_times_per_route():
-    routes = load_gtfs_table("routes")
-    trips = load_gtfs_table("trips")
-    stop_times = load_gtfs_table("stop_times")
+    routes = load_raw_gtfs_table("routes")
+    trips = load_raw_gtfs_table("trips")
+    stop_times = load_raw_gtfs_table("stop_times")
     stop_times = clean_stop_times_table(stop_times)
 
-    travel_times_per_route = {}
+    filepath = DATA_DIR / "travel_times_per_route.pkl"
+    with open(filepath, "rb") as pkl_file:
+        travel_times_per_route = pickle.load(pkl_file) 
 
     for route_id in routes["route_id"].values:
-        print(f"Determining travel times for route {route_id}")
-        trip_ids = trips[trips["route_id"] == route_id]["trip_id"]
-        trip_ids = trip_ids.value_counts().index
+        if route_id not in travel_times_per_route.keys():
+            print(f"Determining travel times for route {route_id}")
+            trip_ids = trips[trips["route_id"] == route_id]["trip_id"]
+            trip_ids = trip_ids.value_counts().index
 
-        pairwise_dfs = []
-        for trip_id in tqdm(trip_ids):
-            single_trip = stop_times[stop_times["trip_id"] == trip_id]
-            if single_trip.shape[0]:
-                df = single_trip_pairwise_travel_times(single_trip)
-                pairwise_dfs.append(df)
-        average_travel_times = pd.concat(pairwise_dfs).groupby(level=0).mean()
-        travel_times_per_route[route_id] = average_travel_times
-        with open("travel_times_per_route.pkl", "wb") as pkl_file:
-            pickle.dump(travel_times_per_route, pkl_file)
+            pairwise_dfs = []
+            for trip_id in tqdm(trip_ids):
+                single_trip = stop_times[stop_times["trip_id"] == trip_id]
+
+                # Remove duplicated stop IDs
+                # Because why are there repeated stop IDs??
+                single_trip.drop_duplicates(subset=["stop_id"], keep="first", inplace=True)
+
+                if single_trip.shape[0]:
+                    df = single_trip_pairwise_travel_times(single_trip)
+                    pairwise_dfs.append(df)
+
+            average_travel_times = pd.concat(pairwise_dfs).groupby(level=0).mean()
+            travel_times_per_route[route_id] = average_travel_times
+            with open("travel_times_per_route.pkl", "wb") as pkl_file:
+                pickle.dump(travel_times_per_route, pkl_file)
     print("✓")
 
 
@@ -74,7 +136,7 @@ def arrival_frequencies_per_stop():
     MVP we'll lump them together in order to move quickly.
     """
     # Data
-    stop_times = load_gtfs_table("stop_times")
+    stop_times = load_raw_gtfs_table("stop_times")
     stop_times = clean_stop_times_table(stop_times)
     stop_times = stop_times[["trip_id", "stop_id", "arrival_time"]]
 
@@ -90,7 +152,7 @@ def arrival_frequencies_per_stop():
     negative_values = [r<0 for r in arrival_rates["arrival_rate"].values]
     if any(negative_values):
         percent = sum(negative_values) / arrival_rates.shape[0] * 100
-        warn(f"{round(percent)}% of arrival rates are negative.")
+        warnings.warn(f"{round(percent)}% of arrival rates are negative.")
 
     # Fix values
     mask = arrival_rates["arrival_rate"] <= 0
@@ -111,11 +173,11 @@ def arrival_frequencies_per_stop():
 
 
 # def arrival_frequencies_per_stop_per_route():
-#     stop_times = load_gtfs_table("stop_times")
+#     stop_times = load_raw_gtfs_table("stop_times")
 #     stop_times = clean_stop_times_table(stop_times)
 #     stop_times = stop_times[["trip_id", "stop_id", "arrival_time"]]
     
-#     trips = load_gtfs_table("trips")
+#     trips = load_raw_gtfs_table("trips")
 #     trips = trips[["trip_id", "route_id"]]
 
 #     # When merging these dataframes, many Route IDs are left as NaN
@@ -133,7 +195,7 @@ def arrival_frequencies_per_stop():
 #     arrival_frequencies.fillna(value=arrival_frequencies.mean())
 
 #     num_stops = arrival_frequencies.reset_index()["stop_id"].value_counts().shape[0]
-#     stops = load_gtfs_table("stops")
+#     stops = load_raw_gtfs_table("stops")
 #     missing_stops = stops.shape[0] - num_stops
 #     print(f"Missing arrival frequencies for {missing_stops} transit stops.")
 
@@ -167,7 +229,7 @@ def find_graph_node_IDs_for_transit_stop():
     to be exact. The graph is detailed enough that the closest node will be 
     plenty close.
     """
-    stops = load_gtfs_table("stops")
+    stops = load_raw_gtfs_table("stops")
     chicago = nx.read_gpickle(GRAPH_PATH)
     # travel_times = load_travel_times_dataframe()
 
@@ -192,8 +254,10 @@ def find_graph_node_IDs_for_transit_stop():
 
 
 if __name__ == "__main__":
+    prepare_needed_data()
+
     # download_chicago()
     # find_graph_node_IDs_for_transit_stop()
     # average_travel_times_per_route()
     # find_graph_node_IDs_for_transit_stop()
-    arrival_frequencies_per_stop()
+    # arrival_frequencies_per_stop()

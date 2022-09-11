@@ -1,12 +1,13 @@
-from cgi import test
+from tracemalloc import stop
+import numpy as np
 import pandas as pd
 import streamlit as st
-import numpy as np
+
 from numpy import random
 random = random.RandomState(42)
 
 from .text import TEXT
-
+import src.gtfs as gtfs
 
 def write_text(section_title, header_level=3):
     # st.subheader(section_title)
@@ -16,7 +17,88 @@ def write_text(section_title, header_level=3):
         st.write(paragraph)
 
 
-# Simulated Bus Arrival Times
+######################### Bus Arrival Rates #########################
+
+@st.cache
+def load_needed_tables():
+    trips = gtfs.load_prepared_table("trips")
+    stop_times = gtfs.load_prepared_table("stop_times")
+    stops = gtfs.load_prepared_table("stops")
+    return trips, stop_times, stops
+
+
+def how_often_does_the_bus_come(stop_times, stops):
+    st.markdown("**Bus Arrivals per Hour**")
+    col1, col2 = st.columns(2)
+    
+    # The 50 bus
+    stop_id = 8920
+    bus_arrivals_per_hour(stop_times, stops, stop_id, col1, "The 50 Bus")
+
+    # The 66 bus
+    stop_id = 552
+    bus_arrivals_per_hour(stop_times, stops, stop_id, col2, "The 66 Bus")
+
+
+def bus_arrivals_per_hour(stop_times, stops, stop_id, st_col, ttl):
+    chart_df = bus_stop_histogram(stop_times, stop_id)
+    layer_spec = bus_stop_histogram_layer_spec(stops, stop_id, ttl)
+    
+    spec = {
+        # "title":    "Chart Main Title",
+        "layer":    layer_spec,
+    }
+    st_col.vega_lite_chart(data=chart_df, spec=spec, use_container_width=True)
+
+
+def bus_stop_histogram_layer_spec(stops, stop_id, ttl):
+    stop_desc = stops[stops["stop_id"] == stop_id]["stop_desc"].iloc[0]
+    stop_name = stop_desc.split(",")[0].strip()
+    direction = stop_desc.split(",")[1].strip()
+
+    histogram_spec = {
+        "mark": "bar",
+        "title": [ttl, f"{direction} from {stop_name}"],
+        "encoding": {
+            "x": {
+                "field": "Hour of Arrival", 
+                "type": "ordinal",
+            },
+            "y": {
+                "field": "Buses Per Hour",
+                "type": "quantitative",
+                "title": "No. Buses per Hour",
+            },
+        }
+    }
+    rule_spec = {
+        "mark": "rule",
+        "encoding": {
+            "y": {
+                "field": "Buses Per Hour",
+                "aggregate":    "mean",
+                },
+            "size": {"value": 2},
+        }
+    }
+    layer_spec = [histogram_spec, rule_spec]
+    return layer_spec
+
+
+def bus_stop_histogram(stop_times, stop_id):
+    # Chart Data
+    chart_df = stop_times[stop_times["stop_id"] == stop_id]
+    chart_df = chart_df["hour_of_arrival"].value_counts().sort_index()
+    chart_df = pd.DataFrame(chart_df).reset_index()
+    chart_df.rename(columns={
+        "index": "Hour of Arrival",
+        "hour_of_arrival": "Buses Per Hour"},
+        inplace=True)
+    return chart_df
+
+
+######################## Wait Time Simulation ########################
+
 def generate_bus_and_people_times(bus_frequency, num_days=7, people_per_day=1000):
     """
     Originally, I generated bus times by sampling from a poisson distribution 

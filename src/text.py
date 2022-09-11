@@ -1,4 +1,19 @@
 TEXT = {
+    "Frequency is Freedom": [
+        """
+“Frequency is freedom” is a phrase coined by the urban planner Jarrett Walker that I learned about from the excellent book [Better Buses Better Cities](https://www.goodreads.com/en/book/show/44451608-better-buses-better-cities), and it has helped me articulate why I felt I have had a greater sense of freedom when I have lived and traveled abroad. Frequent transit service allowed me to go more places, to go places whenever I wanted to, and to still go places even when I was running late or forgot something. Because I spent less time waiting, frequent transit service allowed me to get moving sooner and to move faster once I was on the go.
+        """,
+        """
+I miss those freedoms, but I used to have those same freedoms here at home in Chicago. When ridership vanished at the beginning of the pandemic the CTA was forced to cut service [citation needed]. These days, buses and trains are still running less often as the CTA struggles to hire enough bus drivers [citation needed]. My own commute takes twice as long as it used to, which makes going into the office more of pain. I miss the community of the office, but when I do make the trek I find it mostly empty, because my coworker also all hate waiting forever for the bus or train [citation needed, commute data].
+        """,
+    ],
+
+    "How Often Does the Bus Come": [
+        """
+Below are the number of buses that come per hour for two bus stops that I'm often waiting at. These numbers feel really high to me...
+        """
+    ],
+
     "How Long Do You Wait For The Bus": [
         """
 There are may things in the world of transportation that are counterintuitive, one of them being how long you wait for the bus. If a bus arrives on average every ten minutes, you would be forgiven for thinking that the average time some spends waiting for the bus is half that, only five minutes. This would be the case is the bus arrived exactly every ten minutes, like clockwork, but it doesn’t. It arrives _on average_ every ten minutes, sometime sooner and sometimes later. And, sadly and surprisingly, the average time someone spends waiting for a bus like that is ten minutes.¹""",
@@ -14,7 +29,7 @@ When choosing a student at random, you are more likely to get a student in a lar
     "To test this, we can simulate a bus and measure how long simulated people have to wait for it. Our simulated bus runs 24 hours a day and the little simulated people show up at all times. (They work inside a computer and never get any time off.)"
 ],
 
-"Citations & Helpful References": [
+    "Citations & Helpful References": [
     """
 1. [The Waiting Time Paradox, or, Why Is My Bus Always Late?](https://jakevdp.github.io/blog/2018/09/13/waiting-time-paradox/) by Jake VanderPlas
     """,

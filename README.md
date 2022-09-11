@@ -23,3 +23,4 @@
 - [ ] Use `osmnx.plot.plot_figure_ground` to make very pretty plots like [these](https://i0.wp.com/geoffboeing.com/wp-content/uploads/2017/04/square-mile-street-networks.jpg?ssl=1). 
 - [ ] Can I instead color the edges of the graph?
 - [ ] Multiple walking speeds
+- [ ] Create a top-level prep file to do all the data cleaning and image prep. This way you can have one filepaths import statement

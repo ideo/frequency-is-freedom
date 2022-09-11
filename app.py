@@ -4,13 +4,23 @@ import src.logic as lg
 from src.text import TEXT
 # from src.isochrones import generate_walking_isochrone, download_graph_from_address
 import src.isochrones as iso
+from src.plotting import bus_arrivals_per_hour
 
 
 st.set_page_config(
     page_title="Frequency is Freedom", 
     page_icon="img/usdot_bus_icon.png")
 
-st.markdown("# Frequency is Freedom")
+lg.write_text("Frequency is Freedom", header_level=1)
+lg.write_text("How Often Does the Bus Come")
+
+trips, stop_times, stops = lg.load_needed_tables()
+lg.how_often_does_the_bus_come(stop_times, stops)
+
+stop_id = 552
+fig = bus_arrivals_per_hour(stops, trips, stop_times, stop_id)
+st.pyplot(fig)
+
 
 
 lg.write_text("How Long Do You Wait For The Bus")
@@ -39,23 +49,23 @@ lg.plot_simulated_arrival_times(bus_times, people_times)
 lg.bus_time_metrics(bus_times, people_times)
 
 
-# Walking Isochrone
-st.subheader("Walking Isochrone")
-lg.address_input()
-initial_radius = 2.75 #miles
-graph, lat_lng = iso.download_graph_from_address(st.session_state["address"], 
-    radius=initial_radius)
+# # Walking Isochrone
+# st.subheader("Walking Isochrone")
+# lg.address_input()
+# initial_radius = 2.75 #miles
+# graph, lat_lng = iso.download_graph_from_address(st.session_state["address"], 
+#     radius=initial_radius)
 
-mode = "walk"
-trip_times = [15, 30, 45, 60]
-fig = iso.generate_walking_isochrone(lat_lng, mode, trip_times, 
-    _graph=graph, 
-    address=st.session_state["address"])
-ttl = f"Reachable on Foot Within an Hour of {st.session_state['street_address']}"
-# st.markdown(f"##### {ttl}")
-# st.pyplot(fig, bbox_inches="tight")
-st.image("plots/isochrone.png", caption=ttl)
-lg.isochrone_download_button()
+# mode = "walk"
+# trip_times = [15, 30, 45, 60]
+# fig = iso.generate_walking_isochrone(lat_lng, mode, trip_times, 
+#     _graph=graph, 
+#     address=st.session_state["address"])
+# ttl = f"Reachable on Foot Within an Hour of {st.session_state['street_address']}"
+# # st.markdown(f"##### {ttl}")
+# # st.pyplot(fig, bbox_inches="tight")
+# st.image("plots/isochrone.png", caption=ttl)
+# lg.isochrone_download_button()
 
 
 st.markdown("---")

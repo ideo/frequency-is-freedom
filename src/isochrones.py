@@ -6,8 +6,8 @@ import networkx as nx
 import streamlit as st
 import matplotlib.pyplot as plt
 
-# from src.filepaths import GRAPH_PATH
-from filepaths import DATA_DIR, GRAPH_PATH
+from src.filepaths import GRAPH_PATH
+# from filepaths import DATA_DIR, GRAPH_PATH
 
 
 
@@ -74,13 +74,14 @@ class TransitIsochrone:
         return remaining_time
 
 
-    def walking_isochrone(self, trip_time, starting_lat_lon):
+    def walking_isochrone(self, trip_time, starting_lat_lon=None, starting_node=None):
         """
         From the `starting_lat_lon` the length of the `trip_time` in minutes,
         TKTKTKT
         """
         # Subgraph
-        starting_node = self.get_nearest_node(starting_lat_lon)
+        if starting_node is None:
+            starting_node = self.get_nearest_node(starting_lat_lon)
         subgraph = nx.ego_graph(self.citywide_graph, starting_node, radius=trip_time, distance='travel_time')
     
         # Reachable Transit Stops 
@@ -242,7 +243,7 @@ def generate_walking_isochrone(location, mode, trip_times, initial_radius=None, 
         initial_radius *= meters_to_a_mile
         graph = load_graph_around_location(location, radius=initial_radius, network_type=mode)
 
-    graph = add_travel_time_to_graph_data(graph, mode=mode)
+    # graph = add_travel_time_to_graph_data(graph, mode=mode)
     
     # Set a color scheme
     num_colors = len(trip_times)
@@ -312,23 +313,3 @@ if __name__ == "__main__":
 
     for stp_id, time_left in zip(reachable_stop_nodes, remaining_time):
         print(stp_id, time_left)
-
-
-    # mode = "walk"
-    # initial_radius = 1.5   #miles
-    # trip_times = [5, 10, 15, 20, 25]
-
-    # _ = generate_isochrone(my_apartment, mode, initial_radius, trip_times)
-
-    # chicago = nx.read_gpickle(GRAPH_PATH)
-    # # travel_times = load_travel_times_dataframe()
-
-    # trip_time = 15 #minutes
-    # my_apartment = (41.898010150000005, -87.67613740698785)
-    # subgraph, reachable_stops = get_subgraph_and_reachable_stops(
-    #     chicago,
-    #     travel_times,
-    #     trip_time, 
-    #     my_apartment
-    # )
-    # plot_subgraph(subgraph, reachable_stops)
