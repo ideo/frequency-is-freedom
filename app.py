@@ -46,12 +46,13 @@ lg.bus_time_metrics(bus_times, people_times)
 
 lg.write_text("Where Can Transit Take Me?")
 lg.write_text("How Far Can My Feet Carry Me?", header_level=5)
-
-
+walking_isochrone = "plots/walking_isochrone_from_my_apartment.png"
+caption = "How far I can walk from my apartment in 15, 30, 45, and 60 minutes."
+st.image(walking_isochrone, caption=caption)
 
 
 lg.address_input()
-graph, lat_lng = lg.download_graph_from_address(st.session_state["address"])
+# graph, lat_lng = lg.download_graph_from_address(st.session_state["address"])
 
 
 

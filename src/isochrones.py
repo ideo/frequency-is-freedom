@@ -6,14 +6,17 @@ import networkx as nx
 import streamlit as st
 import matplotlib.pyplot as plt
 
+import src.graphs as graphs
 from src.graphs import add_walking_times_to_graph
-from src.filepaths import GRAPH_PATH
-# from filepaths import DATA_DIR, GRAPH_PATH
+from src.filepaths import GRAPH_PATH, DATA_DIR
 
 
 class WalkingIsochrone:
     def __init__(self, citywide_graph=None):
         self.citywide_graph = None
+        
+        # TODO: calculate this by finding the center of the provided graph
+        self.starting_lat_long = None
 
 
     def download_citywide_graph(self, address):
@@ -26,6 +29,67 @@ class WalkingIsochrone:
 
         graph = add_walking_times_to_graph(graph)
         self.citywide_graph = graph
+
+
+    def make_isochrone(self, starting_lat_lon, trip_times=None, filepath=None):
+        """A Walking Only Isochrone"""
+        if trip_times is None:
+            trip_times = [15, 30, 45, 60]
+
+        # Set a color scheme
+        num_colors = len(trip_times)
+        iso_colors = ox.plot.get_colors(num_colors,
+            cmap='plasma', 
+            start=0, 
+            return_hex=True)
+
+        # Node closest to starting address
+        starting_node = graphs.get_nearest_node(
+            self.citywide_graph, 
+            starting_lat_lon)
+
+
+        # Make subgraphs and color each by trip time
+        node_colors = {}
+        edge_colors = {}
+        trip_times = sorted(trip_times, reverse=True)
+        for trip_time, color in zip(trip_times, iso_colors):
+            subgraph = self.make_subgraph(starting_node, trip_time)
+            for node in subgraph.nodes():
+                node_colors[node] = color
+            for edge in subgraph.edges():
+                edge_colors[edge] = color
+
+        # Plot Colors
+        graph = self.citywide_graph
+        nc = [node_colors[node] if node in node_colors else 'none' for node in graph.nodes()]
+        ec = [edge_colors[edge] if edge in edge_colors else 'none' for edge in graph.edges()]
+
+        # Node Size
+        ns = [0 for _ in graph.nodes()]
+
+        # Plot
+        if filepath is None:
+            filepath = "plots/user_isochrone.png"
+
+        fig, ax = ox.plot_graph(graph, 
+            node_color=nc, edge_color=ec, node_size=ns,
+            node_alpha=0.8, node_zorder=2, bgcolor='k', edge_linewidth=0.2,
+            save=True, filepath=filepath, dpi=300)
+
+        
+        # TODO: Stop the image from opening and just go ahead and save it.
+        # plt.savefig(filename, dpi=300, bbox_inches="tight")
+        return fig
+        
+
+    def make_subgraph(self, starting_node, trip_time):
+        subgraph = nx.ego_graph(
+            self.citywide_graph, 
+            starting_node, 
+            radius=trip_time, 
+            distance='travel_time')
+        return subgraph
 
 
 
@@ -42,7 +106,7 @@ class TransitIsochrone:
         self.default_wait_time = np.mean(list(arrival_rates.values()))
 
 
-    def get_nearest_node(self, location, graph=None):
+    def get_nearest_node(self, location, graph=None, trip_times=None):
         """
         Used to find the center node of the graph. If there is no one closest node, 
         osmnx returns a list. Here we simply take the first node from that list. 
@@ -186,27 +250,27 @@ def load_graph_around_location(location, radius=1609, network_type="walk"):
     return graph
 
 
-def get_nearest_node(graph, location):
-    """
-    Used to find the center node of the graph. If there is no one closest node, 
-    osmnx returns a list. Here we simply take the first node from that list. 
-    All the nodes will be right on top of each other and there's no point for 
-    our purposes in distinguishing between them.
-    ---
-    Reminder: Longitude is along the X axis. Latitude is along the Y axis. When 
-    we speak we tend to say "lat long", implying latitude comes first. But 
-    since latitude goes north/south and longidtude goes east/west, in an X-Y 
-    coordinate system, longitude comes first. 
-    """
-    lat = location[0]
-    lng = location[1]
-    nearest_node = ox.distance.nearest_nodes(graph, lng, lat)
+# def get_nearest_node(graph, location):
+#     """
+#     Used to find the center node of the graph. If there is no one closest node, 
+#     osmnx returns a list. Here we simply take the first node from that list. 
+#     All the nodes will be right on top of each other and there's no point for 
+#     our purposes in distinguishing between them.
+#     ---
+#     Reminder: Longitude is along the X axis. Latitude is along the Y axis. When 
+#     we speak we tend to say "lat long", implying latitude comes first. But 
+#     since latitude goes north/south and longidtude goes east/west, in an X-Y 
+#     coordinate system, longitude comes first. 
+#     """
+#     lat = location[0]
+#     lng = location[1]
+#     nearest_node = ox.distance.nearest_nodes(graph, lng, lat)
     
-    # assert isinstance(nearest_node, int)
-    if not isinstance(nearest_node, int):
-        nearest_node = nearest_node[0]
+#     # assert isinstance(nearest_node, int)
+#     if not isinstance(nearest_node, int):
+#         nearest_node = nearest_node[0]
 
-    return nearest_node
+#     return nearest_node
 
 
 @st.experimental_memo
@@ -241,7 +305,7 @@ def generate_walking_isochrone(location, mode, trip_times, initial_radius=None, 
         return_hex=True)
 
     # Color the nodes according to travel time
-    center_node = get_nearest_node(graph, location)
+    center_node = graphs.get_nearest_node(graph, location)
     node_colors = {}
     edge_colors = {}
     for trip_time, color in zip(sorted(trip_times, reverse=True), iso_colors):
@@ -272,32 +336,33 @@ def generate_walking_isochrone(location, mode, trip_times, initial_radius=None, 
 
 
 if __name__ == "__main__":
+    pass
     # download_citywide_graph()
 
-    chicago = nx.read_gpickle(GRAPH_PATH)
+    # chicago = nx.read_gpickle(GRAPH_PATH)
 
-    filepath = DATA_DIR / "stop_id_to_graph_id.pkl"
-    with open(filepath, "rb") as pkl_file:
-        stop_id_to_graph_id = pickle.load(pkl_file) 
+    # filepath = DATA_DIR / "stop_id_to_graph_id.pkl"
+    # with open(filepath, "rb") as pkl_file:
+    #     stop_id_to_graph_id = pickle.load(pkl_file) 
     
-    filepath = DATA_DIR / "graph_id_to_stop_id.pkl"
-    with open(filepath, "rb") as pkl_file:
-        graph_id_to_stop_id = pickle.load(pkl_file)
+    # filepath = DATA_DIR / "graph_id_to_stop_id.pkl"
+    # with open(filepath, "rb") as pkl_file:
+    #     graph_id_to_stop_id = pickle.load(pkl_file)
 
-    filepath = DATA_DIR / "arrival_rates.pkl"
-    with open(filepath, "rb") as pkl_file:
-        arrival_rates = pickle.load(pkl_file)
+    # filepath = DATA_DIR / "arrival_rates.pkl"
+    # with open(filepath, "rb") as pkl_file:
+    #     arrival_rates = pickle.load(pkl_file)
 
-    transit_isochrone = TransitIsochrone(
-        citywide_graph=chicago,
-        stop_id_to_graph_id=stop_id_to_graph_id,
-        graph_id_to_stop_id=graph_id_to_stop_id,
-        arrival_rates=arrival_rates,
-    )
+    # transit_isochrone = TransitIsochrone(
+    #     citywide_graph=chicago,
+    #     stop_id_to_graph_id=stop_id_to_graph_id,
+    #     graph_id_to_stop_id=graph_id_to_stop_id,
+    #     arrival_rates=arrival_rates,
+    # )
 
-    trip_time = 30
-    my_apartment = (41.897999, -87.675908)
-    subgraph, reachable_stop_nodes, remaining_time = transit_isochrone.walking_isochrone(trip_time, my_apartment)
+    # trip_time = 30
+    # my_apartment = (41.897999, -87.675908)
+    # subgraph, reachable_stop_nodes, remaining_time = transit_isochrone.walking_isochrone(trip_time, my_apartment)
 
-    for stp_id, time_left in zip(reachable_stop_nodes, remaining_time):
-        print(stp_id, time_left)
+    # for stp_id, time_left in zip(reachable_stop_nodes, remaining_time):
+    #     print(stp_id, time_left)
