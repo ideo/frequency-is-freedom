@@ -3,3 +3,5 @@
 __pycache__/
 cache/
 *_backup.*
+data/gtfs_raw/
+.DS_Store

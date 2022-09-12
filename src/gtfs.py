@@ -17,7 +17,23 @@ warnings.filterwarnings("ignore")
 
 ############################# Load & Clean Data #############################
 
+DATA_TYPES = {
+    "trips":    {
+        "service_id":   str,
+        "trip_id":      str,
+        "shape_id":     str,
+        "schd_trip_id": str,
+    },
+    "stop_times":   {
+        "trip_id":      str,
+    },
+    "calendar":     {
+        "service_id":   str,
+    }
+}
+
 def load_clean_and_save_tables():
+    print("Loading and cleaning raw GTFS tables.")
     # Load
     trips = load_raw_gtfs_table("trips")
     stop_times = load_raw_gtfs_table("stop_times")
@@ -37,8 +53,13 @@ def load_clean_and_save_tables():
 
 
 def load_raw_gtfs_table(table_name):
+    # print(f"loading table {table_name}")
     filepath = GTFS_PATH / f"{table_name}.txt"
-    df = pd.read_csv(filepath)
+    if table_name in DATA_TYPES:
+        dtype = DATA_TYPES[table_name]
+    else:
+        dtype = None
+    df = pd.read_csv(filepath, dtype=dtype)
     return df
 
 
@@ -147,6 +168,7 @@ def average_travel_times_per_route(routes, trips, stop_times):
     """
     TKTKTK Explain. This is the big one.
     """
+    print("Calculating travel times between stops per route.")
     travel_times_per_route = load_isochrone_data("travel_times_per_route.pkl")
     if travel_times_per_route is None:
         travel_times_per_route = {}
@@ -200,6 +222,7 @@ def average_arrival_rates_per_stop(stop_times):
     To calculate the average arrival rates of buses and trains, we simply count 
     the number of buses/trains per hour, take the average, then the inverse.
     """
+    print("Calculating average arrival frequencies for buses and trains.")
     # Buses per Hour
     df = stop_times.groupby(["stop_id","hour_of_arrival"])[["trip_id"]].count()
     df = df.reset_index().groupby("stop_id")[["trip_id"]].mean()
@@ -315,6 +338,7 @@ def find_graph_node_IDs_for_transit_stop(stops, citywide_graph):
     to be exact. The graph is detailed enough that the closest node will be 
     plenty close.
     """
+    print("Maping transit stop IDs to graph node IDs.")
     lats = stops["stop_lat"].values
     lons = stops["stop_lon"].values
     graph_nodes = ox.distance.nearest_nodes(citywide_graph, lons, lats)

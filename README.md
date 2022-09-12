@@ -15,6 +15,10 @@
    ```
    And then select the newly created kernel, `frequency-is-freedom`.
 
+1. All the preprocessed data needed for the app has been pushed to this repo. If you would like to remake this app with newer GTFS data, save your GTFS data to `data/gtfs_raw` and then run:
+   ```bash
+   poetry run python preprocess_data.py
+   ```
 
 ### To-Do List
 - [ ] ~Geocode tool to return the lat/lng of an address within Chicago~

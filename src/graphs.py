@@ -22,7 +22,7 @@ def download_citywide_graph(city="Chicago, Illinois"):
     print("✓")
 
 
-def download_graph_from_address(address, radius, mode="walk"):
+def download_graph_from_address(address, radius=2.75, mode="walk"):
     """
     radius (float, int):    
         graph radius in miles

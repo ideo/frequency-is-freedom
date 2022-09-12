@@ -56,6 +56,18 @@ def bus_arrivals_per_hour(stop_times, stops, stop_id, st_col, ttl):
     st_col.vega_lite_chart(data=chart_df, spec=spec, use_container_width=True)
 
 
+def bus_stop_histogram(stop_times, stop_id):
+    # Chart Data
+    chart_df = stop_times[stop_times["stop_id"] == stop_id]
+    chart_df = chart_df["hour_of_arrival"].value_counts().sort_index()
+    chart_df = pd.DataFrame(chart_df).reset_index()
+    chart_df.rename(columns={
+        "index": "Hour of Arrival",
+        "hour_of_arrival": "Buses Per Hour"},
+        inplace=True)
+    return chart_df
+
+
 def bus_stop_histogram_layer_spec(stops, stop_id, ttl):
     stop_desc = stops[stops["stop_id"] == stop_id]["stop_desc"].iloc[0]
     stop_name = stop_desc.split(",")[0].strip()
@@ -89,18 +101,6 @@ def bus_stop_histogram_layer_spec(stops, stop_id, ttl):
     }
     layer_spec = [histogram_spec, rule_spec]
     return layer_spec
-
-
-def bus_stop_histogram(stop_times, stop_id):
-    # Chart Data
-    chart_df = stop_times[stop_times["stop_id"] == stop_id]
-    chart_df = chart_df["hour_of_arrival"].value_counts().sort_index()
-    chart_df = pd.DataFrame(chart_df).reset_index()
-    chart_df.rename(columns={
-        "index": "Hour of Arrival",
-        "hour_of_arrival": "Buses Per Hour"},
-        inplace=True)
-    return chart_df
 
 
 ######################## Wait Time Simulation ########################
