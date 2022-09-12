@@ -8,6 +8,10 @@ random = random.RandomState(42)
 
 from .text import TEXT
 import src.gtfs as gtfs
+from src.graphs import download_graph_from_address
+
+
+################################ App Logic ################################
 
 def write_text(section_title, header_level=3):
     # st.subheader(section_title)
@@ -17,7 +21,7 @@ def write_text(section_title, header_level=3):
         st.write(paragraph)
 
 
-######################### Bus Arrival Rates #########################
+############################# Bus Arrival Rates #############################
 
 @st.cache
 def load_needed_tables():
@@ -28,7 +32,8 @@ def load_needed_tables():
 
 
 def how_often_does_the_bus_come(stop_times, stops):
-    st.markdown("**Bus Arrivals per Hour**")
+    # st.markdown("**Bus Arrivals per Hour**")
+    st.markdown("##### Bus Arrivals per Hour")
     col1, col2 = st.columns(2)
     
     # The 50 bus
@@ -221,6 +226,15 @@ def address_input():
         value="626 W Jackson Blvd, Chicago, IL 60661")
     street_address = address.split(",")[0]
     st.session_state["street_address"] = street_address
+
+
+def download_walking_graph(address):
+    """
+    TKTK
+    """
+    initial_radius = 2.75 #miles
+    graph, lat_lng = download_graph_from_address(address, initial_radius)
+    return graph, lat_lng
 
 
 def isochrone_download_button():

@@ -24,3 +24,4 @@
 - [ ] Can I instead color the edges of the graph?
 - [ ] Multiple walking speeds
 - [ ] Create a top-level prep file to do all the data cleaning and image prep. This way you can have one filepaths import statement
+- [ ] Need header image

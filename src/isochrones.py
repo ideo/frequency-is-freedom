@@ -6,8 +6,26 @@ import networkx as nx
 import streamlit as st
 import matplotlib.pyplot as plt
 
+from src.graphs import add_walking_times_to_graph
 from src.filepaths import GRAPH_PATH
 # from filepaths import DATA_DIR, GRAPH_PATH
+
+
+class WalkingIsochrone:
+    def __init__(self, citywide_graph=None):
+        self.citywide_graph = None
+
+
+    def download_citywide_graph(self, address):
+        network_type = "all"
+        graph = ox.graph_from_place(address,
+            network_type=network_type,
+            retain_all=False,
+            truncate_by_edge=True,
+            simplify=True)
+
+        graph = add_walking_times_to_graph(graph)
+        self.citywide_graph = graph
 
 
 
@@ -94,36 +112,6 @@ class TransitIsochrone:
         return subgraph, reachable_stop_nodes, remaining_time
 
 
-
-
-
-def download_citywide_graph(city="Chicago, Illinois"):
-    network_type = "all"
-    chicago = ox.graph_from_place(city,
-        network_type=network_type,
-        retain_all=False,
-        truncate_by_edge=True,
-        simplify=True)
-
-    chicago = add_walking_times_to_graph(chicago)
-    nx.write_gpickle(chicago, GRAPH_PATH)
-    print("✓")
-
-
-def add_walking_times_to_graph(graph, mode="walk"):
-    """
-    TODO: multiple speeds for multiple kinds of pedestrians
-    """
-    speeds = {
-        "walk": 4.5 #walking speed in km/hr
-    }
-    meters_per_minute = speeds[mode] * 1000 / 60 #convert to meters/min
-    
-    for _, _, _, data in graph.edges(data=True, keys=True):
-        data['travel_time'] = data['length'] / meters_per_minute
-    return graph
-
-
 # def walking_isochrone(citywide_graph, transit_stops, trip_time, starting_lat_lon):
 #     """
 #     Returns:
@@ -157,30 +145,30 @@ def add_walking_times_to_graph(graph, mode="walk"):
 #     return subgraph, reachable_stops, remaining_time
 
 
-def walking_time_to_stop(graph, center_node, transit_stop):
-    path = ox.distance.shortest_path(graph, center_node, transit_stop, weight="travel_time")
-    walking_time = nx.function.path_weight(graph, path, weight="travel_time")
-    return walking_time
+# def walking_time_to_stop(graph, center_node, transit_stop):
+#     path = ox.distance.shortest_path(graph, center_node, transit_stop, weight="travel_time")
+#     walking_time = nx.function.path_weight(graph, path, weight="travel_time")
+#     return walking_time
 
 
-@st.experimental_memo
-def download_graph_from_address(address, radius, mode="walk"):
-    """
-    TODO: We will need to check to see if the the address is in Chicago.
-    --
-    radius (float, int):    
-        graph radius in miles
-    """
-    meters_to_a_mile = 1609
-    radius *= meters_to_a_mile
+# @st.experimental_memo
+# def download_graph_from_address(address, radius, mode="walk"):
+#     """
+#     TODO: We will need to check to see if the the address is in Chicago.
+#     --
+#     radius (float, int):    
+#         graph radius in miles
+#     """
+#     meters_to_a_mile = 1609
+#     radius *= meters_to_a_mile
 
-    graph, lat_lng = ox.graph_from_address(address, 
-        dist=radius, 
-        network_type=mode,
-        return_coords=True,
-        truncate_by_edge=True,
-        simplify=True)
-    return graph, lat_lng
+#     graph, lat_lng = ox.graph_from_address(address, 
+#         dist=radius, 
+#         network_type=mode,
+#         return_coords=True,
+#         truncate_by_edge=True,
+#         simplify=True)
+#     return graph, lat_lng
 
 
 def load_graph_around_location(location, radius=1609, network_type="walk"):

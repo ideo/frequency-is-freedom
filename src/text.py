@@ -22,7 +22,7 @@ These numbers feel high to me. As expected, both buses have peaks around rush ho
 
     "How Long Do You Wait For The Bus?": [
         """
-There are may things in the world of transportation that are counterintuitive, one of them being how long you wait for the bus. If a bus arrives on average every ten minutes, you would be forgiven for thinking that the average time some spends waiting for the bus is half that, only five minutes. This would be the case is the bus arrived exactly every ten minutes, like clockwork, but it doesn’t. It arrives _on average_ every ten minutes, sometime sooner and sometimes later. And, sadly and surprisingly, the average time someone spends waiting for a bus like that is ten minutes.¹""",
+There are may things in the world of transportation that are counterintuitive, one of them being how long you wait for the bus. If a bus arrives on average every ten minutes, you would be forgiven for thinking that the average time some spends waiting for the bus is half that, only five minutes. This would be the case if the bus arrived exactly every ten minutes, like clockwork, but it doesn’t. It arrives _on average_ every ten minutes, sometime sooner and sometimes later. And, sadly and surprisingly, the average time someone spends waiting for a bus like that is ten minutes.¹""",
         """
 To understand why, think about a university that advertises small class. Tallying each class, the average may indeed be small, say thirty students. But not every class is that small. A few big freshman seminars may have hundreds of students. And since more students take those larger classes, when we tally students, their average number of students in their classes will be much higher.²
         """,
@@ -31,9 +31,24 @@ When choosing a student at random, you are more likely to get a student in a lar
         """,
     ],
 
-"One Day of Simulated Bus Service": [
-    "To test this, we can simulate a bus and measure how long simulated people have to wait for it. Our simulated bus runs 24 hours a day and the little simulated people show up at all times. (They work inside a computer and never get any time off.)"
+    "One Day of Simulated Bus Service": [
+        """
+To test this, we can simulate a bus and measure how long simulated people have to wait for it. Our simulated bus runs 24 hours a day and the little simulated people show up at all times. (They work inside a computer and never get any time off.)
+        """,
 ],
+
+    "Where Can Transit Take Me?": [
+        """
+I can use this data to see how far I can go….
+        """,
+    ],
+
+    "How Far Can My Feet Carry Me?": [
+        """
+First, I need to know everywhere I can walk. Using OpenStreetMaps, I can trace everywhere I can walk within one hour of my apartment.
+        """,
+    ],
+
 
     "Citations & Helpful References": [
     """

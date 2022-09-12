@@ -44,10 +44,17 @@ lg.plot_simulated_arrival_times(bus_times, people_times)
 lg.bus_time_metrics(bus_times, people_times)
 
 
-# # Walking Isochrone
-# st.subheader("Walking Isochrone")
-# lg.address_input()
-# initial_radius = 2.75 #miles
+lg.write_text("Where Can Transit Take Me?")
+lg.write_text("How Far Can My Feet Carry Me?", header_level=5)
+
+
+
+
+lg.address_input()
+graph, lat_lng = lg.download_graph_from_address(st.session_state["address"])
+
+
+
 # graph, lat_lng = iso.download_graph_from_address(st.session_state["address"], 
 #     radius=initial_radius)
 
