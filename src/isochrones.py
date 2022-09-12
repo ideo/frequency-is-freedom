@@ -48,20 +48,23 @@ class WalkingIsochrone:
             self.citywide_graph, 
             starting_lat_lon)
 
-
         # Make subgraphs and color each by trip time
         node_colors = {}
         edge_colors = {}
         trip_times = sorted(trip_times, reverse=True)
+        furthest_walking_graph = None
         for trip_time, color in zip(trip_times, iso_colors):
             subgraph = self.make_subgraph(starting_node, trip_time)
             for node in subgraph.nodes():
                 node_colors[node] = color
             for edge in subgraph.edges():
                 edge_colors[edge] = color
+            if furthest_walking_graph is None:
+                furthest_walking_graph = subgraph
 
         # Plot Colors
-        graph = self.citywide_graph
+        # graph = self.citywide_graph
+        graph = furthest_walking_graph
         nc = [node_colors[node] if node in node_colors else 'none' for node in graph.nodes()]
         ec = [edge_colors[edge] if edge in edge_colors else 'none' for edge in graph.edges()]
 

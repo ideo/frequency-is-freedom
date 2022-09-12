@@ -49,6 +49,12 @@ First, I need to know everywhere I can walk. Using OpenStreetMaps, I can trace e
         """,
     ],
 
+    "Generate Your Own Map": [
+        """
+Enter an address below to generate a map of everywhere you can walk from that spot. (This will work for any address, but it'll take a few minutes as it'll have to download the map surrounding that address first.)
+        """,
+    ],
+
 
     "Citations & Helpful References": [
     """

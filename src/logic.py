@@ -8,7 +8,8 @@ random = random.RandomState(42)
 
 from .text import TEXT
 import src.gtfs as gtfs
-from src.graphs import download_graph_from_address
+import src.graphs as graphs
+from src.isochrones import WalkingIsochrone
 
 
 ################################ App Logic ################################
@@ -221,25 +222,43 @@ def average_wait_time(bus_times, people_times):
 ############################### Map Building ###############################
 
 def address_input():
-    address = st.text_input("Address", 
+    # col1, col2 = st.columns([5,2])
+
+    address = st.text_input("", 
         key="address", 
-        value="626 W Jackson Blvd, Chicago, IL 60661")
-    street_address = address.split(",")[0]
-    st.session_state["street_address"] = street_address
+        # value="626 W Jackson Blvd, Chicago, IL 60661",
+        placeholder="Enter your Address"
+        )
+    
+    # st.session_state["street_address"] = street_address
+
+    # col2.write("")
+    # col2.write("")
+    # btn_pressed = col2.button("Make a Walking Map")
+    # return address, btn_pressed
+    return address
 
 
-def download_walking_graph(address):
+def make_walking_isochrone(address):
     """
     TKTK
     """
-    initial_radius = 2.75 #miles
-    graph, lat_lng = download_graph_from_address(address, initial_radius)
-    return graph, lat_lng
+    graph, lat_lng = graphs.download_graph_from_address(address)
+
+    walking_isochrone = WalkingIsochrone()
+    walking_isochrone.citywide_graph = graph
+    filepath = "plots/user_generated_walking_isochrone.png"
+    _ = walking_isochrone.make_isochrone(lat_lng, filepath=filepath)
+
+    street_address = address.split(",")[0]
+    caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
+    st.image(filepath, caption=caption)
+    isochrone_download_button(filepath, street_address)
 
 
-def isochrone_download_button():
-    with open("plots/isochrone.png", "rb") as image_file:
+def isochrone_download_button(filepath, street_address):
+    with open(filepath, "rb") as image_file:
         st.download_button("Download Map", 
             data=image_file,
-            file_name=f"{st.session_state['street_address']}.png",
+            file_name=f"{street_address}.png",
             mime="image/png")

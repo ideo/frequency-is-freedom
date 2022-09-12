@@ -50,8 +50,12 @@ walking_isochrone = "plots/walking_isochrone_from_my_apartment.png"
 caption = "How far I can walk from my apartment in 15, 30, 45, and 60 minutes."
 st.image(walking_isochrone, caption=caption)
 
+lg.write_text("Generate Your Own Map", header_level=5)
+address = lg.address_input()
+if address:
+    lg.make_walking_isochrone(address)
 
-lg.address_input()
+
 # graph, lat_lng = lg.download_graph_from_address(st.session_state["address"])
 
 

@@ -1,5 +1,6 @@
 import osmnx as ox
 import networkx as nx
+import streamlit as st
 
 from src.filepaths import GRAPH_PATH
 
@@ -22,14 +23,15 @@ def download_citywide_graph(city="Chicago, Illinois"):
     print("✓")
 
 
-def download_graph_from_address(address, radius=2.75, mode="walk"):
+@st.experimental_memo
+def download_graph_from_address(address, radius=4.5, mode="walk"):
     """
     radius (float, int):    
         graph radius in miles
     """
     print("Downloading graph")
-    meters_to_a_mile = 1609
-    radius *= meters_to_a_mile
+    # meters_to_a_mile = 1609
+    radius *= 1000  #conver to meters
 
     graph, lat_lng = ox.graph_from_address(address, 
         dist=radius, 

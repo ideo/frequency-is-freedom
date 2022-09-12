@@ -5,3 +5,4 @@ cache/
 *_backup.*
 data/gtfs_raw/
 .DS_Store
+plots/user_generated_walking_isochrone.png
