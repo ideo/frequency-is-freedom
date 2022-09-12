@@ -25,9 +25,9 @@ def write_text(section_title, header_level=3):
 
 @st.cache
 def load_needed_tables():
-    trips = gtfs.load_prepared_table("trips")
-    stop_times = gtfs.load_prepared_table("stop_times")
-    stops = gtfs.load_prepared_table("stops")
+    trips = gtfs.load_prepared_gtfs_table("trips")
+    stop_times = gtfs.load_prepared_gtfs_table("stop_times")
+    stops = gtfs.load_prepared_gtfs_table("stops")
     return trips, stop_times, stops
 
 

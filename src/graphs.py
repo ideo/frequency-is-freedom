@@ -4,6 +4,11 @@ import networkx as nx
 from src.filepaths import GRAPH_PATH
 
 
+def load_chicago_graph():
+    chicago = nx.read_gpickle(GRAPH_PATH)
+    return chicago
+
+
 def download_citywide_graph(city="Chicago, Illinois"):
     network_type = "all"
     chicago = ox.graph_from_place(city,
