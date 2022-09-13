@@ -14,10 +14,10 @@ from src.isochrones import WalkingIsochrone
 
 ################################ App Logic ################################
 
-def write_text(section_title, header_level=3):
-    # st.subheader(section_title)
-    header_hashes = "#"*header_level
-    st.markdown(f"{header_hashes} {section_title}")
+def write_text(section_title, header_level=3, header=True):
+    if header:
+        header_hashes = "#"*header_level
+        st.markdown(f"{header_hashes} {section_title}")
     for paragraph in TEXT[section_title]:
         st.write(paragraph)
 

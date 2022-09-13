@@ -4,7 +4,8 @@ TEXT = {
 “Frequency is freedom” is a phrase coined by the urban planner Jarrett Walker that I learned about from the excellent book [Better Buses Better Cities](https://www.goodreads.com/en/book/show/44451608-better-buses-better-cities), and it has helped me articulate why I felt I had a greater sense of freedom when I have lived and traveled abroad. Frequent transit service allowed me to go more places, to go places whenever I wanted to, and to still go places even when I was running late or forgot something (which seems to happen quite a bit). I spent less time waiting, and so I could get moving sooner and to move faster once I was on the go.
         """,
         """
-I miss those freedoms, but I used to have those same freedoms here at home in Chicago. When ridership vanished at the beginning of the pandemic the CTA was forced to cut service¹. These days, buses and trains are still running less often as the CTA struggles to hire enough bus drivers¹. My own commute takes twice as long as it used to, which makes going into the office more of pain. I miss the community of the office, but when I do make the trek I find it mostly empty, because my coworkers also all hate waiting forever for the bus or train².        """,
+I miss those freedoms, but I used to have those same freedoms here at home in Chicago. When ridership vanished at the beginning of the pandemic the CTA was forced to cut service¹. These days, buses and trains are still running less often as the [CTA struggles to hire enough bus drivers](https://blockclubchicago.org/2022/07/14/cta-leaders-vow-to-fix-unreliable-service-with-more-hiring-improved-train-and-bus-tracking/). My own commute takes twice as long as it used to, which makes going into the office more of pain. I miss the community of the office, but when I do make the trek I find it mostly empty, because [my coworkers also all hate waiting forever for the bus or train](https://www.wsj.com/articles/dreaded-commute-to-the-city-is-keeping-offices-mostly-empty-11653989581).
+        """,
     ],
 
     "How Often Does the Bus Come?": [
@@ -13,7 +14,7 @@ Like nearly all transit agencies, the CTA publishes scheduled and realtime servi
         """,
     ],
 
-    "How Often Does the Bus Come? (part two)": [
+    "How Often Does the Bus Come? (II)": [
         """
 These numbers feel high to me. As expected, both buses have peaks around rush hour, but an average of 9 buses per hour for the 66 bus, which runs down Chicago Ave, feels high to me. That’s one bus nearly every 6 and half minutes. I wish the bus ran that often, because how often the bus comes determines how long I’m stuck waiting for it.
         """,
@@ -38,7 +39,7 @@ To test this, we can simulate a bus and measure how long simulated people have t
 
     "How Far Can I Go?": [
         """
-How often the bus comes determines how far it can take me. A bus that runs more frequently is more likely to come on time, and buses that run more frequently are less likely to be stuck in traffic. But felt most acutely, when a bus comes more often I spend less time waiting for it. 
+How often the bus comes determines how far it can take me. A bus that runs more frequently is more likely to come on time, since it will bunch less [citation needed]. A bus that runs more frequently will be stuck in less traffic, since every bus carries people who would otherwise be driving [citation needed]. But most acutely, when a bus comes more often I spend less time waiting for it. 
         """,
         """
 I want to use the CTA’s own data to measure how far I can go in a certain amount of time. To do that, I first need to map everywhere I can walk to. What you see below is a map of everywhere I can walk within an hour from my apartment, which is near the intersection of Chicago and Damen.
@@ -63,11 +64,20 @@ Enter an address below to generate a map of everywhere you can walk from that sp
         """,
     ],
 
-    "Ridin' the Bus": [
+    "How Far Can I Go with Public Transit": [
         """
+Now that we can walk, let’s walk to the bus, or, more honestly, let’s wait for the bus. Using the CTA’s publicly available schedule data, we can trace everywhere transit can take us from a given starting point and measure how long it would take to do so. Crucially, from the arrival rates shown above, we also know how long we can expect to wait at each transit stop. So, for every bus or train stop, the CTA’s own schedule data tells us how often buses or trains come and so how long, on average, we would be stuck waiting.
+        """,
+        """
+The maps below consider weekday CTA service from the week of August 15th. Within city limits, starting from my apartment, we trace every transit stop we can walk to, how long we must wait there, all the other transit stops those routes can take us to, and everywhere we can walk to from there, including other routes we can transfer to, after waiting of course.
         """,
     ],
 
+    "How Far Can I Go with Public Transit (II)": [
+        """
+The map above shows the city that the CTA makes accessible to me. A friend of mine who lives in Ravenswood was surprised to see that his place isn’t on this map, but I wasn’t. I know to bike to his place for dinner, because the bus would take over an hour.
+        """,
+    ],
 
     "Citations & Helpful References": [
     """

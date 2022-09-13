@@ -1,10 +1,10 @@
 import streamlit as st
 
 import src.logic as lg
-from src.text import TEXT
+# from src.text import TEXT
 # from src.isochrones import generate_walking_isochrone, download_graph_from_address
-import src.isochrones as iso
-from src.plotting import bus_arrivals_per_hour
+# import src.isochrones as iso
+# from src.plotting import bus_arrivals_per_hour
 
 
 st.set_page_config(
@@ -17,7 +17,7 @@ lg.write_text("Frequency is Freedom", header_level=1)
 lg.write_text("How Often Does the Bus Come?")
 trips, stop_times, stops = lg.load_needed_tables()
 lg.how_often_does_the_bus_come(stop_times, stops)
-st.write(TEXT["How Often Does the Bus Come? (part two)"][0])
+lg.write_text("How Often Does the Bus Come? (II)", header=False)
 
 
 lg.write_text("How Long Do You Wait For The Bus?")
@@ -49,9 +49,8 @@ lg.write_text("How Far Can I Go?")
 walking_isochrone = "plots/walking_isochrone_from_my_apartment.png"
 caption = "How far I can walk from my apartment in 15, 30, 45, and 60 minutes."
 st.image(walking_isochrone, caption=caption)
-st.write(TEXT["Geography"][0])
+lg.write_text("Geography", header=False)
 
-# lg.write_text("Generate Your Own Walking Map", header_level=5)
 st.write("")
 st.markdown("##### Generate Your Own Walking Map")
 address = lg.address_input()
@@ -59,11 +58,11 @@ if address:
     lg.make_walking_isochrone(address)
 
 
-lg.write_text("Ridin' the Bus")
-# transit_isochrone = "plots/transit_isochrone_45.png"
+lg.write_text("How Far Can I Go with Public Transit")
 transit_isochrone = "plots/transit_isochrone_from_my_apartment.png"
 caption = "How far public transit can take me from my apartment in 15, 30, 45, and 60 minutes."
 st.image(transit_isochrone, caption=caption)
+lg.write_text("How Far Can I Go with Public Transit (II)", header=False)
 
 
 st.markdown("---")
