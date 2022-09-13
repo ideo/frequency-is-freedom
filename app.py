@@ -10,9 +10,10 @@ from src.plotting import bus_arrivals_per_hour
 st.set_page_config(
     page_title="Frequency is Freedom", 
     page_icon="img/usdot_bus_icon.png")
+lg.initialize_session_state()
+
 
 lg.write_text("Frequency is Freedom", header_level=1)
-
 lg.write_text("How Often Does the Bus Come?")
 trips, stop_times, stops = lg.load_needed_tables()
 lg.how_often_does_the_bus_come(stop_times, stops)
@@ -44,13 +45,15 @@ lg.plot_simulated_arrival_times(bus_times, people_times)
 lg.bus_time_metrics(bus_times, people_times)
 
 
-lg.write_text("Where Can Transit Take Me?")
-lg.write_text("How Far Can My Feet Carry Me?", header_level=5)
+lg.write_text("How Far Can I Go?")
 walking_isochrone = "plots/walking_isochrone_from_my_apartment.png"
 caption = "How far I can walk from my apartment in 15, 30, 45, and 60 minutes."
 st.image(walking_isochrone, caption=caption)
+st.write(TEXT["Geography"][0])
 
-lg.write_text("Generate Your Own Map", header_level=5)
+# lg.write_text("Generate Your Own Walking Map", header_level=5)
+st.write("")
+st.markdown("##### Generate Your Own Walking Map")
 address = lg.address_input()
 if address:
     lg.make_walking_isochrone(address)

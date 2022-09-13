@@ -22,6 +22,15 @@ def write_text(section_title, header_level=3):
         st.write(paragraph)
 
 
+def initialize_session_state():
+    initial_values = {
+        "map_ready":    False,
+    }
+    for key, value in initial_values.items():
+        if key not in st.session_state:
+            st.session_state[key] = value
+
+
 ############################# Bus Arrival Rates #############################
 
 @st.cache
@@ -222,20 +231,22 @@ def average_wait_time(bus_times, people_times):
 ############################### Map Building ###############################
 
 def address_input():
-    # col1, col2 = st.columns([5,2])
+    col1, col2 = st.columns([7,2])
 
-    address = st.text_input("", 
-        key="address", 
-        # value="626 W Jackson Blvd, Chicago, IL 60661",
-        placeholder="Enter your Address"
-        )
-    
-    # st.session_state["street_address"] = street_address
+    label = """
+        Enter an address below to generate a map of everywhere you can walk 
+        from that spot.
+    """
+    address = col1.text_input(label, key="address", 
+        placeholder="Enter your Address")
 
-    # col2.write("")
-    # col2.write("")
-    # btn_pressed = col2.button("Make a Walking Map")
-    # return address, btn_pressed
+    col2.write("")
+    col2.write("")
+    if address:
+        street_address = address.split(",")[0]
+    else:
+        street_address = None
+    isochrone_download_button(col2, street_address)
     return address
 
 
@@ -243,6 +254,7 @@ def make_walking_isochrone(address):
     """
     TKTK
     """
+    st.session_state["map_ready"] = False
     graph, lat_lng = graphs.download_graph_from_address(address)
 
     walking_isochrone = WalkingIsochrone()
@@ -253,12 +265,15 @@ def make_walking_isochrone(address):
     street_address = address.split(",")[0]
     caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
     st.image(filepath, caption=caption)
-    isochrone_download_button(filepath, street_address)
+    # isochrone_download_button(filepath, street_address)
+    st.session_state["map_ready"] = True
 
 
-def isochrone_download_button(filepath, street_address):
+def isochrone_download_button(st_col, street_address):
+    filepath = "plots/user_generated_walking_isochrone.png"
     with open(filepath, "rb") as image_file:
-        st.download_button("Download Map", 
+        st_col.download_button("Download Map", 
             data=image_file,
             file_name=f"{street_address}.png",
-            mime="image/png")
+            mime="image/png",
+            disabled=not st.session_state["map_ready"])
