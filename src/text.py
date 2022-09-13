@@ -79,7 +79,7 @@ The map above shows the city that the CTA makes accessible to me. A friend of mi
         """,
     ],
 
-    "More Buses Takes You More Places": [
+    "More Buses Can Take You More Places": [
         """
 Truthfully, that map above is aspirational. It’s based off of the CTA’s published schedules, but the CTA has been running reduced service, sometimes as bad as running [half as many trains as the schedule says](https://blockclubchicago.org/2022/06/23/ghost-trains-and-buses-packed-platforms-35-alderpeople-want-city-council-hearing-on-deteriorating-cta-service/). That means waiting even longer.
         """,

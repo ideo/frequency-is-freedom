@@ -270,7 +270,7 @@ def make_walking_isochrone(address):
 
 
 def isochrone_download_button(st_col, street_address):
-    filepath = "plots/user_generated_walking_isochrone.png"
+    filepath = "plots/user_generated_walking_isochrone.png" 
     with open(filepath, "rb") as image_file:
         st_col.download_button("Download Map", 
             data=image_file,
