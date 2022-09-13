@@ -78,3 +78,18 @@ def get_nearest_node(graph, location):
         nearest_node = nearest_node[0]
 
     return nearest_node
+
+
+# def load_graph_around_location(location, radius=1609, network_type="walk"):
+#     """
+#     location (tuple, list): (lat, lng) of center point
+#     radius (int): radius in meters (1609 meters is one mile)
+#     network_type (str): tktk
+#     """
+#     graph = ox.graph_from_point(location, 
+#         dist=radius, 
+#         network_type=network_type,
+#         retain_all=False,
+#         truncate_by_edge=True,
+#         simplify=True)
+#     return graph

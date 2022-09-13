@@ -56,23 +56,11 @@ if address:
     lg.make_walking_isochrone(address)
 
 
-# graph, lat_lng = lg.download_graph_from_address(st.session_state["address"])
-
-
-
-# graph, lat_lng = iso.download_graph_from_address(st.session_state["address"], 
-#     radius=initial_radius)
-
-# mode = "walk"
-# trip_times = [15, 30, 45, 60]
-# fig = iso.generate_walking_isochrone(lat_lng, mode, trip_times, 
-#     _graph=graph, 
-#     address=st.session_state["address"])
-# ttl = f"Reachable on Foot Within an Hour of {st.session_state['street_address']}"
-# # st.markdown(f"##### {ttl}")
-# # st.pyplot(fig, bbox_inches="tight")
-# st.image("plots/isochrone.png", caption=ttl)
-# lg.isochrone_download_button()
+lg.write_text("Ridin' the Bus")
+# transit_isochrone = "plots/transit_isochrone_45.png"
+transit_isochrone = "plots/transit_isochrone_from_my_apartment.png"
+caption = "How far public transit can take me from my apartment in 15, 30, 45, and 60 minutes."
+st.image(transit_isochrone, caption=caption)
 
 
 st.markdown("---")

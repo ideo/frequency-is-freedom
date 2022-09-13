@@ -5,11 +5,11 @@ import warnings
 import osmnx as ox
 import numpy as np
 import pandas as pd
-import networkx as nx
+# import networkx as nx
 from tqdm import tqdm
 
 # from filepaths import DATA_DIR, DATAFRAME_PATH, GTFS_PATH, GRAPH_PATH
-from src.filepaths import DATA_DIR, DATAFRAME_PATH, GTFS_PATH, GRAPH_PATH
+from src.filepaths import DATA_DIR, GTFS_PATH
 
 
 warnings.filterwarnings("ignore")
@@ -214,6 +214,8 @@ def single_trip_pairwise_travel_times(df):
     pairwise_minutes = np.array(list(map(to_minutes, pairwise_td)))
     
     pairwise_df = pd.DataFrame(pairwise_minutes, index=df["stop_id"], columns=df["stop_id"])
+    pairwise_df.index.name = "Destination Stop"
+    pairwise_df = pairwise_df[pairwise_df > 0]
     return pairwise_df
 
 
@@ -237,6 +239,27 @@ def average_arrival_rates_per_stop(stop_times):
     arrival_rates = {_id:rate for _id, rate in zip(stops_ids, rates)}
 
     save_isochrone_data(arrival_rates, "average_arrival_rates_per_stop.pkl")
+
+
+def find_graph_node_IDs_for_transit_stop(stops, citywide_graph):
+    """
+    We don't need to put the transit stops on the map, we simply need to find
+    the graph node closest to each stop. For our purposes, they don't even need 
+    to be exact. The graph is detailed enough that the closest node will be 
+    plenty close.
+    """
+    print("Maping transit stop IDs to graph node IDs.")
+    lats = stops["stop_lat"].values
+    lons = stops["stop_lon"].values
+    graph_nodes = ox.distance.nearest_nodes(citywide_graph, lons, lats)
+    graph_nodes = [node if isinstance(node, int) else node[0] for node in graph_nodes]
+
+    stop_ids = stops["stop_id"].values
+    stop_id_to_graph_id = {s_id:g_id for s_id, g_id in zip(stop_ids, graph_nodes)}
+    graph_id_to_stop_id = {g_id:s_id for s_id, g_id in zip(stop_ids, graph_nodes)}
+
+    save_isochrone_data(stop_id_to_graph_id, "stop_id_to_graph_id.pkl")
+    save_isochrone_data(graph_id_to_stop_id, "graph_id_to_stop_id.pkl")
 
 
 # def arrival_frequencies_per_stop():
@@ -331,25 +354,7 @@ def average_arrival_rates_per_stop(stop_times):
 #     return travel_times
 
 
-def find_graph_node_IDs_for_transit_stop(stops, citywide_graph):
-    """
-    We don't need to put the transit stops on the map, we simply need to find
-    the graph node closest to each stop. For our purposes, they don't even need 
-    to be exact. The graph is detailed enough that the closest node will be 
-    plenty close.
-    """
-    print("Maping transit stop IDs to graph node IDs.")
-    lats = stops["stop_lat"].values
-    lons = stops["stop_lon"].values
-    graph_nodes = ox.distance.nearest_nodes(citywide_graph, lons, lats)
-    graph_nodes = [node if isinstance(node, int) else node[0] for node in graph_nodes]
 
-    stop_ids = stops["stop_id"].values
-    stop_id_to_graph_id = {s_id:g_id for s_id, g_id in zip(stop_ids, graph_nodes)}
-    graph_id_to_stop_id = {g_id:s_id for s_id, g_id in zip(stop_ids, graph_nodes)}
-
-    save_isochrone_data(stop_id_to_graph_id, "stop_id_to_graph_id.pkl")
-    save_isochrone_data(graph_id_to_stop_id, "graph_id_to_stop_id.pkl")
     
 
 if __name__ == "__main__":
