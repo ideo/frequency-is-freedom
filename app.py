@@ -65,5 +65,16 @@ st.image(transit_isochrone, caption=caption)
 lg.write_text("How Far Can I Go with Public Transit (II)", header=False)
 
 
+lg.write_text("More Buses Takes You More Places")
+frequency_isochrone = "plots/frequency_isochrone_30_minute_trip.png"
+caption = """
+    A 30 minute trip from my apartment at 50% reduced service, scheduled 
+    service, service 1.5 times as often, and service twice as often.
+    """
+st.image(frequency_isochrone, caption=caption)
+
+lg.write_text("Better Bus Service")
+
+
 st.markdown("---")
 lg.write_text("Citations & Helpful References", header_level=5)

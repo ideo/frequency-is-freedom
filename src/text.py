@@ -79,15 +79,38 @@ The map above shows the city that the CTA makes accessible to me. A friend of mi
         """,
     ],
 
+    "More Buses Takes You More Places": [
+        """
+Truthfully, that map above is aspirational. It’s based off of the CTA’s published schedules, but the CTA has been running reduced service, sometimes as bad as running [half as many trains as the schedule says](https://blockclubchicago.org/2022/06/23/ghost-trains-and-buses-packed-platforms-35-alderpeople-want-city-council-hearing-on-deteriorating-cta-service/). That means waiting even longer.
+        """,
+        """
+When public transit runs less often, our world gets smaller. TKTKTK [Here I'd like to bring in more numbers and point out how the bus does more work than the train, but need some better maps first!]
+        """,
+    ],
+
+    "Better Bus Service": [
+        """
+The CTA is [hurting financially because of reduced ridership](https://experience.arcgis.com/experience/037eb95a8daa44f488e48d9afc09c38e), making it harder to run routes as often as advertised. This creates a vicious cycle, as worse service forces would-be riders to find other options. Many people think that those who are dependent upon the bus will take the bus no matter what, because they have no other choice. Even the current head of the CTA, Dorval Carter has said, “The people who have to ride the CTA will ride the CTA.”⁴
+        """,
+        """
+The bus is often stigmatized as only for poor people who cannot afford a car, but that doesn’t measure up against reality. Research across the US has confirmed that transit ridership levels a result of service quality.⁴ People choose the bus when they learn they can rely upon the bus. When they can’t, they – even poor people – figure something else out.
+        """,
+        """
+Something that I loved about Chicago pre-pandemic was that everyone, rich and poor, relied upon public transit. While friends from the suburbs would be too afraid to take the bus, no Chicagoan wasted time with that nonsense, because it was reliable and safe. [That’s no longer the case](https://blockclubchicago.org/2022/04/27/the-cta-boosted-unarmed-security-to-battle-violence-bad-behavior-on-trains-and-buses-but-riders-say-nothing-has-changed/), but the CTA can win us back. Kurt Luhrsen, vice president of bus operations for METRO, Houston’s transit agency, sums it up well: “You provide a good service, you’ll have customers. You don’t, you wont.”⁴
+        """,
+    ],
+
     "Citations & Helpful References": [
     """
 1. [CTA Leaders Vow To Fix Unreliable Service With More Hiring, Improved Train And Bus Tracking](https://blockclubchicago.org/2022/07/14/cta-leaders-vow-to-fix-unreliable-service-with-more-hiring-improved-train-and-bus-tracking/) from Block Club Chicago
 1. [Dreaded Commute to the City Is Keeping Offices Mostly Empty](https://www.wsj.com/articles/dreaded-commute-to-the-city-is-keeping-offices-mostly-empty-11653989581) from The Wall Street Journal
 1. [The Waiting Time Paradox, or, Why Is My Bus Always Late?](https://jakevdp.github.io/blog/2018/09/13/waiting-time-paradox/) by Jake VanderPlas
+1. [Better Buses, Better Cities: How to Plan, Run, and Win the Fight for Effective Transit](https://www.goodreads.com/en/book/show/44451608-better-buses-better-cities) by Steven Higashide
 1. [The Inspection Paradox is Everywhere](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709) by Allen Downey
 1. [Isochrone Maps with OSMnx + Python](https://geoffboeing.com/2017/08/isochrone-maps-osmnx-python/) by Geoff Boeing
 1. [The Mobility Database](https://database.mobilitydata.org/) and [GTFS Schedule Reference](https://gtfs.org/schedule/reference/)
 1. [Isochrone Maps with R and OpenTripPlanner](https://xang1234.github.io/isochrone/) by David Ten, for his very helpful diagram of the GTFS schema.
+1. And lastly, a big thank you to [all my lovely coworkers](https://www.ideo.com/jobs) who helped with this project. You're brilliant and beautiful.
     """,
 ]
 
