@@ -1,4 +1,3 @@
-# import pickle
 from time import time
 
 import numpy as np
@@ -7,13 +6,8 @@ import osmnx as ox
 import networkx as nx
 from tqdm import tqdm
 
-# import streamlit as st
-# import matplotlib.pyplot as plt
-
 import src.graphs as graphs
 import src.gtfs as gtfs
-# from src.graphs import add_walking_times_to_graph
-# from src.filepaths import GRAPH_PATH, DATA_DIR
 
 
 class WalkingIsochrone:
