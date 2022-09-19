@@ -294,16 +294,7 @@ def transit_address_input(walking_address):
         value=walking_address,
         placeholder="Enter your Address")
 
-    # for spacing in [""]*3:
-    #     col2.write(spacing)
     make_map_button(col2, address)
-
-    # for spacing in [""]*3:
-    #     col2.write(spacing)
-    # if address:
-    #     street_address = address.split(",")[0]
-    # else:
-    #     street_address = None
     transit_isochrone_download_button(col2, address)
     return address
 
@@ -322,8 +313,8 @@ def trace_transit_map(address):
     transit_isochrone = TransitIsochrone(DATA_DIR)
     lat_lon = ox.geocoder.geocode(address)
 
-    # trip_times = [15, 30, 45, 60]
-    trip_times = [15, 30, 45]
+    trip_times = [15, 30, 45, 60]
+    # trip_times = [15, 30, 45]
     freq_multipliers = [1]
     filepath = "plots/user_generated_transit_isochrone.png"
     transit_isochrone.make_isochrone(lat_lon, 
