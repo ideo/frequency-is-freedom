@@ -180,9 +180,10 @@ class TransitIsochrone:
             num_colors = len(freq_multipliers)
             iso_colors = ox.plot.get_colors(num_colors,
                 cmap=cmap,
-                start=0, 
+                start=min(freq_multipliers), 
+                stop=max(freq_multipliers),
                 return_hex=True)
-            iso_colors.reverse()
+            print(iso_colors)
 
             for freq, color in zip(freq_multipliers, iso_colors):
                 subgraph = isochrones[trip_time][freq]

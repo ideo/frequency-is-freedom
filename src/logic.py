@@ -288,7 +288,7 @@ def transit_address_input(walking_address):
 
     label = """
         Enter an address below to generate a map of everywhere transit can take 
-        you from that spot. Please note this will take several minutes.
+        you from that spot. Please note this will take about five minutes to run.
     """
     address = col1.text_input(label, key="transit_address",
         value=walking_address,
@@ -312,12 +312,12 @@ def make_map_button(st_col, address):
     btn_pressed = st_col.button("Trace Map", disabled=address is None)
 
     if btn_pressed:
-        make_transit_isochrone(address)
+        trace_transit_map(address)
 
 
 
 @st.experimental_memo
-def make_transit_isochrone(address):
+def trace_transit_map(address):
     st.session_state["transit_map_ready"] = False
     transit_isochrone = TransitIsochrone(DATA_DIR)
     lat_lon = ox.geocoder.geocode(address)

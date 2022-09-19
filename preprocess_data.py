@@ -36,9 +36,10 @@ def transit_isochrone_from_my_apartment():
     #     filepath=filepath,
     #     cmap="plasma")
 
-    trip_times = [60]
+    # trip_times = [60]
+    trip_times = [20]
     freq_multipliers = [0.5, 1, 2]
-    filepath = f"plots/transit_isochrone_{trip_times[0]}_{len(freq_multipliers)}_freqs.png"
+    filepath = f"plots/frequency_isochrone_{trip_times[0]}_min_trip.png"
     transit_isochrone.make_isochrone(my_lat_lon, trip_times=trip_times, 
         freq_multipliers=freq_multipliers,
         filepath=filepath,
