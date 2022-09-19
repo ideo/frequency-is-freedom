@@ -75,10 +75,11 @@ if st.session_state["transit_map_ready"]:
 
 
 lg.write_text("More Buses Can Take You More Places")
-frequency_isochrone = "plots/frequency_isochrone_60_min_trip.png"
+# frequency_isochrone = "plots/frequency_isochrone_60_min_trip.png"
+frequency_isochrone = "plots/frequency_isochrone_45_min_trips.png"
 caption = """
-    A 30 minute trip from my apartment at 50% reduced service, scheduled 
-    service, service 1.5 times as often, and service twice as often.
+    Fourty five minute trips at half scheduled service, scheduled service, twice as 
+    often as scheduled service, and three times as often.
     """
 st.image(frequency_isochrone, caption=caption)
 

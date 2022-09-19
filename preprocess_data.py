@@ -1,6 +1,5 @@
-# import osmnx as ox
+import matplotlib.pyplot as plt
 
-# import src.gtfs as gtfs
 import src.graphs as graphs
 from src.isochrones import WalkingIsochrone, TransitIsochrone, timer_func
 from src.filepaths import DATA_DIR
@@ -25,25 +24,40 @@ def transit_isochrone_from_my_apartment():
     # my_address = "906 N Winchester Ave, Chicago, IL 60622"
     # my_lat_lon = ox.geocoder.geocode(my_address)
     my_lat_lon = (41.898010150000005, -87.67613740698785)
-
     transit_isochrone = TransitIsochrone(DATA_DIR)
 
-    # trip_times = [15, 30, 45, 60]
-    # freq_multipliers = [1]
-    # filepath = "plots/transit_isochrone_from_my_apartment.png"
-    # transit_isochrone.make_isochrone(my_lat_lon, trip_times=trip_times, 
-    #     freq_multipliers=freq_multipliers,
-    #     filepath=filepath,
-    #     cmap="plasma")
-
-    # trip_times = [60]
-    trip_times = [20]
-    freq_multipliers = [0.5, 1, 2]
-    filepath = f"plots/frequency_isochrone_{trip_times[0]}_min_trip.png"
+    trip_times = [15, 30, 45, 60]
+    freq_multipliers = [1]
+    filepath = "plots/transit_isochrone_from_my_apartment.png"
     transit_isochrone.make_isochrone(my_lat_lon, trip_times=trip_times, 
         freq_multipliers=freq_multipliers,
         filepath=filepath,
-        cmap="viridis")
+        cmap="plasma")
+
+
+def frequency_isochrones_from_my_apartment():
+    """TKTKT"""
+    my_lat_lon = (41.898010150000005, -87.67613740698785)
+    transit_isochrone = TransitIsochrone(DATA_DIR)
+
+    freq_multipliers = [0.5, 1, 2, 3]
+    # freq_multipliers = [0.5, 1]
+    trip_time = 60
+
+    bgcolor="#262730"
+    fig, ax = plt.subplots(nrows=1, ncols=len(freq_multipliers), figsize=(12,4))
+
+    for ii, freq in enumerate(freq_multipliers):
+        filepath = f"plots/frequency_isochrone_{trip_time}_min_trips.png"
+        transit_isochrone.make_isochrone(my_lat_lon, 
+            trip_times=[trip_time], 
+            freq_multipliers=[freq],
+            filepath=filepath,
+            color="#B3DDF2",
+            bgcolor=bgcolor,
+            use_city_bounds=True,
+            ax=ax[ii])
+        plt.savefig(filepath, dpi=300, facecolor=bgcolor)
 
 
 if __name__ == "__main__":
@@ -70,8 +84,9 @@ if __name__ == "__main__":
     # graph = gtfs.build_transit_graph()
 
     # Isochrone Images
-    # walking_isochrone_from_my_apartment()
-    transit_isochrone_from_my_apartment()
+    walking_isochrone_from_my_apartment()
+    # transit_isochrone_from_my_apartment()
+    # frequency_isochrones_from_my_apartment()
     # frequency_maps()
 
 

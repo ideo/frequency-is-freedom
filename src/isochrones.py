@@ -1,10 +1,8 @@
 from collections import defaultdict
 
-# import numpy as np
-# import pandas as pd
 import osmnx as ox
 import networkx as nx
-# from tqdm import tqdm
+
 
 import src.graphs as graphs
 import src.gtfs as gtfs
@@ -31,7 +29,8 @@ class WalkingIsochrone:
         self.citywide_graph = graph
 
 
-    def make_isochrone(self, starting_lat_lon, trip_times=None, filepath=None):
+    def make_isochrone(self, starting_lat_lon, trip_times=None, filepath=None, 
+                       bgcolor="#262730"):
         """A Walking Only Isochrone"""
         if trip_times is None:
             trip_times = [15, 30, 45, 60]
@@ -77,7 +76,7 @@ class WalkingIsochrone:
 
         fig, ax = ox.plot_graph(graph, 
             node_color=nc, edge_color=ec, node_size=ns,
-            node_alpha=0.8, node_zorder=2, bgcolor='k', edge_linewidth=0.2,
+            node_alpha=0.8, node_zorder=2, bgcolor=bgcolor, edge_linewidth=0.2,
             show=False, save=True, filepath=filepath, dpi=300)
 
         return fig
@@ -109,120 +108,152 @@ class TransitIsochrone:
         self.transit_graph = gtfs.load_isochrone_data("transit_graph.pkl")
 
 
-    def set_graph_weights(self, freq_multiplier):
+    def set_graph_weights(self, freq_multiplier, reset_city_graph=False):
         """
         The transit graph weights are the total travel times from each stop, 
         which is the sum of the time spent waiting for the bus and the time 
         spent riding the bus. We set it here so we can adjust the weights based
         on the adjusted frequency of service.
         """
+        if reset_city_graph:
+            self.load_data_files()
+        
         for orig, dest, edge_data in self.transit_graph.edges(data=True):
-            # edge_data["weight"] = edge_data["wait_time"]/freq_multiplier
-            # edge_data["weight"] += edge_data["transit_travel_time"]
             travel_time = edge_data["wait_time"]/freq_multiplier
             travel_time += edge_data["transit_travel_time"]
             self.citywide_graph.add_edge(orig, dest, travel_time=travel_time, display=False)
 
 
-    def make_isochrone(self, starting_lat_lon, trip_times=None, 
-                       freq_multipliers=None, filepath=None, cmap="plasma"):
+    def make_isochrone(self, starting_lat_lon, 
+                       trip_times=None, freq_multipliers=None, 
+                       filepath=None, cmap="plasma", color=None, bgcolor="#262730",
+                       use_city_bounds=False,
+                       ax=None):
         """A Walking and Transit Isochrone!!"""
         if trip_times is None:
             trip_times = [15, 30, 45, 60]
 
         if freq_multipliers is None:
             freq_multipliers = [1.0]
+            
+        reset_city_graph = len(freq_multipliers) > 1
 
         trip_times = sorted(trip_times, reverse=True)
         freq_multipliers = sorted(freq_multipliers, reverse=True)
+        edge_colors = {}
 
-        # Make isocrhones
+        # Make isochrones
         isochrones = defaultdict(dict)
         for trip_time in trip_times:
             for freq in freq_multipliers:
                 graph = self.transit_isochrone(starting_lat_lon, trip_time, 
-                                               freq_multiplier=freq)
+                                               freq_multiplier=freq,
+                                               reset_city_graph=reset_city_graph)
                 isochrones[trip_time][freq] = graph
 
-        # Colors
-        node_colors = {}
-        edge_colors = {}
-        graphs_to_plot = []
+        # Assign Edge Colors
+        if len(trip_times) == 1 and len(freq_multipliers) == 1:
+            graph = isochrones[max(trip_times)][max(freq_multipliers)]
+            edge_colors = self.assign_edge_colors(graph, edge_colors, color)
+            ec = [edge_colors[edge] if edge in edge_colors else 'none' for edge in graph.edges()]
 
-        if len(freq_multipliers) == 1:
-            # Color Subgraphs by Trip Time
-            freq = freq_multipliers[0]
+        else:
+            if len(freq_multipliers) == 1:
+                print("Coloring by Trip Time")
+                # Color Subgraphs by Trip Time
+                freq = freq_multipliers[0]
 
-            # Set a color scheme
-            num_colors = len(trip_times)
-            iso_colors = ox.plot.get_colors(num_colors,
-                cmap=cmap, 
-                start=0, 
-                return_hex=True)
+                # Set a color scheme
+                num_colors = len(trip_times)
+                iso_colors = ox.plot.get_colors(num_colors,
+                    cmap=cmap, 
+                    start=0, 
+                    return_hex=True)
 
-            for trip_time, color in zip(trip_times, iso_colors):
-                subgraph = isochrones[trip_time][freq]
-                graphs_to_plot.append(subgraph)
-                for node in subgraph.nodes():
-                    node_colors[node] = color
-                for edge_data in subgraph.edges(data=True):
-                    edge = (edge_data[0], edge_data[1])
-                    if edge_data[2]["display"]:
-                        edge_colors[edge] = color
-                    else:
-                        edge_colors[edge] = "none"
+                for trip_time, iso_clr in zip(trip_times, iso_colors):
+                    print(trip_time, freq, iso_clr)
+                    subgraph = isochrones[trip_time][freq]
+                    edge_colors = self.assign_edge_colors(subgraph, edge_colors, iso_clr)
 
-        elif len(trip_times) == 1:
-            # Color Subgraph by Frequency
-            trip_time = trip_times[0]
+            elif len(trip_times) == 1:
+                print("Coloring by Frequency")
+                # Color Subgraph by Frequency
+                trip_time = trip_times[0]
 
-            # Set a color scheme
-            num_colors = len(freq_multipliers)
-            iso_colors = ox.plot.get_colors(num_colors,
-                cmap=cmap,
-                start=min(freq_multipliers), 
-                stop=max(freq_multipliers),
-                return_hex=True)
-            print(iso_colors)
-            print(isochrones)
+                # Set a color scheme
+                num_colors = len(freq_multipliers)
+                iso_colors = ox.plot.get_colors(num_colors,
+                    cmap=cmap,
+                    # start=max(freq_multipliers),
+                    start=0, 
+                    stop=max(freq_multipliers),
+                    return_hex=True)
 
-            for freq, color in zip(freq_multipliers, iso_colors):
-                subgraph = isochrones[trip_time][freq]
-                graphs_to_plot.append(subgraph)
-                for node in subgraph.nodes():
-                    node_colors[node] = color
-                for edge_data in subgraph.edges(data=True):
-                    edge = (edge_data[0], edge_data[1])
-                    if edge_data[2]["display"]:
-                        edge_colors[edge] = color
-                    else:
-                        edge_colors[edge] = "none"
+                for freq, iso_clr in zip(freq_multipliers, iso_colors):
+                    print(trip_time, freq, iso_clr)
+                    subgraph = isochrones[trip_time][freq]
+                    edge_colors = self.assign_edge_colors(subgraph, edge_colors, iso_clr)
 
-        graph = nx.compose_all(graphs_to_plot)
-        nc = [node_colors[node] if node in node_colors else 'none' for node in graph.nodes()]
-        ec = [edge_colors[edge] if edge in edge_colors else 'none' for edge in graph.edges()]
-        ns = [0 for _ in graph.nodes()]
-
+            graph = isochrones[max(trip_times)][max(freq_multipliers)]
+            ec = [edge_colors[edge] if edge in edge_colors else 'none' for edge in graph.edges()]
+        
         # Plot
         if filepath is None:
             filepath = "plots/user_transit_isochrone.png"
 
-        fig, ax = ox.plot_graph(graph, 
-            node_color=nc, edge_color=ec, node_size=ns,
-            node_alpha=0.8, node_zorder=2, bgcolor='k', edge_linewidth=0.2,
-            show=False, save=True, filepath=filepath, dpi=300)
+        if use_city_bounds:
+            north = max([node[1]["y"] for node in self.citywide_graph.nodes(data=True)]) 
+            south = min([node[1]["y"] for node in self.citywide_graph.nodes(data=True)]) 
+            east = max([node[1]["x"] for node in self.citywide_graph.nodes(data=True)]) 
+            west = min([node[1]["x"] for node in self.citywide_graph.nodes(data=True)]) 
+            bbox = (north, south, east, west)
+        else:
+            bbox=None
 
-        return fig
+        nc = [0 for _ in graph.nodes()]
+        ns = [0 for _ in graph.nodes()]
+
+        # bgcolor = "k"
+        # bgcolor = "#262730"
+
+        if ax is None:
+            fig, ax = ox.plot_graph(graph, 
+                node_color=nc, edge_color=ec, node_size=ns,
+                node_alpha=0.8, node_zorder=2, bgcolor=bgcolor, edge_linewidth=0.2,
+                show=False, save=True, filepath=filepath, dpi=300, bbox=None)
+        else:
+            city = ox.geocode_to_gdf('Chicago, Illinois')
+            x,y = city["geometry"].iloc[0].exterior.xy
+            ax.plot(x,y, color=color, linewidth=0.5)
+
+            fig, ax = ox.plot_graph(graph, ax=ax,
+                node_color=nc, edge_color=ec, node_size=ns,
+                node_alpha=0.8, node_zorder=2, bgcolor=bgcolor, edge_linewidth=0.2,
+                show=False, save=False, filepath=filepath, dpi=300, bbox=bbox)
+
+            ax.set_facecolor(bgcolor)            
+            
+
+
+    def assign_edge_colors(self, subgraph, edge_colors, color):
+        print(f"Subgraph has {len(subgraph.nodes)} nodes and {len(subgraph.edges)} edges.")
+        for edge_data in subgraph.edges(data=True):
+            edge = (edge_data[0], edge_data[1])
+            if edge_data[2]["display"]:
+                edge_colors[edge] = color
+            else:
+                edge_colors[edge] = "none"
+        return edge_colors
 
 
     # @timer_func
-    def transit_isochrone(self, lat_lon, trip_time, freq_multiplier=1.0):
+    def transit_isochrone(self, lat_lon, trip_time, freq_multiplier=1.0, reset_city_graph=False):
         """
         Generate one isochrone for a single set of start parameters
         """
         print(f"Tracing a transit isochrone for a {trip_time} minute trip at {freq_multiplier} times arrival rates.")
         starting_node = self.get_nearest_node(lat_lon)
-        self.set_graph_weights(freq_multiplier)
+        self.set_graph_weights(freq_multiplier, reset_city_graph)
         subgraph = nx.ego_graph(self.citywide_graph, starting_node, 
             radius=trip_time, 
             distance='travel_time')
