@@ -53,7 +53,7 @@ lg.write_text("Geography", header=False)
 
 st.write("")
 st.markdown("##### Generate Your Own Walking Map")
-address = lg.address_input()
+address = lg.walking_address_input()
 if address:
     lg.make_walking_isochrone(address)
 
@@ -63,6 +63,15 @@ transit_isochrone = "plots/transit_isochrone_from_my_apartment.png"
 caption = "How far public transit can take me from my apartment in 15, 30, 45, and 60 minutes."
 st.image(transit_isochrone, caption=caption)
 lg.write_text("How Far Can I Go with Public Transit (II)", header=False)
+# TODO: Explain the map here.
+
+st.markdown("##### Generate Your Own Transit Map")
+transit_address = lg.transit_address_input(address)
+if st.session_state["transit_map_ready"]:
+    filepath = "plots/user_generated_transit_isochrone.png"
+    street_address = transit_address.split(",")[0]
+    caption = f"Everywhere someone can take public transit in 15, 30, 45, and 60 minutes from {street_address}."
+    st.image(filepath, caption=caption)
 
 
 lg.write_text("More Buses Can Take You More Places")

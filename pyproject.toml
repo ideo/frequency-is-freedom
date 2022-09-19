@@ -5,7 +5,7 @@ description = "Maps that show how more frequent bus service gives people more fr
 authors = ["Joe Gambino <joe@gam.bingo>"]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.9.7 || >3.9.7,<4.0"
+python = ">=3.9,<3.9.7 || >3.9.7,<3.12"
 requests = "^2.28.1"
 python-dotenv = "^0.20.0"
 streamlit = "^1.12.2"
@@ -16,6 +16,7 @@ osmnx = "^1.2.2"
 scikit-learn = "^1.1.2"
 geopy = "^2.2.0"
 tqdm = "^4.64.1"
+scipy = "^1.9.1"
 
 [tool.poetry.dev-dependencies]
 watchdog = "^2.1.9"

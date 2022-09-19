@@ -5,19 +5,17 @@ import warnings
 import osmnx as ox
 import numpy as np
 import pandas as pd
-# import networkx as nx
+import networkx as nx
 from tqdm import tqdm
 
-# from filepaths import DATA_DIR, DATAFRAME_PATH, GTFS_PATH, GRAPH_PATH
+from src.utils import timer_func
 from src.filepaths import DATA_DIR, GTFS_PATH
 
 
 warnings.filterwarnings("ignore")
 
 
-############################# Load & Clean Data #############################
-
-DATA_TYPES = {
+GTFS_DTYPES = {
     "trips":    {
         "service_id":   str,
         "trip_id":      str,
@@ -31,6 +29,101 @@ DATA_TYPES = {
         "service_id":   str,
     }
 }
+
+
+class TransitGraph:
+    def __init__(self, gtfs_directory, app_data_directory, gtfs_dtypes=GTFS_DTYPES):
+        self.gtfs_directory = gtfs_directory
+        self.app_data_directory = app_data_directory
+        # self.service_date = service_date
+        self.gtfs_dtypes = gtfs_dtypes
+
+
+    ####################### Process Raw GTFS Data #######################
+
+    def load_clean_and_save_tables(self):
+ 
+        print("Loading and cleaning raw GTFS tables.")
+        # Load
+        trips = load_raw_gtfs_table("trips")
+        stop_times = load_raw_gtfs_table("stop_times")
+        stops = load_raw_gtfs_table("stops")
+        routes = load_raw_gtfs_table("routes")
+        calendar = load_raw_gtfs_table("calendar")
+
+        # Filter & Clean
+        trips, stop_times = self.filter_by_service_date(calendar, trips, stop_times)
+        stop_times = self.convert_datetime_cols(stop_times)
+        
+        # Save
+        save_prepared_gtfs_table(trips, "trips")
+        save_prepared_gtfs_table(stop_times, "stop_times")
+        save_prepared_gtfs_table(stops, "stops")
+        save_prepared_gtfs_table(routes, "routes")
+
+
+    def load_raw_gtfs_table(self, table_name):
+        # print(f"loading table {table_name}")
+        filepath = self.gtfs_directory / f"{table_name}.txt"
+        if table_name in self.gtfs_dtypes:
+            dtype = self.gtfs_dtypes[table_name]
+        else:
+            dtype = None
+        df = pd.read_csv(filepath, dtype=dtype)
+        return df
+
+
+    def save_prepared_gtfs_table(self, df, table_name):
+        # TODO Check to see if dir "gtfs_cleaned/" exists. If not, make it
+
+        filepath = self.app_data_directory / "gtfs_cleaned" / f"{table_name}.pkl"
+        with open(filepath, "wb") as pkl_file:
+                pickle.dump(df, pkl_file)
+        print("✓")
+
+
+    def convert_datetime_cols(self, df):
+        """
+        Expects only the stop_times table
+        """
+        hour_of_arrival = lambda ts: int(ts.split(":")[0])
+        df["hour_of_arrival"] = df["arrival_time"].apply(hour_of_arrival)
+
+        # Filter to after 6 am and before 10 pm.
+        df = df[(df["hour_of_arrival"] >= 5) & (df["hour_of_arrival"] < 22)]
+
+        # Convert to datetime
+        frmt = "%H:%M:%S"
+        df["arrival_time"] = pd.to_datetime(df["arrival_time"], format=frmt)
+        df["departure_time"] = pd.to_datetime(df["departure_time"], format=frmt)
+        return df
+
+
+    def filter_by_service_date(self, calendar, trips, stop_times):
+        # TODO:
+        # 1. convert datetime column
+        # 2. Create day of week columns?
+        # 3. Filter
+
+        weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
+        calendar["all_weekdays"] = calendar[weekdays].sum(axis=1) == 5
+
+        # Weekday Service starting Aug. 15th
+        wkdy_service = calendar[calendar["all_weekdays"]]
+        wkdy_service = wkdy_service[wkdy_service["start_date"] == 20220815]
+
+        # Filter trips and stop_times tables
+        service_ids_to_include = wkdy_service["service_id"].values
+        trips_filtered = trips[trips["service_id"].isin(service_ids_to_include)]
+        trips_ids = trips_filtered["trip_id"].values
+        stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
+        return trips_filtered, stop_times_filtered
+
+
+
+############################# Load & Clean Data #############################
+
+
 
 def load_clean_and_save_tables():
     print("Loading and cleaning raw GTFS tables.")
@@ -55,8 +148,8 @@ def load_clean_and_save_tables():
 def load_raw_gtfs_table(table_name):
     # print(f"loading table {table_name}")
     filepath = GTFS_PATH / f"{table_name}.txt"
-    if table_name in DATA_TYPES:
-        dtype = DATA_TYPES[table_name]
+    if table_name in GTFS_DTYPES:
+        dtype = GTFS_DTYPES[table_name]
     else:
         dtype = None
     df = pd.read_csv(filepath, dtype=dtype)
@@ -88,10 +181,6 @@ def clean_stop_times_table(df):
     df["arrival_time"] = pd.to_datetime(df["arrival_time"], format=_format)
     df["departure_time"] = pd.to_datetime(df["departure_time"], format=_format)
     return df
-
-
-def enforce_data_types():
-    pass
 
 
 def filter_to_weekday_servive(calendar, trips, stop_times):
@@ -262,107 +351,74 @@ def find_graph_node_IDs_for_transit_stop(stops, citywide_graph):
     save_isochrone_data(graph_id_to_stop_id, "graph_id_to_stop_id.pkl")
 
 
-# def arrival_frequencies_per_stop():
-#     """
-#     Eventually, I'd like to disaggregate arrival rates by route ID, but for the
-#     MVP we'll lump them together in order to move quickly.
-#     """
-#     # Data
-#     stop_times = load_raw_gtfs_table("stop_times")
-#     stop_times = clean_stop_times_table(stop_times)
-#     stop_times = stop_times[["trip_id", "stop_id", "arrival_time"]]
+############################### Transit Graph ###############################
 
-#     # Arrival Intervals
-#     arrival_rates = stop_times.sort_values(by="arrival_time")
-#     arrival_rates = arrival_rates.groupby("stop_id")["arrival_time"].apply(
-#         lambda at: np.diff(np.asarray(at)).mean() / np.timedelta64(1, 'm'))
-#     arrival_rates = pd.DataFrame(arrival_rates)
-#     arrival_rates.rename(columns={"arrival_time": "arrival_rate"}, inplace=True)
+@timer_func
+def build_transit_graph():
+    print("Loading Data")
+    stop_id_to_graph_id = load_isochrone_data("stop_id_to_graph_id.pkl")
+    average_arrival_rates_per_stop = load_isochrone_data("average_arrival_rates_per_stop.pkl")
+    travel_times_per_route = load_isochrone_data("travel_times_per_route.pkl")
+
+    # Concatenate Route Pairwise Travel Times
+    print("Concatenating DataFrames")
+    full_pairwise_df = pd.concat(list(travel_times_per_route.values()))
+    full_pairwise_df = full_pairwise_df.groupby(level=0).min()
+
+    # Label properly and stack
+    print("Stacking")
+    full_pairwise_df.index.name = "Destination Node"
+    full_pairwise_df.columns.name = "Origin Node"
+    stacked = pd.DataFrame(full_pairwise_df.T.stack()).reset_index().dropna()
+    stacked.rename(columns={0: "transit_travel_time"}, inplace=True)
+
+    # Build the graph
+    print("Building the graph")
+    graph = nx.from_pandas_edgelist(stacked, 
+        source="Origin Node", 
+        target="Destination Node", 
+        edge_attr="transit_travel_time",
+        create_using=nx.DiGraph)
+
+    # Wait times
+    print("Adding in Wait Times")
+    for edge in graph.edges(data=True):
+        origin_node = edge[0]
+        edge[2]['wait_time'] = average_arrival_rates_per_stop[origin_node]
+
+    # Index by graph node not Stop ID
+    graph = nx.relabel_nodes(graph, stop_id_to_graph_id)
+
+    save_isochrone_data(graph, "transit_graph.pkl")
+
+
+# @timer_func
+# def build_transit_graph():
+#     print("Loading Data")
+#     stop_id_to_graph_id = load_isochrone_data("stop_id_to_graph_id.pkl")
+#     average_arrival_rates_per_stop = load_isochrone_data("average_arrival_rates_per_stop.pkl")
+#     travel_times_per_route = load_isochrone_data("travel_times_per_route.pkl")
+
+#     # Concatenate Route Pairwise Travel Times
+#     print("Concatenating DataFrames")
+#     time_btwn_stops = pd.concat(list(travel_times_per_route.values()))
+#     time_btwn_stops = time_btwn_stops.groupby(level=0).min()
+
+#     print("Building the graph")
+#     graph = nx.from_pandas_adjacency(time_btwn_stops)
     
-#     # If done properly, these should all be greater than zero.
-#     # TODO: It's not yet, so let's investigate why.
-#     negative_values = [r<0 for r in arrival_rates["arrival_rate"].values]
-#     if any(negative_values):
-#         percent = sum(negative_values) / arrival_rates.shape[0] * 100
-#         warnings.warn(f"{round(percent)}% of arrival rates are negative.")
+#     print("Removing Invalid Edges")
+#     edges_to_remove = [edge for edge in graph.edges(data=True) if np.isnan(edge[2]["weight"])]
+#     graph.remove_edges_from(edges_to_remove)
 
-#     # Fix values
-#     mask = arrival_rates["arrival_rate"] <= 0
-#     arrival_rates.loc[mask, "arrival_rate"] = np.NaN
-#     arrival_rates["arrival_rate"].fillna(arrival_rates["arrival_rate"].mean(), 
-#         inplace=True)
+#     # Add Wait Times
+#     for orig_node in graph:
+#         for dest_node in graph[orig_node]:
+#             graph[orig_node][dest_node]["weight"] += average_arrival_rates_per_stop[orig_node]
 
-#     # Convert to dictionary
-#     stops_ids = arrival_rates.index.values
-#     rates = arrival_rates["arrival_rate"].values
-#     arrival_rates = {_id:rate for _id, rate in zip(stops_ids, rates)}
+#     # Relabel Graph
+#     graph = nx.relabel_nodes(graph, stop_id_to_graph_id)
 
-#     # Save
-#     filepath = DATA_DIR / "arrival_rates.pkl"
-#     with open(filepath, "wb") as pkl_file:
-#             pickle.dump(arrival_rates, pkl_file)
-#     print("✓")
-
-
-# def arrival_frequencies_per_stop_per_route():
-#     stop_times = load_raw_gtfs_table("stop_times")
-#     stop_times = clean_stop_times_table(stop_times)
-#     stop_times = stop_times[["trip_id", "stop_id", "arrival_time"]]
-    
-#     trips = load_raw_gtfs_table("trips")
-#     trips = trips[["trip_id", "route_id"]]
-
-#     # When merging these dataframes, many Route IDs are left as NaN
-#     # That's very curious
-#     arrival_frequencies = stop_times.merge(trips, how="left", on="trip_id")
-#     arrival_frequencies["route_id"].fillna(value="unspecified", inplace=True)
-
-#     # Interval Means
-#     arrival_frequencies = arrival_frequencies.groupby(
-#         ["route_id", "stop_id"])["arrival_time"].apply(
-#             lambda at: np.diff(np.asarray(at)).mean() / np.timedelta64(1, 'm'))
-    
-#     # Impute missing values
-#     # assume average bus frequency
-#     arrival_frequencies.fillna(value=arrival_frequencies.mean())
-
-#     num_stops = arrival_frequencies.reset_index()["stop_id"].value_counts().shape[0]
-#     stops = load_raw_gtfs_table("stops")
-#     missing_stops = stops.shape[0] - num_stops
-#     print(f"Missing arrival frequencies for {missing_stops} transit stops.")
-
-#     # For now, we will ignore routes in arrival times. We'll figure out how to 
-#     # incorporate that later
-#     # TODO: Figure out the best way to incorporate routes!
-#     arrival_frequencies = arrival_frequencies.reset_index() \
-#         .drop(columns="route_id").groupby("stop_id").mean()
-
-#     stops_ids = arrival_frequencies.index.values
-#     arrival_rates = arrival_frequencies["arrival_time"].values
-#     arrival_frequencies = {_id:rate for _id, rate in zip(stops_ids, arrival_rates)}
-
-#     filepath = DATA_DIR / "arrival_frequencies.pkl"
-#     with open(filepath, "wb") as pkl_file:
-#             pickle.dump(arrival_frequencies, pkl_file)
-#     print("✓")
-
-
-
-# def load_travel_times_dataframe():
-#     travel_times = pd.read_csv(DATAFRAME_PATH)
-#     travel_times.drop(columns=["Unnamed: 0"], inplace=True)
-#     return travel_times
-
-
-
-    
-
-if __name__ == "__main__":
-    pass
-    # prepare_needed_data()
-
-    # download_chicago()
-    # find_graph_node_IDs_for_transit_stop()
-    # average_travel_times_per_route()
-    # find_graph_node_IDs_for_transit_stop()
-    # arrival_frequencies_per_stop()
+#     save_isochrone_data(graph, "transit_graph.pkl")
+#     print("Done ✓")
+#     return graph

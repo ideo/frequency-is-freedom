@@ -1,4 +1,4 @@
-from tracemalloc import stop
+import osmnx as ox
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -9,7 +9,8 @@ random = random.RandomState(42)
 from .text import TEXT
 import src.gtfs as gtfs
 import src.graphs as graphs
-from src.isochrones import WalkingIsochrone
+from src.isochrones import WalkingIsochrone, TransitIsochrone
+from src.filepaths import DATA_DIR
 
 
 ################################ App Logic ################################
@@ -24,7 +25,8 @@ def write_text(section_title, header_level=3, header=True):
 
 def initialize_session_state():
     initial_values = {
-        "map_ready":    False,
+        "walking_map_ready":    False,
+        "transit_map_ready":    False,
     }
     for key, value in initial_values.items():
         if key not in st.session_state:
@@ -228,9 +230,9 @@ def average_wait_time(bus_times, people_times):
     return wait_times.mean()
 
 
-############################### Map Building ###############################
+############################### Walking Map ###############################
 
-def address_input():
+def walking_address_input():
     col1, col2 = st.columns([7,2])
 
     label = """
@@ -246,7 +248,7 @@ def address_input():
         street_address = address.split(",")[0]
     else:
         street_address = None
-    isochrone_download_button(col2, street_address)
+    walking_isochrone_download_button(col2, street_address)
     return address
 
 
@@ -254,7 +256,7 @@ def make_walking_isochrone(address):
     """
     TKTK
     """
-    st.session_state["map_ready"] = False
+    st.session_state["walking_map_ready"] = False
     graph, lat_lng = graphs.download_graph_from_address(address)
 
     walking_isochrone = WalkingIsochrone()
@@ -265,15 +267,87 @@ def make_walking_isochrone(address):
     street_address = address.split(",")[0]
     caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
     st.image(filepath, caption=caption)
-    # isochrone_download_button(filepath, street_address)
-    st.session_state["map_ready"] = True
+    st.session_state["walking_map_ready"] = True
 
 
-def isochrone_download_button(st_col, street_address):
+def walking_isochrone_download_button(st_col, street_address):
     filepath = "plots/user_generated_walking_isochrone.png" 
     with open(filepath, "rb") as image_file:
         st_col.download_button("Download Map", 
             data=image_file,
             file_name=f"{street_address}.png",
             mime="image/png",
-            disabled=not st.session_state["map_ready"])
+            disabled=not st.session_state["walking_map_ready"])
+
+############################### Transit Map ###############################
+
+
+def transit_address_input(walking_address):
+    # col1, col2, col3 = st.columns([7,2,3])
+    col1, col2 = st.columns([7,3])
+
+    label = """
+        Enter an address below to generate a map of everywhere transit can take 
+        you from that spot. Please note this will take several minutes.
+    """
+    address = col1.text_input(label, key="transit_address",
+        value=walking_address,
+        placeholder="Enter your Address")
+
+    # for spacing in [""]*3:
+    #     col2.write(spacing)
+    make_map_button(col2, address)
+
+    # for spacing in [""]*3:
+    #     col2.write(spacing)
+    # if address:
+    #     street_address = address.split(",")[0]
+    # else:
+    #     street_address = None
+    transit_isochrone_download_button(col2, address)
+    return address
+
+
+def make_map_button(st_col, address):
+    btn_pressed = st_col.button("Trace Map", disabled=address is None)
+
+    if btn_pressed:
+        make_transit_isochrone(address)
+
+
+
+@st.experimental_memo
+def make_transit_isochrone(address):
+    st.session_state["transit_map_ready"] = False
+    transit_isochrone = TransitIsochrone(DATA_DIR)
+    lat_lon = ox.geocoder.geocode(address)
+
+    trip_times = [15, 30, 45, 60]
+    freq_multipliers = [1]
+    filepath = "plots/user_generated_transit_isochrone.png"
+    transit_isochrone.make_isochrone(lat_lon, 
+        trip_times=trip_times, 
+        freq_multipliers=freq_multipliers,
+        filepath=filepath,
+        cmap="plasma")
+    st.session_state["transit_map_ready"] = True
+
+    # street_address = address.split(",")[0]
+    # caption = f"Everywhere someone can take public transit in 15, 30, 45, and 60 minutes from {street_address}."
+    # st.image(filepath, caption=caption)
+
+
+def transit_isochrone_download_button(st_col, address):
+    if address:
+        street_address = address.split(",")[0]
+    else:
+        street_address = None
+
+    filepath = "plots/user_generated_transit_isochrone.png" 
+    with open(filepath, "rb") as image_file:
+        st_col.download_button("Download Map", 
+            data=image_file,
+            file_name=f"{street_address}.png",
+            mime="image/png",
+            disabled=not st.session_state["transit_map_ready"],
+            key="transit_download")

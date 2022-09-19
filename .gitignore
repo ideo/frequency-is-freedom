@@ -6,3 +6,5 @@ cache/
 data/gtfs_raw/
 .DS_Store
 .vscode/
+networkx_reference.pdf
+plots/old_plots/
