@@ -83,6 +83,13 @@ caption = """
     """
 st.image(frequency_isochrone, caption=caption)
 
+frequency_isochrone = "plots/frequency_isochrone_60_min_trips.png"
+caption = """
+    One hour trips at half scheduled service, scheduled service, twice as 
+    often as scheduled service, and three times as often.
+    """
+st.image(frequency_isochrone, caption=caption)
+
 lg.write_text("Better Bus Service")
 
 

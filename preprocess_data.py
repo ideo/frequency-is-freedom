@@ -84,9 +84,9 @@ if __name__ == "__main__":
     # graph = gtfs.build_transit_graph()
 
     # Isochrone Images
-    walking_isochrone_from_my_apartment()
+    # walking_isochrone_from_my_apartment()
     # transit_isochrone_from_my_apartment()
-    # frequency_isochrones_from_my_apartment()
+    frequency_isochrones_from_my_apartment()
     # frequency_maps()
 
 
