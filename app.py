@@ -70,7 +70,7 @@ transit_address = lg.transit_address_input(address)
 if st.session_state["transit_map_ready"]:
     filepath = "plots/user_generated_transit_isochrone.png"
     street_address = transit_address.split(",")[0]
-    caption = f"Everywhere someone can take public transit in 15, 30, 45, and 60 minutes from {street_address}."
+    caption = f"Everywhere someone can take public transit in 15, 30, and 45 minutes from {street_address}."
     st.image(filepath, caption=caption)
 
 

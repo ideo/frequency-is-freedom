@@ -184,6 +184,7 @@ class TransitIsochrone:
                 stop=max(freq_multipliers),
                 return_hex=True)
             print(iso_colors)
+            print(isochrones)
 
             for freq, color in zip(freq_multipliers, iso_colors):
                 subgraph = isochrones[trip_time][freq]
