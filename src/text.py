@@ -79,7 +79,7 @@ When public transit runs less often, our world gets smaller. Below are three tri
 These maps show how reduced service confines me to my neighborhood. I live a 15-minute walk to the closes L line stop. When trains or buses run every 15 minutes or worse, a 30-minute trip with public transit takes me barely further than just walking for 30 minutes.
         """,
         """
-But note how simple it would be to unlock more of the city. Trips at three times scheduled service don't offer that much more than running everything twice as often. That may sound like a lot to ask, but increased ridership brings increased revenue from fares, and research from "157 US cities [has found] that increasing the frequency of service on current routes was about 20 percent more effective at increasing ridership than adding more routes."⁷ And I've never experienced true freedom like living somewhere where there's no need to check a bus or train schedule. Whenever you want to go somewhere, you simply get up and go.       
+But note how simple it would be to unlock more of the city. Trips at three times scheduled service don't offer that much more than running everything twice as often. We don't need a million more buses and trains, just twice as many! That may sound like a lot to ask, but increased ridership brings increased revenue from fares, and research from "157 US cities [has found] that increasing the frequency of service on current routes was about 20 percent more effective at increasing ridership than adding more routes."⁷ And I've never experienced true freedom like living somewhere where there's no need to check a bus or train schedule. Whenever you want to go somewhere, you simply get up and go.       
         """,
     ],
 
@@ -91,7 +91,7 @@ The CTA is [hurting financially because of reduced ridership](https://experience
 The bus is often stigmatized as only for people who cannot afford a car, but that doesn’t measure up against reality. Research across the US has confirmed that transit ridership levels are a result of service quality.⁷ People choose the bus when they learn they can rely upon the bus. When they can’t, they – even people without a car – figure something else out.
         """,
         """
-Something that I loved about Chicago pre-pandemic was that everyone, rich and poor, relied upon public transit. While friends from the suburbs would be too afraid to take the bus, no Chicagoan wasted time with that nonsense, because it was reliable and safe. [That’s no longer the case](https://blockclubchicago.org/2022/04/27/the-cta-boosted-unarmed-security-to-battle-violence-bad-behavior-on-trains-and-buses-but-riders-say-nothing-has-changed/), but the CTA can win us back. Kurt Luhrsen, vice president of bus operations for METRO, Houston’s transit agency, sums it up well: “You provide a good service, you’ll have customers. You don’t, you won't.”⁷
+Something that I loved about Chicago pre-pandemic was that everyone, rich and poor, relied upon public transit. While friends from the suburbs would refuse to take the bus, no Chicagoan wasted time with that nonsense, because it was reliable and safe. [That’s no longer the case](https://blockclubchicago.org/2022/04/27/the-cta-boosted-unarmed-security-to-battle-violence-bad-behavior-on-trains-and-buses-but-riders-say-nothing-has-changed/), but the CTA can win us back. Kurt Luhrsen, vice president of bus operations for METRO, Houston’s transit agency, sums it up well: “You provide a good service, you’ll have customers. You don’t, you won't.”⁷
         """,
     ],
 
