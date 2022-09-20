@@ -231,7 +231,8 @@ class TransitIsochrone:
                 node_alpha=0.8, node_zorder=2, bgcolor=bgcolor, edge_linewidth=0.2,
                 show=False, save=False, filepath=filepath, dpi=300, bbox=bbox)
 
-            ax.set_facecolor(bgcolor)            
+            ax.set_facecolor(bgcolor)
+            ax.set_axis_on()        
             
 
 
