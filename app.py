@@ -51,7 +51,6 @@ caption = "How far I can walk from my apartment in 15, 30, 45, and 60 minutes."
 st.image(walking_isochrone, caption=caption)
 lg.write_text("Geography", header=False)
 
-st.write("")
 st.markdown("##### Generate Your Own Walking Map")
 address = lg.walking_address_input()
 if address:
@@ -63,12 +62,10 @@ if address:
         st.image(filepath, caption=caption)
 
 
-lg.write_text("How Far Can I Go with Public Transit")
+lg.write_text("How Far Can I Go with Public Transit?")
 transit_isochrone = "plots/transit_isochrone_from_my_apartment.png"
 caption = "How far public transit can take me from my apartment in 15, 30, 45, and 60 minutes."
 st.image(transit_isochrone, caption=caption)
-lg.write_text("How Far Can I Go with Public Transit (II)", header=False)
-# TODO: Explain the map here.
 
 st.markdown("##### Generate Your Own Transit Map")
 transit_address = lg.transit_address_input()
@@ -83,7 +80,7 @@ if transit_address:
 
 lg.write_text("More Buses Can Take You More Places")
 st.write("")
-st.markdown("###### Thirty minute trips at increasing rates of service")
+st.markdown("###### Thirty Minute Trips")
 frequency_isochrone = "plots/frequency_isochrone_30_min_trips.png"
 caption = """
     Coverage area for service at half of what is scheduled, as scheduled, 
@@ -92,12 +89,12 @@ caption = """
 st.image(frequency_isochrone, caption=caption)
 
 st.write("")
-st.markdown("###### Fourty five minute trips at increasing rates of service")
+st.markdown("###### Fourty Five Minute Trips")
 frequency_isochrone = "plots/frequency_isochrone_45_min_trips.png"
 st.image(frequency_isochrone, caption=caption)
 
 st.write("")
-st.markdown("###### One hour trips at increasing rates of service")
+st.markdown("###### One Hour Trips")
 frequency_isochrone = "plots/frequency_isochrone_60_min_trips.png"
 st.image(frequency_isochrone, caption=caption)
 

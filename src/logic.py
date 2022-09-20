@@ -18,6 +18,8 @@ from src.filepaths import DATA_DIR
 
 def write_text(section_title, header_level=3, header=True):
     if header:
+        if header_level > 1:
+            st.write("")
         header_hashes = "#"*header_level
         st.markdown(f"{header_hashes} {section_title}")
     for paragraph in TEXT[section_title]:
@@ -317,18 +319,10 @@ def transit_address_input():
     address = col1.text_input(label, key="transit_address",
         placeholder="Enter your Address")
 
-    # make_map_button(col2, address)
     col2.write("")
     col2.write("")
     transit_isochrone_download_button(col2, address)
     return address
-
-
-# def make_map_button(st_col, address):
-#     btn_pressed = st_col.button("Trace Map", disabled=address is None)
-
-#     if btn_pressed:
-#         trace_transit_map(address)
 
 
 @st.experimental_memo
