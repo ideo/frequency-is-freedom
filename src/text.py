@@ -24,7 +24,7 @@ These numbers feel high to me. As expected, both buses have peaks around rush ho
         """
 There are may things in the world of transportation that are counterintuitive, one of them being how long you wait for the bus. If a bus arrives on average every ten minutes, you would be forgiven for thinking that the average time some spends waiting for the bus is half that, only five minutes. This would be the case if the bus arrived exactly every ten minutes, like clockwork, but it doesn’t. It arrives _on average_ every ten minutes, sometime sooner and sometimes later. And, sadly and surprisingly, the average time someone spends waiting for a bus like that is ten minutes.³""",
         """
-To understand why, think about a university that advertises small class. Tallying each class, the average may indeed be small, say thirty students. But not every class is that small. A few big freshman seminars may have hundreds of students. And since more students take those larger classes, when we tally students, their average number of students in their classes will be much higher.²
+To understand why, think about a university that advertises small class. Tallying each class, the average may indeed be small, say thirty students. But not every class is that small. A few big freshman seminars may have hundreds of students. And since more students take those larger classes, when we tally students, their average number of students in their classes will be much higher.⁴
         """,
         """
 When choosing a student at random, you are more likely to get a student in a larger class. When a bus arrives at a certain frequency – sometimes shorter, sometimes longer – you are more likely to arrive at the stop during a longer period. This same paradox explains why [your friends have more friends than you](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709#070e). 
@@ -39,7 +39,7 @@ To test this, we can simulate a bus and measure how long simulated people have t
 
     "How Far Can I Go?": [
         """
-How often the bus comes determines how far it can take me. A bus that runs more frequently is more likely to come on time, since it will bunch less [citation needed]. A bus that runs more frequently will be stuck in less traffic, since every bus carries people who would otherwise be driving [citation needed]. But most acutely, when a bus comes more often I spend less time waiting for it. 
+How often the bus comes determines how far it can take me. While all buses that are at the [“mercy of the street”](https://www.wbez.org/stories/why-buses-arrive-in-bunches/4e768974-dd32-47f7-97e8-37951507e43d) will eventually bunch, buses that run more frequently bunch less.⁵ So, a bus that comes more often is more likely to come on time. Also, research from the US Department of Transportation has found that “a standard bus is able to remove 31 cars from the road”, so buses that come more often will sit in less traffic.⁶ But bunching and congestions aside, when a bus comes more often I spend less time waiting for it. 
         """,
         """
 I want to use the CTA’s own data to measure how far I can go in a certain amount of time. To do that, I first need to map everywhere I can walk to. What you see below is a map of everywhere I can walk within an hour from my apartment, which is near the intersection of Chicago and Damen.
@@ -90,13 +90,13 @@ When public transit runs less often, our world gets smaller. TKTKTK [Here I'd li
 
     "Better Bus Service": [
         """
-The CTA is [hurting financially because of reduced ridership](https://experience.arcgis.com/experience/037eb95a8daa44f488e48d9afc09c38e), making it harder to run routes as often as advertised. This creates a vicious cycle, as worse service forces would-be riders to find other options. Many people think that those who are dependent upon the bus will take the bus no matter what, because they have no other choice. Even the current head of the CTA, Dorval Carter has said, “The people who have to ride the CTA will ride the CTA.”⁴
+The CTA is [hurting financially because of reduced ridership](https://experience.arcgis.com/experience/037eb95a8daa44f488e48d9afc09c38e), making it harder to run routes as often as advertised. This creates a vicious cycle, as worse service forces would-be riders to find other options. Many people think that those who are dependent upon the bus will take the bus no matter what, because they have no other choice. Even the current head of the CTA, Dorval Carter has said, “The people who have to ride the CTA will ride the CTA.”⁷
         """,
         """
 The bus is often stigmatized as only for people who cannot afford a car, but that doesn’t measure up against reality. Research across the US has confirmed that transit ridership levels a result of service quality.⁴ People choose the bus when they learn they can rely upon the bus. When they can’t, they – even poor people – figure something else out.
         """,
         """
-Something that I loved about Chicago pre-pandemic was that everyone, rich and poor, relied upon public transit. While friends from the suburbs would be too afraid to take the bus, no Chicagoan wasted time with that nonsense, because it was reliable and safe. [That’s no longer the case](https://blockclubchicago.org/2022/04/27/the-cta-boosted-unarmed-security-to-battle-violence-bad-behavior-on-trains-and-buses-but-riders-say-nothing-has-changed/), but the CTA can win us back. Kurt Luhrsen, vice president of bus operations for METRO, Houston’s transit agency, sums it up well: “You provide a good service, you’ll have customers. You don’t, you wont.”⁴
+Something that I loved about Chicago pre-pandemic was that everyone, rich and poor, relied upon public transit. While friends from the suburbs would be too afraid to take the bus, no Chicagoan wasted time with that nonsense, because it was reliable and safe. [That’s no longer the case](https://blockclubchicago.org/2022/04/27/the-cta-boosted-unarmed-security-to-battle-violence-bad-behavior-on-trains-and-buses-but-riders-say-nothing-has-changed/), but the CTA can win us back. Kurt Luhrsen, vice president of bus operations for METRO, Houston’s transit agency, sums it up well: “You provide a good service, you’ll have customers. You don’t, you wont.”⁷
         """,
     ],
 
@@ -105,8 +105,10 @@ Something that I loved about Chicago pre-pandemic was that everyone, rich and po
 1. [CTA Leaders Vow To Fix Unreliable Service With More Hiring, Improved Train And Bus Tracking](https://blockclubchicago.org/2022/07/14/cta-leaders-vow-to-fix-unreliable-service-with-more-hiring-improved-train-and-bus-tracking/) from Block Club Chicago
 1. [Dreaded Commute to the City Is Keeping Offices Mostly Empty](https://www.wsj.com/articles/dreaded-commute-to-the-city-is-keeping-offices-mostly-empty-11653989581) from The Wall Street Journal
 1. [The Waiting Time Paradox, or, Why Is My Bus Always Late?](https://jakevdp.github.io/blog/2018/09/13/waiting-time-paradox/) by Jake VanderPlas
-1. [Better Buses, Better Cities: How to Plan, Run, and Win the Fight for Effective Transit](https://www.goodreads.com/en/book/show/44451608-better-buses-better-cities) by Steven Higashide
 1. [The Inspection Paradox is Everywhere](https://towardsdatascience.com/the-inspection-paradox-is-everywhere-2ef1c2e9d709) by Allen Downey
+1. [Why buses arrive in bunches](https://www.wbez.org/stories/why-buses-arrive-in-bunches/4e768974-dd32-47f7-97e8-37951507e43d) from WBEZ
+1. [How the Chicago region’s transit system is going even greener](https://blog.rtachicago.org/2022/04/20/how-the-chicago-regions-transit-system-is-going-even-greener/) from the RTA
+1. [Better Buses, Better Cities: How to Plan, Run, and Win the Fight for Effective Transit](https://www.goodreads.com/en/book/show/44451608-better-buses-better-cities) by Steven Higashide
 1. [Isochrone Maps with OSMnx + Python](https://geoffboeing.com/2017/08/isochrone-maps-osmnx-python/) by Geoff Boeing
 1. [The Mobility Database](https://database.mobilitydata.org/) and [GTFS Schedule Reference](https://gtfs.org/schedule/reference/)
 1. [Isochrone Maps with R and OpenTripPlanner](https://xang1234.github.io/isochrone/) by David Ten, for his very helpful diagram of the GTFS schema.
