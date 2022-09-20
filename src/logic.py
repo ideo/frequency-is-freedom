@@ -1,4 +1,5 @@
 import osmnx as ox
+import networkx as nx
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -252,22 +253,45 @@ def walking_address_input():
     return address
 
 
+@st.experimental_memo()
 def make_walking_isochrone(address):
     """
     TKTK
     """
     st.session_state["walking_map_ready"] = False
-    graph, lat_lng = graphs.download_graph_from_address(address)
+    
+    chicago = graphs.load_chicago_graph()
+    in_chicago, lat_lng = address_is_in_chicago(address, chicago)
 
-    walking_isochrone = WalkingIsochrone()
-    walking_isochrone.citywide_graph = graph
+    if in_chicago:
+        graph = chicago
+    else:
+        graph, lat_lng = graphs.download_graph_from_address(address)
+
     filepath = "plots/user_generated_walking_isochrone.png"
+    walking_isochrone = WalkingIsochrone(citywide_graph=graph)
     _ = walking_isochrone.make_isochrone(lat_lng, filepath=filepath)
 
-    street_address = address.split(",")[0]
-    caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
-    st.image(filepath, caption=caption)
+    # street_address = address.split(",")[0]
+    # caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
+    # st.image(filepath, caption=caption)
     st.session_state["walking_map_ready"] = True
+
+
+def address_is_in_chicago(address, chicago):
+    lat_lon = ox.geocoder.geocode(address)
+    lat, lon = lat_lon[0], lat_lon[1]
+    nearest_node = ox.distance.nearest_nodes(chicago, lon, lat)
+    if not isinstance(nearest_node, int):
+        nearest_node = nearest_node[0]
+    node_lat = chicago.nodes[nearest_node]["y"]
+    node_lon = chicago.nodes[nearest_node]["x"]
+
+    threshold = 0.0008
+    if abs(node_lat-lat) < threshold and abs(node_lon-lon) < threshold:
+        return True, (node_lat, node_lon)
+    else:
+        return False, None
 
 
 def walking_isochrone_download_button(st_col, street_address):
@@ -282,33 +306,33 @@ def walking_isochrone_download_button(st_col, street_address):
 ############################### Transit Map ###############################
 
 
-def transit_address_input(walking_address):
+def transit_address_input():
     # col1, col2, col3 = st.columns([7,2,3])
-    col1, col2 = st.columns([7,3])
+    col1, col2 = st.columns([7,2])
 
     label = """
         Enter an address below to generate a map of everywhere transit can take 
-        you from that spot. Please note this will take about five minutes to run.
+        you from that spot.
     """
     address = col1.text_input(label, key="transit_address",
-        value=walking_address,
         placeholder="Enter your Address")
 
-    make_map_button(col2, address)
+    # make_map_button(col2, address)
+    col2.write("")
+    col2.write("")
     transit_isochrone_download_button(col2, address)
     return address
 
 
-def make_map_button(st_col, address):
-    btn_pressed = st_col.button("Trace Map", disabled=address is None)
+# def make_map_button(st_col, address):
+#     btn_pressed = st_col.button("Trace Map", disabled=address is None)
 
-    if btn_pressed:
-        trace_transit_map(address)
-
+#     if btn_pressed:
+#         trace_transit_map(address)
 
 
 @st.experimental_memo
-def trace_transit_map(address):
+def make_transit_isochrone(address):
     st.session_state["transit_map_ready"] = False
     transit_isochrone = TransitIsochrone(DATA_DIR)
     lat_lon = ox.geocoder.geocode(address)
@@ -323,10 +347,6 @@ def trace_transit_map(address):
         filepath=filepath,
         cmap="plasma")
     st.session_state["transit_map_ready"] = True
-
-    # street_address = address.split(",")[0]
-    # caption = f"Everywhere someone can take public transit in 15, 30, 45, and 60 minutes from {street_address}."
-    # st.image(filepath, caption=caption)
 
 
 def transit_isochrone_download_button(st_col, address):

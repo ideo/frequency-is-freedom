@@ -11,7 +11,7 @@ from src.utils import timer_func
 
 class WalkingIsochrone:
     def __init__(self, citywide_graph=None):
-        self.citywide_graph = None
+        self.citywide_graph = citywide_graph
         
         # TODO: calculate this by finding the center of the provided graph
         self.starting_lat_long = None
@@ -60,6 +60,9 @@ class WalkingIsochrone:
                 edge_colors[edge] = color
             if furthest_walking_graph is None:
                 furthest_walking_graph = subgraph
+
+            # Since we go in reverse, we can reduce the city graph each time
+            self.citywide_graph = subgraph
 
         # Plot Colors
         # graph = self.citywide_graph
