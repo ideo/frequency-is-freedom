@@ -12,13 +12,15 @@ This project explores the effect of frequency of transit schedules on freedom of
 
 1. Pushed to this repo are all the necessary directories for processing data. Add you raw GTFS data to `data/gtfs_raw`. 
 
-1. Update line 67 in the `if __name__ == "__main__":` loop of `preprocess_data.py` with the name of your city. It's currently set to `city="Chicago, Illinois"`
+1. Update `preprocess_data.py` with the name of your city. You can find the current value of `city="Chicago, Illinois"` within the `if __name__ == "__main__":` loop.
 
 1. Run:
    ```bash
    poetry run python preprocess_data.py
    ```  
-   You will now have everything you need to generate transit isochrones and develop further.
+   This file downloads a citywide network graph and parses the GTFS data to create a transit graph. The isochrone modules rely upon these two graphs to generate maps.
+
+1. Included in `preprocess_data.py` are the functions to generate the maps that appear on the app. You can update these as well to draw maps from your apartment instead of mine.
 
 1. Optionally, if you would like to work with jupyter notebooks while using poetry, after running `poetry install`, run:
    ```bash
