@@ -11,7 +11,7 @@ def load_citywide_graph():
 
 
 def download_citywide_graph(city="Chicago, Illinois"):
-    print("Downloading the citywide netork graph")
+    print("Downloading the citywide network graph")
     network_type = "all"
     citywide_graph = ox.graph_from_place(city,
         network_type=network_type,

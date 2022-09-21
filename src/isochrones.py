@@ -108,7 +108,8 @@ class TransitIsochrone:
         # TODO: make this selfsufficient
         self.citywide_graph = graphs.load_citywide_graph()
         nx.set_edge_attributes(self.citywide_graph, True, "display")
-        self.transit_graph = gtfs.load_isochrone_data("transit_graph.pkl")
+        filepath = self.app_data_directory / "transit_graph.pkl"
+        self.transit_graph = nx.read_gpickle(filepath)
 
 
     def set_graph_weights(self, freq_multiplier, reset_city_graph=False):

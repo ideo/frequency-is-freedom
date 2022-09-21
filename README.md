@@ -10,14 +10,17 @@ This project explores the effect of frequency of transit schedules on freedom of
    poetry install
    ```
 
+1. Pushed to this repo are all the necessary directories for processing data. Add you raw GTFS data to `data/gtfs_raw`. 
 
+1. Update line 67 in the `if __name__ == "__main__":` loop of `preprocess_data.py` with the name of your city. It's currently set to `city="Chicago, Illinois"`
 
-1. All the preprocessed data needed for the app has been pushed to this repo. If you would like to remake this app with newer GTFS data, save your GTFS data to `data/gtfs_raw` and then run:
+1. Run:
    ```bash
    poetry run python preprocess_data.py
-   ```
+   ```  
+   You will now have everything you need to generate transit isochrones and develop further.
 
-1. If you would like to work with jupyter notebooks while using poetry, after running `poetry install`, run:
+1. Optionally, if you would like to work with jupyter notebooks while using poetry, after running `poetry install`, run:
    ```bash
    poetry run python -m ipykernel install --user --name frequency-is-freedom
    poetry run jupyter lab
@@ -25,5 +28,7 @@ This project explores the effect of frequency of transit schedules on freedom of
    And then select the newly created kernel, `frequency-is-freedom`.
 
 ### Ideas for follow up projects
-- [ ] measure coverage area
-- [ ] 
+- [ ] Calcualte the coverage area of the isochrones and then calculate statistics for what percentage of the city you can access.
+- [ ] Use OSMNX's tie to Open Street Maps to count how many of the city's restaruants, office buildings, greenspace, etc. transit makes accessible to you.
+- [ ] Bring in census population data to calculate the labor pool that is available to commute to any one location.
+- [ ] Bring in real estate data to show that property value is tied to transit accessibility.

@@ -76,7 +76,7 @@ Truthfully, that map above is aspirational. It’s based off of the CTA’s publ
 When public transit runs less often, our world gets smaller. Below are three trips at increasing rates of service. The leftmost maps plot 50% reduced service. Next to those, we can see how far I should be able to get from my apartment given the published schedules. And after that, we see the Chicago I could have access to if buses and trains ran twice and three times as often as the current schedules.
         """,
         """
-These maps show how reduced service confines me to my neighborhood. I live a 15-minute walk to the closes L line stop. When trains or buses run every 15 minutes or worse, a 30-minute trip with public transit takes me barely further than just walking for 30 minutes.
+These maps show how reduced service confines me to my neighborhood. I live a 15-minute walk to the closes L line stop. When trains or buses run less than every 15 minutes, a 30-minute trip with public transit takes me barely further than just walking for 30 minutes.
         """,
         """
 But note how simple it would be to unlock more of the city. Trips at three times scheduled service don't offer that much more than running everything twice as often. We don't need a million more buses and trains, just twice as many! That may sound like a lot to ask, but increased ridership brings increased revenue from fares, and research from "157 US cities [has found] that increasing the frequency of service on current routes was about 20 percent more effective at increasing ridership than adding more routes."⁷ And I've never experienced true freedom like living somewhere where there's no need to check a bus or train schedule. Whenever you want to go somewhere, you simply get up and go.       

@@ -100,11 +100,6 @@ class TransitGraph:
 
 
     def filter_by_service_date(self, calendar, trips, stop_times):
-        # TODO:
-        # 1. convert datetime column
-        # 2. Create day of week columns?
-        # 3. Filter
-
         weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
         calendar["all_weekdays"] = calendar[weekdays].sum(axis=1) == 5
 
@@ -197,25 +192,6 @@ def filter_to_weekday_servive(calendar, trips, stop_times):
     trips_ids = trips_filtered["trip_id"].values
     stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
     return trips_filtered, stop_times_filtered
-
-
-# def filter_by_service_id(trips, stop_times):
-#     """
-#     Need more EDA to determine which Service IDs to include, but for the MVP
-#     we'll stick with this one. It's weekday service on 100 our of 136 routes.
-#     """
-#     # These are both integers and strings.
-#     service_ids_to_include = [
-#         64901,
-#         106901,
-#         206901,   # I think this is the Purple Line Express
-#     ]
-#     service_ids_to_include += [str(_id) for _id in service_ids_to_include]
-
-#     trips_filtered = trips[trips["service_id"].isin(service_ids_to_include)]
-#     trips_ids = trips_filtered["trip_id"].values
-#     stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
-#     return trips_filtered, stop_times_filtered
 
 
 ################################### EDA ###################################
@@ -389,36 +365,8 @@ def build_transit_graph():
     # Index by graph node not Stop ID
     graph = nx.relabel_nodes(graph, stop_id_to_graph_id)
 
-    save_isochrone_data(graph, "transit_graph.pkl")
-
-
-# @timer_func
-# def build_transit_graph():
-#     print("Loading Data")
-#     stop_id_to_graph_id = load_isochrone_data("stop_id_to_graph_id.pkl")
-#     average_arrival_rates_per_stop = load_isochrone_data("average_arrival_rates_per_stop.pkl")
-#     travel_times_per_route = load_isochrone_data("travel_times_per_route.pkl")
-
-#     # Concatenate Route Pairwise Travel Times
-#     print("Concatenating DataFrames")
-#     time_btwn_stops = pd.concat(list(travel_times_per_route.values()))
-#     time_btwn_stops = time_btwn_stops.groupby(level=0).min()
-
-#     print("Building the graph")
-#     graph = nx.from_pandas_adjacency(time_btwn_stops)
-    
-#     print("Removing Invalid Edges")
-#     edges_to_remove = [edge for edge in graph.edges(data=True) if np.isnan(edge[2]["weight"])]
-#     graph.remove_edges_from(edges_to_remove)
-
-#     # Add Wait Times
-#     for orig_node in graph:
-#         for dest_node in graph[orig_node]:
-#             graph[orig_node][dest_node]["weight"] += average_arrival_rates_per_stop[orig_node]
-
-#     # Relabel Graph
-#     graph = nx.relabel_nodes(graph, stop_id_to_graph_id)
-
-#     save_isochrone_data(graph, "transit_graph.pkl")
-#     print("Done ✓")
-#     return graph
+    # save_isochrone_data(graph, "transit_graph.pkl")
+    filepath = DATA_DIR / "transit_graph.pkl"
+    with open(filepath, "wb") as pkl_file:
+            pickle.dump(graph, pkl_file)
+    print("✓")
