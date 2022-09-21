@@ -1,15 +1,13 @@
 import streamlit as st
 
 import src.logic as lg
-# from src.text import TEXT
-# from src.isochrones import generate_walking_isochrone, download_graph_from_address
-# import src.isochrones as iso
-# from src.plotting import bus_arrivals_per_hour
 
 
 st.set_page_config(
     page_title="Frequency is Freedom", 
-    page_icon="img/usdot_bus_icon.png")
+    # page_icon="img/usdot_bus_icon.png",
+    page_icon="oncoming_bus",
+    )
 lg.initialize_session_state()
 
 
