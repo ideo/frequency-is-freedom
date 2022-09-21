@@ -102,5 +102,9 @@ st.image(frequency_isochrone, caption=caption)
 lg.write_text("Better Bus Service")
 
 
+st.markdown("___")
+lg.write_text("Draw Maps For Your City")
+
+
 st.markdown("---")
 lg.write_text("Citations & Helpful References", header_level=5)

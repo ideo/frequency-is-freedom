@@ -95,6 +95,12 @@ Something that I loved about Chicago pre-pandemic was that everyone, rich and po
         """,
     ],
 
+    "Draw Maps For Your City": [
+        """
+If you would like to recreate this project for your city, or develop it even further, please check out our [GitHub repo](https://github.com/ideo/frequency-is-freedom) or send me a note at jgambino@ideo.com.
+        """,
+    ],
+
     "Citations & Helpful References": [
     """
 1. [CTA Leaders Vow To Fix Unreliable Service With More Hiring, Improved Train And Bus Tracking](https://blockclubchicago.org/2022/07/14/cta-leaders-vow-to-fix-unreliable-service-with-more-hiring-improved-train-and-bus-tracking/) from Block Club Chicago

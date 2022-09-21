@@ -20,7 +20,7 @@ This project explores the effect of frequency of transit schedules on freedom of
    ```  
    This file downloads a citywide network graph and parses the GTFS data to create a transit graph. The isochrone modules rely upon these two graphs to generate maps.
 
-1. Included in `preprocess_data.py` are the functions to generate the maps that appear on the app. You can update these as well to draw maps from your apartment instead of mine.
+1. Included in `preprocess_data.py` are the functions to generate the maps that appear on the app. You may update these as well to draw maps from your apartment instead of mine, or simply remove the calls to them.
 
 1. Optionally, if you would like to work with jupyter notebooks while using poetry, after running `poetry install`, run:
    ```bash
