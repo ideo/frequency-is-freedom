@@ -10,7 +10,7 @@ This project draws maps to show that more frequent transit service, especially e
    poetry install
    ```
 
-1. Pushed to this repo are all the necessary directories for processing data. You can find GTFS data from any transit agency that makes it available in [The Mobility Database](https://database.mobilitydata.org/). Once you've found and downloaded your data, add you raw GTFS data to `data/gtfs_raw`. 
+1. Pushed to this repo are all the necessary directories for processing data. You can find GTFS data from any transit agency that makes it available in [The Mobility Database](https://database.mobilitydata.org/). Once you've found and downloaded your data, add you raw GTFS tables to `data/gtfs_raw`. 
 
 1. Update `preprocess_data.py` with the name of your city. You can find the current value of `city="Chicago, Illinois"` within the `if __name__ == "__main__":` loop.
 
@@ -18,9 +18,9 @@ This project draws maps to show that more frequent transit service, especially e
    ```bash
    poetry run python preprocess_data.py
    ```  
-   This file downloads a citywide network graph and parses the GTFS data to create a transit graph. The isochrone modules rely upon these two graphs to generate maps.
+   This script downloads a citywide network graph and parses the GTFS data to create a corresponding transit graph. The isochrone modules rely upon these two graphs to generate maps.
 
-1. Included in `preprocess_data.py` are the functions to generate the maps that appear on the app. You may update these as well to draw maps from your apartment instead of mine, or simply remove the calls to them.
+1. Included in `preprocess_data.py` are the functions to generate the maps that appear in the interactive article. You may update these as well to draw maps from your apartment instead of mine, or simply remove the calls to them.
 
 1. Optionally, if you would like to work with jupyter notebooks while using poetry, after running `poetry install`, run:
    ```bash
