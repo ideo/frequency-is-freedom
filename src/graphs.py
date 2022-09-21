@@ -5,21 +5,22 @@ import streamlit as st
 from src.filepaths import GRAPH_PATH
 
 
-def load_chicago_graph():
-    chicago = nx.read_gpickle(GRAPH_PATH)
-    return chicago
+def load_citywide_graph():
+    citywide_graph = nx.read_gpickle(GRAPH_PATH)
+    return citywide_graph
 
 
 def download_citywide_graph(city="Chicago, Illinois"):
+    print("Downloading the citywide netork graph")
     network_type = "all"
-    chicago = ox.graph_from_place(city,
+    citywide_graph = ox.graph_from_place(city,
         network_type=network_type,
         retain_all=False,
         truncate_by_edge=True,
         simplify=True)
 
-    chicago = add_walking_times_to_graph(chicago)
-    nx.write_gpickle(chicago, GRAPH_PATH)
+    citywide_graph = add_walking_times_to_graph(citywide_graph)
+    nx.write_gpickle(citywide_graph, GRAPH_PATH)
     print("✓")
 
 

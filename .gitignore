@@ -3,7 +3,6 @@
 __pycache__/
 cache/
 *_backup.*
-data/gtfs_raw/
 .DS_Store
 .vscode/
 networkx_reference.pdf

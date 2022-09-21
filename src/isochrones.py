@@ -106,7 +106,7 @@ class TransitIsochrone:
 
     def load_data_files(self):
         # TODO: make this selfsufficient
-        self.citywide_graph = graphs.load_chicago_graph()
+        self.citywide_graph = graphs.load_citywide_graph()
         nx.set_edge_attributes(self.citywide_graph, True, "display")
         self.transit_graph = gtfs.load_isochrone_data("transit_graph.pkl")
 

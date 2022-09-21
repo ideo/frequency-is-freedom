@@ -262,7 +262,7 @@ def make_walking_isochrone(address):
     """
     st.session_state["walking_map_ready"] = False
     
-    chicago = graphs.load_chicago_graph()
+    chicago = graphs.load_citywide_graph()
     in_chicago, lat_lng = address_is_in_chicago(address, chicago)
 
     if in_chicago:
