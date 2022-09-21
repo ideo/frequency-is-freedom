@@ -100,7 +100,7 @@ def bus_stop_histogram_layer_spec(stops, stop_id, ttl):
             "y": {
                 "field": "Buses Per Hour",
                 "type": "quantitative",
-                "title": "No. Buses per Hour",
+                "title": "No. Buses per Hour, Average",
             },
         }
     }

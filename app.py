@@ -13,7 +13,9 @@ st.set_page_config(
 lg.initialize_session_state()
 
 
-lg.write_text("Frequency is Freedom", header_level=1)
+st.markdown("# Frequency is Freedom")
+st.caption("September, 2022 – words and code by Joe Gambino")
+lg.write_text("Frequency is Freedom", header=False)
 lg.write_text("How Often Does the Bus Come?")
 trips, stop_times, stops = lg.load_needed_tables()
 lg.how_often_does_the_bus_come(stop_times, stops)
