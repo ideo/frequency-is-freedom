@@ -1,6 +1,6 @@
 # Frequency is Freedom
 
-This project draws maps to that more frequent transit service, especially especially bus service, gives people more access to their city. The interactive article can be found [here](https://ideo-frequency-is-freedom-app-q4autp.streamlitapp.com/). While the motivation for the project and the focus of the article is my experience in Chicago, the code has been set up to work for any city. It relies upon [OSMNX](https://geoffboeing.com/2016/11/osmnx-python-street-networks/), which is a mash up of Open Street Maps and [NetworkX](https://networkx.org/), and publicly available [GTFS](https://database.mobilitydata.org/) data. If you would like to recreate this project for your city, follow the steps below.
+This project draws maps to show that more frequent transit service, especially especially bus service, gives people more access to their city. The interactive article can be found [here](https://ideo-frequency-is-freedom-app-q4autp.streamlitapp.com/). While the motivation for the project and the focus of the article is my experience in Chicago, the code has been set up to work for any city. It relies upon [OSMNX](https://geoffboeing.com/2016/11/osmnx-python-street-networks/), which is a mash up of Open Street Maps and [NetworkX](https://networkx.org/), and publicly available [GTFS](https://database.mobilitydata.org/) data. If you would like to recreate this project for your city, follow the steps below.
 
 
 ### Development
@@ -10,7 +10,7 @@ This project draws maps to that more frequent transit service, especially especi
    poetry install
    ```
 
-1. Pushed to this repo are all the necessary directories for processing data. Add you raw GTFS data to `data/gtfs_raw`. 
+1. Pushed to this repo are all the necessary directories for processing data. You can find GTFS data from any transit agency that makes it available in [The Mobility Database](https://database.mobilitydata.org/). Once you've found and downloaded your data, add you raw GTFS data to `data/gtfs_raw`. 
 
 1. Update `preprocess_data.py` with the name of your city. You can find the current value of `city="Chicago, Illinois"` within the `if __name__ == "__main__":` loop.
 
