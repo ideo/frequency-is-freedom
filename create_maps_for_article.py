@@ -9,7 +9,8 @@ from src.filepaths import DATA_DIR
 def walking_isochrone_from_my_apartment():
     print("Generating the Walking Isochrone")
     my_lat_lon = (41.898010150000005, -87.67613740698785)
-    graph = graphs.load_citywide_graph()
+    city = "Chicago, Illinois"
+    graph = graphs.load_citywide_graph(city)
     walking_isochrone = WalkingIsochrone(graph)
     filepath = "plots/walking_isochrone_from_my_apartment.png"
     _ = walking_isochrone.make_isochrone(my_lat_lon, filepath=filepath)
@@ -17,8 +18,9 @@ def walking_isochrone_from_my_apartment():
 
 @timer_func
 def transit_isochrone_from_my_apartment():
+    city = "Chicago, Illinois"
     my_lat_lon = (41.898010150000005, -87.67613740698785)
-    transit_isochrone = TransitIsochrone(DATA_DIR)
+    transit_isochrone = TransitIsochrone(DATA_DIR, city)
 
     trip_times = [15, 30, 45, 60]
     freq_multipliers = [1]
@@ -31,8 +33,9 @@ def transit_isochrone_from_my_apartment():
 
 @timer_func
 def frequency_isochrones_from_my_apartment(trip_time=30):
+    city = "Chicago, Illinois"
     my_lat_lon = (41.898010150000005, -87.67613740698785)
-    transit_isochrone = TransitIsochrone(DATA_DIR)
+    transit_isochrone = TransitIsochrone(DATA_DIR, city)
 
     freq_multipliers = [0.5, 1, 2, 3]
     bgcolor="#262730"

@@ -262,7 +262,8 @@ def make_walking_isochrone(address):
     """
     st.session_state["walking_map_ready"] = False
     
-    chicago = graphs.load_citywide_graph()
+    city = "Chicago, Illinois"
+    chicago = graphs.load_citywide_graph(city)
     in_chicago, lat_lng = address_is_in_chicago(address, chicago)
 
     if in_chicago:
@@ -328,7 +329,7 @@ def transit_address_input():
 @st.experimental_memo
 def make_transit_isochrone(address):
     st.session_state["transit_map_ready"] = False
-    transit_isochrone = TransitIsochrone(DATA_DIR)
+    transit_isochrone = TransitIsochrone(DATA_DIR, "Chicago, Illinois")
     lat_lon = ox.geocoder.geocode(address)
 
     trip_times = [15, 30, 45, 60]

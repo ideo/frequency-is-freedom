@@ -96,17 +96,18 @@ class WalkingIsochrone:
 
 
 class TransitIsochrone:
-    def __init__ (self, app_data_directory):
+    def __init__ (self, app_data_directory, city):
         """
         TKTK
         """
         self.app_data_directory = app_data_directory
+        self.city = city
         self.load_data_files()
 
 
     def load_data_files(self):
         # TODO: make this selfsufficient
-        self.citywide_graph = graphs.load_citywide_graph()
+        self.citywide_graph = graphs.load_citywide_graph(self.city)
         nx.set_edge_attributes(self.citywide_graph, True, "display")
         filepath = self.app_data_directory / "transit_graph.pkl"
         self.transit_graph = nx.read_gpickle(filepath)
