@@ -6,7 +6,7 @@ This project draws maps to show that more frequent transit service, especially e
 
 OSMNX allows you to download a NetworkX graph of all walking routes in a city. You can also set a travel time for each edge, taken from a constant walking speed. From the GTFS data we can infer travel times between transit stops, as well as the average time someone would spend waiting for a bus or train at a transit stop. We can then add new edges to the graph, directly connecting transit stops. The travel times for the edges are taken from the sum of how long someone would be stuck waiting, on average, for the bus or train plus the average travel time once riding.
 
-The purpose of this project is to test the effect on the frequency of service, and so the transit travel times are updated each time an isochrone is built so that the wait times reflect the frequency being tested. The isochrone modules can be found in `src/isochrones.py`. See instructions below for generating your own maps
+The purpose of this project is to test the effect on the frequency of service, and so the transit travel times are updated each time an isochrone is built based on the `freq_multipliers` specified. The isochrone modules can be found in `src/isochrones.py`. See instructions below for generating your own maps.
 
 
 ### Development
