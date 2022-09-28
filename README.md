@@ -37,6 +37,7 @@ The purpose of this project is to test the effect on the frequency of service, a
 
    from src.filepaths import DATA_DIR
    from src.isochrones import WalkingIsochrone
+   import src.graphs as graphs
 
    address = "626 W Jackson Blvd, Chicago IL"
    lat_lng = ox.geocoder.geocode(address)
@@ -56,6 +57,7 @@ The purpose of this project is to test the effect on the frequency of service, a
 
    from src.filepaths import DATA_DIR
    from src.isochrones import TransitIsochrone
+   import src.graphs as graphs
 
    address = "626 W Jackson Blvd, Chicago IL"
    lat_lng = ox.geocoder.geocode(address)
