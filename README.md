@@ -32,45 +32,45 @@ The purpose of this project is to test the effect on the frequency of service, a
 
 1. After creating the graph, you are ready to make some isochrones! A walking isochrone can me made like so:
 
-```python
-import osmnx as ox
+   ```python
+   import osmnx as ox
 
-from src.filepaths import DATA_DIR
-from src.isochrones import WalkingIsochrone
+   from src.filepaths import DATA_DIR
+   from src.isochrones import WalkingIsochrone
 
-address = "626 W Jackson Blvd, Chicago IL
-lat_lng = ox.geocoder.geocode(address)
+   address = "626 W Jackson Blvd, Chicago IL"
+   lat_lng = ox.geocoder.geocode(address)
 
-city = "Chicago, Illinois"
-graph = graphs.load_citywide_graph(city)
-walking_isochrone = WalkingIsochrone(graph)
+   city = "Chicago, Illinois"
+   graph = graphs.load_citywide_graph(city)
+   walking_isochrone = WalkingIsochrone(graph)
 
-filepath = "plots/walking_isochrone.png"
-walking_isochrone.make_isochrone(lat_lng, filepath=filepath)
-```
+   filepath = "plots/walking_isochrone.png"
+   walking_isochrone.make_isochrone(lat_lng, filepath=filepath)
+   ```
 
    And a transit isochrone can be made like so:
 
-```python
-import osmnx as ox
+   ```python
+   import osmnx as ox
 
-from src.filepaths import DATA_DIR
-from src.isochrones import TransitIsochrone
+   from src.filepaths import DATA_DIR
+   from src.isochrones import TransitIsochrone
 
-address = "626 W Jackson Blvd, Chicago IL
-lat_lng = ox.geocoder.geocode(address)
+   address = "626 W Jackson Blvd, Chicago IL"
+   lat_lng = ox.geocoder.geocode(address)
 
-city = "Chicago, Illinois"
-transit_isochrone = TransitIsochrone(DATA_DIR, city)
+   city = "Chicago, Illinois"
+   transit_isochrone = TransitIsochrone(DATA_DIR, city)
 
-trip_times = [15, 30, 45, 60]
-freq_multipliers = [1]
-filepath = "plots/transit_isochrone_from_my_apartment.png"
-transit_isochrone.make_isochrone(my_lat_lon, 
-   trip_times=trip_times, 
-   freq_multipliers=freq_multipliers,
-   filepath=filepath)
-```
+   trip_times = [15, 30, 45, 60]
+   freq_multipliers = [1]
+   filepath = "plots/transit_isochrone_from_my_apartment.png"
+   transit_isochrone.make_isochrone(my_lat_lon, 
+      trip_times=trip_times, 
+      freq_multipliers=freq_multipliers,
+      filepath=filepath)
+   ```
 
 1. To recreate the charts from the article, run:
    ```bash
