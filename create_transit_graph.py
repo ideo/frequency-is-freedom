@@ -2,10 +2,10 @@ import src.gtfs as gtfs
 import src.graphs as graphs
 
 
-def construct_transit_graph_for_requested_date():
+def construct_transit_graph_for_requested_date(city):
     # Data
     routes, trips, stop_times, stops = gtfs.load_clean_and_save_tables()
-    citywide_graph = graphs.download_citywide_graph(city="Chicago, Illinois")
+    citywide_graph = graphs.download_citywide_graph(city)
 
     # Bus Frequency
     gtfs.average_arrival_rates_per_stop(stop_times)
@@ -21,6 +21,7 @@ def construct_transit_graph_for_requested_date():
 
 
 if __name__ == "__main__":
-    construct_transit_graph_for_requested_date()
+    city = "Chicago, Illinois"
+    construct_transit_graph_for_requested_date(city)
 
     
