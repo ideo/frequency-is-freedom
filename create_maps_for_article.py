@@ -13,7 +13,7 @@ def walking_isochrone_from_my_apartment():
     graph = graphs.load_citywide_graph(city)
     walking_isochrone = WalkingIsochrone(graph)
     filepath = "plots/walking_isochrone_from_my_apartment.png"
-    _ = walking_isochrone.make_isochrone(my_lat_lon, filepath=filepath)
+    walking_isochrone.make_isochrone(my_lat_lon, filepath=filepath)
 
 
 @timer_func

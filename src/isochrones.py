@@ -81,8 +81,6 @@ class WalkingIsochrone:
             node_color=nc, edge_color=ec, node_size=ns,
             node_alpha=0.8, node_zorder=2, bgcolor=bgcolor, edge_linewidth=0.2,
             show=False, save=True, filepath=filepath, dpi=300)
-
-        return fig
         
 
     def make_subgraph(self, starting_node, trip_time):
