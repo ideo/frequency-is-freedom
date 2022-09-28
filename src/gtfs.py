@@ -1,6 +1,8 @@
 import os
+import sys
 import pickle
 import warnings
+from datetime import datetime
 
 import osmnx as ox
 import numpy as np
@@ -31,91 +33,6 @@ GTFS_DTYPES = {
 }
 
 
-class TransitGraph:
-    def __init__(self, gtfs_directory, app_data_directory, gtfs_dtypes=GTFS_DTYPES):
-        self.gtfs_directory = gtfs_directory
-        self.app_data_directory = app_data_directory
-        # self.service_date = service_date
-        self.gtfs_dtypes = gtfs_dtypes
-
-
-    ####################### Process Raw GTFS Data #######################
-
-    def load_clean_and_save_tables(self):
- 
-        print("Loading and cleaning raw GTFS tables.")
-        # Load
-        trips = load_raw_gtfs_table("trips")
-        stop_times = load_raw_gtfs_table("stop_times")
-        stops = load_raw_gtfs_table("stops")
-        routes = load_raw_gtfs_table("routes")
-        calendar = load_raw_gtfs_table("calendar")
-
-        # Filter & Clean
-        trips, stop_times = self.filter_by_service_date(calendar, trips, stop_times)
-        stop_times = self.convert_datetime_cols(stop_times)
-        
-        # Save
-        save_prepared_gtfs_table(trips, "trips")
-        save_prepared_gtfs_table(stop_times, "stop_times")
-        save_prepared_gtfs_table(stops, "stops")
-        save_prepared_gtfs_table(routes, "routes")
-
-
-    def load_raw_gtfs_table(self, table_name):
-        # print(f"loading table {table_name}")
-        filepath = self.gtfs_directory / f"{table_name}.txt"
-        if table_name in self.gtfs_dtypes:
-            dtype = self.gtfs_dtypes[table_name]
-        else:
-            dtype = None
-        df = pd.read_csv(filepath, dtype=dtype)
-        return df
-
-
-    def save_prepared_gtfs_table(self, df, table_name):
-        # TODO Check to see if dir "gtfs_cleaned/" exists. If not, make it
-
-        filepath = self.app_data_directory / "gtfs_cleaned" / f"{table_name}.pkl"
-        with open(filepath, "wb") as pkl_file:
-                pickle.dump(df, pkl_file)
-        print("✓")
-
-
-    def convert_datetime_cols(self, df):
-        """
-        Expects only the stop_times table
-        """
-        hour_of_arrival = lambda ts: int(ts.split(":")[0])
-        df["hour_of_arrival"] = df["arrival_time"].apply(hour_of_arrival)
-
-        # Filter to after 6 am and before 10 pm.
-        df = df[(df["hour_of_arrival"] >= 5) & (df["hour_of_arrival"] < 22)]
-
-        # Convert to datetime
-        frmt = "%H:%M:%S"
-        df["arrival_time"] = pd.to_datetime(df["arrival_time"], format=frmt)
-        df["departure_time"] = pd.to_datetime(df["departure_time"], format=frmt)
-        return df
-
-
-    def filter_by_service_date(self, calendar, trips, stop_times):
-        weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
-        calendar["all_weekdays"] = calendar[weekdays].sum(axis=1) == 5
-
-        # Weekday Service starting Aug. 15th
-        wkdy_service = calendar[calendar["all_weekdays"]]
-        wkdy_service = wkdy_service[wkdy_service["start_date"] == 20220815]
-
-        # Filter trips and stop_times tables
-        service_ids_to_include = wkdy_service["service_id"].values
-        trips_filtered = trips[trips["service_id"].isin(service_ids_to_include)]
-        trips_ids = trips_filtered["trip_id"].values
-        stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
-        return trips_filtered, stop_times_filtered
-
-
-
 ############################# Load & Clean Data #############################
 
 
@@ -127,10 +44,10 @@ def load_clean_and_save_tables():
     stop_times = load_raw_gtfs_table("stop_times")
     stops = load_raw_gtfs_table("stops")
     routes = load_raw_gtfs_table("routes")
-    calendar = load_raw_gtfs_table("calendar")
 
     # Filter & Clean
-    trips, stop_times = filter_to_weekday_servive(calendar, trips, stop_times)
+    service_ids = get_service_ids_for_requested_date()
+    trips, stop_times = filter_by_service_ids(trips, stop_times, service_ids)
     stop_times = clean_stop_times_table(stop_times)
     
     # Save
@@ -138,6 +55,7 @@ def load_clean_and_save_tables():
     save_prepared_gtfs_table(stop_times, "stop_times")
     save_prepared_gtfs_table(stops, "stops")
     save_prepared_gtfs_table(routes, "routes")
+    return routes, trips, stop_times, stops
 
 
 def load_raw_gtfs_table(table_name):
@@ -155,7 +73,7 @@ def save_prepared_gtfs_table(df, table_name):
     filepath = DATA_DIR / "gtfs_cleaned" / f"{table_name}.pkl"
     with open(filepath, "wb") as pkl_file:
             pickle.dump(df, pkl_file)
-    print("✓")
+    print(f"✓\tSaved table to {filepath}")
 
 
 def load_prepared_gtfs_table(table_name):
@@ -178,20 +96,119 @@ def clean_stop_times_table(df):
     return df
 
 
-def filter_to_weekday_servive(calendar, trips, stop_times):
-    weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
-    calendar["all_weekdays"] = calendar[weekdays].sum(axis=1) == 5
+# def filter_to_weekday_servive(calendar, trips, stop_times):
+#     weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
+#     calendar["all_weekdays"] = calendar[weekdays].sum(axis=1) == 5
 
-    # Weekday Service starting Aug. 15th
-    wkdy_service = calendar[calendar["all_weekdays"]]
-    wkdy_service = wkdy_service[wkdy_service["start_date"] == 20220815]
+#     # Weekday Service starting Aug. 15th
+#     wkdy_service = calendar[calendar["all_weekdays"]]
+#     wkdy_service = wkdy_service[wkdy_service["start_date"] == 20220815]
 
-    # Filter trips and stop_times tables
-    service_ids_to_include = wkdy_service["service_id"].values
-    trips_filtered = trips[trips["service_id"].isin(service_ids_to_include)]
+#     # Filter trips and stop_times tables
+#     service_ids_to_include = wkdy_service["service_id"].values
+    # trips_filtered = trips[trips["service_id"].isin(service_ids_to_include)]
+    # trips_ids = trips_filtered["trip_id"].values
+    # stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
+    # return trips_filtered, stop_times_filtered
+
+
+def convert_calendar_to_datetime(calendar, calendar_dates):
+    frmt = "%Y%m%d"
+    for col in ["start_date", "end_date"]:
+        calendar[col] = pd.to_datetime(calendar[col], format=frmt)
+        
+    calendar_dates["date"] = pd.to_datetime(calendar_dates["date"], format=frmt)
+    return calendar, calendar_dates
+
+
+def choose_date(calendar):
+    """Return datestamp to filter service IDs by"""
+    start_date = calendar.start_date.min()
+    end_date = calendar.end_date.min()
+    frmt = "%A, %B %d, %Y"
+
+    if len(sys.argv) == 1:
+        # User needs to select a date.
+        prompt = f"""
+    Schedule data runs from {start_date.strftime(frmt)} to {end_date.strftime(frmt)}. 
+    Which date of service would like to use for the transit graph?
+        """
+        print(prompt)
+
+        if start_date.year != end_date.year:
+            year = user_input("Enter the four-digit year:\t")
+        else:
+            year = start_date.year
+        
+        month = user_input("Enter the month:\t\t")
+        day = user_input("Enter the day:\t\t\t")
+
+        dt = datetime(year=year, month=month, day=day)
+
+    elif len(sys.argv) == 3:
+        # User specified a date
+        dt = datetime.strptime(sys.argv[2], "%Y%m%d")
+        if dt < start_date or dt > end_date:
+            msg = f"""
+        The specified date – {dt.strftime(frmt)} – is not on the calendar.
+        Supplied GTFS data ranges from {start_date.strftime(frmt)} to {end_date.strftime(frmt)}.
+            """
+            raise ValueError(msg)
+
+    print(f"Filtering service for {dt.strftime(frmt)}")
+    return dt
+
+
+def user_input(label):
+    value = None
+    while value is None:
+        value = input(label)
+        try:
+            value = int(value)
+        except ValueError:
+            value = None
+    return value
+
+
+def service_ids_for_date(dt, calendar, calendar_dates):
+    # Calendar
+    service = calendar[(calendar["start_date"] <= dt) & (calendar["end_date"] >= dt)]
+    service = service[service[dt.strftime("%A").lower()] == 1]
+    service_ids = list(service["service_id"].values)
+
+    # Exceptions
+    # exception_type 1 means service has been added for that date.
+    # exception_type 2 means service has been removed for that date.
+    exceptions = calendar_dates[calendar_dates["date"] == dt]
+    include = exceptions[exceptions["exception_type"] == 1]
+    include = list(include["service_id"].values)
+    exclude = exceptions[exceptions["exception_type"] == 2]
+    exclude = list(exclude["service_id"].values)
+
+    service_ids = service_ids + include
+    service_ids = [s_id for s_id in service_ids if s_id not in exclude]
+    return service_ids
+
+
+def get_service_ids_for_requested_date():
+    # Load calendar
+    calendar = load_raw_gtfs_table("calendar")
+    calendar_dates = load_raw_gtfs_table("calendar_dates")
+    calendar, calendar_dates = convert_calendar_to_datetime(calendar, 
+        calendar_dates)
+
+    # User specified dates
+    dt = choose_date(calendar)
+    service_ids = service_ids_for_date(dt, calendar, calendar_dates)
+    return service_ids
+
+
+def filter_by_service_ids(trips, stop_times, service_ids):
+    trips_filtered = trips[trips["service_id"].isin(service_ids)]
     trips_ids = trips_filtered["trip_id"].values
     stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
     return trips_filtered, stop_times_filtered
+
 
 
 ################################### EDA ###################################
@@ -329,8 +346,8 @@ def find_graph_node_IDs_for_transit_stop(stops, citywide_graph):
 
 ############################### Transit Graph ###############################
 
-@timer_func
-def build_transit_graph():
+# @timer_func
+def build_and_save_transit_graph():
     print("Loading Data")
     stop_id_to_graph_id = load_isochrone_data("stop_id_to_graph_id.pkl")
     average_arrival_rates_per_stop = load_isochrone_data("average_arrival_rates_per_stop.pkl")

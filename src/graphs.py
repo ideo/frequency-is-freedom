@@ -1,27 +1,40 @@
+import os
+
 import osmnx as ox
 import networkx as nx
 import streamlit as st
 
-from src.filepaths import GRAPH_PATH
+from src.filepaths import DATA_DIR
 
 
-def load_citywide_graph():
-    citywide_graph = nx.read_gpickle(GRAPH_PATH)
+def graph_path(city):
+    filename = city.replace(",", "").replace(" ","_").lower() + ".pkl"
+    graph_path = DATA_DIR / filename
+    return graph_path
+
+
+def load_citywide_graph(city):
+    citywide_graph = nx.read_gpickle(graph_path(city))
     return citywide_graph
 
 
 def download_citywide_graph(city="Chicago, Illinois"):
-    print("Downloading the citywide network graph")
-    network_type = "all"
-    citywide_graph = ox.graph_from_place(city,
-        network_type=network_type,
-        retain_all=False,
-        truncate_by_edge=True,
-        simplify=True)
+    if os.path.exists(graph_path(city)):
+        citywide_graph = load_citywide_graph(city)
 
-    citywide_graph = add_walking_times_to_graph(citywide_graph)
-    nx.write_gpickle(citywide_graph, GRAPH_PATH)
-    print("✓")
+    else:
+        print("Downloading the citywide network graph")
+        network_type = "all"
+        citywide_graph = ox.graph_from_place(city,
+            network_type=network_type,
+            retain_all=False,
+            truncate_by_edge=True,
+            simplify=True)
+
+        citywide_graph = add_walking_times_to_graph(citywide_graph)
+        nx.write_gpickle(citywide_graph, graph_path(city))
+        print(f"✓\tSaved citywide graph to {graph_path(city)}")
+    return citywide_graph
 
 
 @st.experimental_memo
