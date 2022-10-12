@@ -24,7 +24,7 @@ def download_citywide_graph(city="Chicago, Illinois"):
 
     else:
         print("Downloading the citywide network graph")
-        network_type = "all"
+        network_type = "walk"
         citywide_graph = ox.graph_from_place(city,
             network_type=network_type,
             retain_all=False,

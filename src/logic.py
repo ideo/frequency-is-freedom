@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import osmnx as ox
 import networkx as nx
 import numpy as np
@@ -233,6 +234,42 @@ def average_wait_time(bus_times, people_times):
     return wait_times.mean()
 
 
+############################## Geocode Check ##############################
+
+def address_can_be_found(address):
+    """Ensure that if the address cannot be found the site fails gracefully"""
+    try:
+        _ = ox.geocoder.geocode(address)
+        return True
+    except ValueError:
+        # Nominatim could not geocode the query
+        return False
+
+
+def display_dora():
+    buffer = 0.25
+    _, col1, _, col2, _ = st.columns([buffer, 2, buffer, 5, buffer])
+    # col1.write("")
+    col1.image("img/dora_and_her_map.webp")
+    col2.text("Oh no!")
+    col2.text("""
+        I'm sorry. I couldn't find that location on my 
+        map. I got it for free from some nice people on 
+        the internet, but sometimes it's missing things!
+        Please try another address.
+        """)
+
+
+def geocode_check(make_isochrone_func):
+    def wrapper(*args):
+        address = args[0]
+        if address_can_be_found(address):
+            return make_isochrone_func(*args)
+        else:
+            display_dora()
+    return wrapper
+
+
 ############################### Walking Map ###############################
 
 def walking_address_input():
@@ -255,6 +292,7 @@ def walking_address_input():
     return address
 
 
+@geocode_check
 @st.experimental_memo()
 def make_walking_isochrone(address):
     """
@@ -274,15 +312,14 @@ def make_walking_isochrone(address):
     filepath = "plots/user_generated_walking_isochrone.png"
     walking_isochrone = WalkingIsochrone(citywide_graph=graph)
     _ = walking_isochrone.make_isochrone(lat_lng, filepath=filepath)
-
-    # street_address = address.split(",")[0]
-    # caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
-    # st.image(filepath, caption=caption)
     st.session_state["walking_map_ready"] = True
+
 
 
 def address_is_in_chicago(address, chicago):
     lat_lon = ox.geocoder.geocode(address)
+    # lat_lon = geocode_gracefully(address)
+    # if lat_lon is not None:
     lat, lon = lat_lon[0], lat_lon[1]
     nearest_node = ox.distance.nearest_nodes(chicago, lon, lat)
     if not isinstance(nearest_node, int):
@@ -326,6 +363,7 @@ def transit_address_input():
     return address
 
 
+@geocode_check
 @st.experimental_memo
 def make_transit_isochrone(address):
     st.session_state["transit_map_ready"] = False
