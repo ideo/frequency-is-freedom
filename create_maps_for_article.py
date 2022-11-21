@@ -55,12 +55,47 @@ def frequency_isochrones_from_my_apartment(trip_time=30):
         plt.savefig(filepath, dpi=300, facecolor=bgcolor)
 
 
+@timer_func
+def thirty_minute_frequency_maps():
+    city = "Chicago, Illinois"
+    my_lat_lon = (41.898010150000005, -87.67613740698785)
+    transit_isochrone = TransitIsochrone(DATA_DIR, city)
+
+    trip_times = [30]
+    freq_multipliers = [1, 2]
+    filepath = "plots/thirty_minute_enhanced_service.png"
+    bbox = transit_isochrone.make_isochrone(my_lat_lon, 
+        trip_times=trip_times, 
+        freq_multipliers=freq_multipliers,
+        filepath=filepath,
+        color_start=0.75,
+        color_stop=0.5,
+        # color_start=0.9,
+        # color_stop=0.7,
+        cmap="GnBu")
+
+    freq_multipliers = [0.5, 1]
+    filepath = "plots/thirty_minute_reduced_service.png"
+    _ = transit_isochrone.make_isochrone(my_lat_lon, 
+        trip_times=trip_times, 
+        freq_multipliers=freq_multipliers,
+        filepath=filepath,
+        color_start=0.5,
+        color_stop=0.25,
+        # color_start=0.7,
+        # color_stop=0.5,
+        cmap="GnBu",
+        bbox=bbox)
+
+
+
 if __name__ == "__main__":
-    walking_isochrone_from_my_apartment()
-    transit_isochrone_from_my_apartment()
-    frequency_isochrones_from_my_apartment(trip_time=30)
-    frequency_isochrones_from_my_apartment(trip_time=45)
-    frequency_isochrones_from_my_apartment(trip_time=60)
+    # walking_isochrone_from_my_apartment()
+    # transit_isochrone_from_my_apartment()
+    # frequency_isochrones_from_my_apartment(trip_time=30)
+    # frequency_isochrones_from_my_apartment(trip_time=45)
+    # frequency_isochrones_from_my_apartment(trip_time=60)
+    thirty_minute_frequency_maps()
 
 
 

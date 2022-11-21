@@ -130,8 +130,8 @@ class TransitIsochrone:
     def make_isochrone(self, starting_lat_lon, 
                        trip_times=None, freq_multipliers=None, 
                        filepath=None, cmap="plasma", color=None, bgcolor="#262730",
-                       use_city_bounds=False,
-                       ax=None):
+                       use_city_bounds=False, bbox=None, ax=None,
+                       color_start=0, color_stop=1):
         """A Walking and Transit Isochrone!!"""
         if trip_times is None:
             trip_times = [15, 30, 45, 60]
@@ -162,7 +162,6 @@ class TransitIsochrone:
 
         else:
             if len(freq_multipliers) == 1:
-                print("Coloring by Trip Time")
                 # Color Subgraphs by Trip Time
                 freq = freq_multipliers[0]
 
@@ -170,16 +169,14 @@ class TransitIsochrone:
                 num_colors = len(trip_times)
                 iso_colors = ox.plot.get_colors(num_colors,
                     cmap=cmap, 
-                    start=0, 
+                    # start=0,
                     return_hex=True)
 
                 for trip_time, iso_clr in zip(trip_times, iso_colors):
-                    print(trip_time, freq, iso_clr)
                     subgraph = isochrones[trip_time][freq]
                     edge_colors = self.assign_edge_colors(subgraph, edge_colors, iso_clr)
 
             elif len(trip_times) == 1:
-                print("Coloring by Frequency")
                 # Color Subgraph by Frequency
                 trip_time = trip_times[0]
 
@@ -188,12 +185,13 @@ class TransitIsochrone:
                 iso_colors = ox.plot.get_colors(num_colors,
                     cmap=cmap,
                     # start=max(freq_multipliers),
-                    start=0, 
-                    stop=max(freq_multipliers),
+                    # start=0, 
+                    # stop=max(freq_multipliers),
+                    start=color_start,
+                    stop=color_stop,
                     return_hex=True)
 
                 for freq, iso_clr in zip(freq_multipliers, iso_colors):
-                    print(trip_time, freq, iso_clr)
                     subgraph = isochrones[trip_time][freq]
                     edge_colors = self.assign_edge_colors(subgraph, edge_colors, iso_clr)
 
@@ -205,13 +203,12 @@ class TransitIsochrone:
             filepath = "plots/user_transit_isochrone.png"
 
         if use_city_bounds:
-            north = max([node[1]["y"] for node in self.citywide_graph.nodes(data=True)]) 
-            south = min([node[1]["y"] for node in self.citywide_graph.nodes(data=True)]) 
-            east = max([node[1]["x"] for node in self.citywide_graph.nodes(data=True)]) 
-            west = min([node[1]["x"] for node in self.citywide_graph.nodes(data=True)]) 
-            bbox = (north, south, east, west)
-        else:
-            bbox=None
+            # north = max([node[1]["y"] for node in self.citywide_graph.nodes(data=True)]) 
+            # south = min([node[1]["y"] for node in self.citywide_graph.nodes(data=True)]) 
+            # east = max([node[1]["x"] for node in self.citywide_graph.nodes(data=True)]) 
+            # west = min([node[1]["x"] for node in self.citywide_graph.nodes(data=True)]) 
+            # bbox = (north, south, east, west)
+            bbox = self.get_bbox_from_graph(self.citywide_graph)
 
         nc = [0 for _ in graph.nodes()]
         ns = [0 for _ in graph.nodes()]
@@ -220,10 +217,11 @@ class TransitIsochrone:
         # bgcolor = "#262730"
 
         if ax is None:
-            fig, ax = ox.plot_graph(graph, 
+            _, ax = ox.plot_graph(graph, 
                 node_color=nc, edge_color=ec, node_size=ns,
                 node_alpha=0.8, node_zorder=2, bgcolor=bgcolor, edge_linewidth=0.2,
-                show=False, save=True, filepath=filepath, dpi=300, bbox=None)
+                show=False, save=True, filepath=filepath, dpi=300, bbox=bbox)
+            bbox = self.get_bbox_from_plot(ax)
         else:
             city = ox.geocode_to_gdf('Chicago, Illinois')
             x,y = city["geometry"].iloc[0].exterior.xy
@@ -235,12 +233,13 @@ class TransitIsochrone:
                 show=False, save=False, filepath=filepath, dpi=300, bbox=bbox)
 
             ax.set_facecolor(bgcolor)
-            ax.set_axis_on()        
-            
+            ax.set_axis_on() 
+        
+        return bbox
 
 
     def assign_edge_colors(self, subgraph, edge_colors, color):
-        print(f"Subgraph has {len(subgraph.nodes)} nodes and {len(subgraph.edges)} edges.")
+        # print(f"Subgraph has {len(subgraph.nodes)} nodes and {len(subgraph.edges)} edges.")
         for edge_data in subgraph.edges(data=True):
             edge = (edge_data[0], edge_data[1])
             if edge_data[2]["display"]:
@@ -263,6 +262,24 @@ class TransitIsochrone:
             distance='travel_time')
         subgraph.remove_edges_from([edge for edge in self.transit_graph.edges])
         return subgraph
+
+
+    def get_bbox_from_graph(self, graph):
+        north = max([node[1]["y"] for node in graph.nodes(data=True)]) 
+        south = min([node[1]["y"] for node in graph.nodes(data=True)]) 
+        east = max([node[1]["x"] for node in graph.nodes(data=True)]) 
+        west = min([node[1]["x"] for node in graph.nodes(data=True)]) 
+        bbox = (north, south, east, west)
+        return bbox
+
+
+    def get_bbox_from_plot(self, ax):
+        ylim, xlim = ax.get_ylim(), ax.get_xlim()
+        north, south = ylim[1], ylim[0]
+        east, west = xlim[1], xlim[0]
+        bbox = (north, south, east, west)
+        return bbox
+    
 
         # self.missing_stops = []
         # self.start_positions = {starting_node: trip_time}
