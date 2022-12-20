@@ -13,7 +13,7 @@ When ridership vanished at the beginning of the pandemic, the CTA was forced to 
 Like nearly all transit agencies, the CTA publishes scheduled and real-time service data. While anyone who lives in the city knows that the bus never runs on schedule, we can look at this data to see the service the CTA intends to run. 
         """,
         """
-Below is scheduled weekday service from the week of August 15th, 2022 for two bus stops near my apartment. (I’ve filtered this data to only show service between 6 am and 10 pm, but the CTA does run buses and trains all night on many routes, including the 66 bus shown here.)
+Below is scheduled weekday service from the week of August 22nd, 2022, for two bus stops near my apartment. (I’ve filtered this data to only show service between 6 am and 10 pm, but the CTA does run buses and trains all night on many routes, including the 66 bus shown here.)
         """,
     ],
 
@@ -55,7 +55,7 @@ The map above shows all walking routes surrounding my apartment. I find it quite
 
     "How Far Can I Go with Public Transit?": [
         """
-Now that we can walk, let’s walk to the bus, or, more realistically, let’s wait for the bus. From CTA schedules and our understanding of average wait times, we know how long we can expect to wait at each transit stop. We can then trace how far we can get on foot and public transit, including transfers, within a given amount of time. The maps below start from my apartment and consider weekday service from the week of August 15th.
+Now that we can walk, let’s walk to the bus, or, more realistically, let’s wait for the bus. From CTA schedules and our understanding of average wait times, we know how long we can expect to wait at each transit stop. We can then trace how far we can get on foot and public transit, including transfers, within a given amount of time. The maps below start from my apartment and consider weekday service from the week of August 22nd.
         """,
         """
 This is my Chicago: the city the CTA makes accessible to me. I can get as east as the lake and as west as city limits. My reach northwest is expectedly defined by the blue line. North and south, I am confined by the limits of the bus, which peak in purple and blue. Since I live on the near west side, I have to go downtown before I can catch a train north or south. Doing that burns precious time. A friend of mine who lives in Ravenswood was surprised to see that his place isn’t on this map, but I wasn’t. I know to bike to his place for dinner, because the bus would take over an hour.
