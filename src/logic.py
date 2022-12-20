@@ -1,6 +1,7 @@
-from multiprocessing.sharedctypes import Value
+from zipfile import ZipFile
+
 import osmnx as ox
-import networkx as nx
+# import networkx as nx
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -12,7 +13,7 @@ from .text import TEXT
 import src.gtfs as gtfs
 import src.graphs as graphs
 from src.isochrones import WalkingIsochrone, TransitIsochrone
-from src.filepaths import DATA_DIR
+from src.filepaths import DATA_DIR, FREQUENCY_DIR
 
 
 ################################ App Logic ################################
@@ -29,8 +30,11 @@ def write_text(section_title, header_level=3, header=True):
 
 def initialize_session_state():
     initial_values = {
-        "walking_map_ready":    False,
-        "transit_map_ready":    False,
+        "walking_map_ready":        False,
+        "transit_map_ready":        False,
+        "frequency_map_1_ready":    False,
+        "frequency_map_2_ready":    False,
+        "frequency_map_3_ready":    False,
     }
     for key, value in initial_values.items():
         if key not in st.session_state:
@@ -418,3 +422,117 @@ def thirty_minute_maps():
         filename = "plots/thirty_minute_enhanced_service.png"
         caption  = "Twice Scheduled Service"
         st.image(filename, caption=caption)
+
+
+def frequency_address_input():
+    col1, col2 = st.columns([7,2])
+
+    label = """
+        Enter an address below to generate a map of everywhere transit can take 
+        you from that spot.
+    """
+    address = col1.text_input(label, key="frequency_address",
+        placeholder="Enter your Address")
+
+    col2.write("")
+    col2.write("")
+    frequency_isochrone_download_button(col2, address)
+    return address
+
+
+@geocode_check
+@st.experimental_memo
+def make_frequency_isochrones(address):
+    st.session_state["frequency_map_1_ready"] = False
+    st.session_state["frequency_map_2_ready"] = False
+    st.session_state["frequency_map_3_ready"] = False
+
+    transit_isochrone = TransitIsochrone(DATA_DIR, "Chicago, Illinois")
+    lat_lon = ox.geocoder.geocode(address)
+    trip_times = [30]
+
+    freq_multipliers = [2]
+    filepath = FREQUENCY_DIR / "enhanced_service.png"
+    bbox = transit_isochrone.make_isochrone(lat_lon, 
+        trip_times=trip_times, 
+        freq_multipliers=freq_multipliers,
+        filepath=filepath,
+        color="#4767AF")
+    st.session_state["frequency_map_1_ready"] = True
+
+    freq_multipliers = [1]
+    filepath = FREQUENCY_DIR / "scheduled_service.png"
+    _ = transit_isochrone.make_isochrone(lat_lon, 
+        trip_times=trip_times, 
+        freq_multipliers=freq_multipliers,
+        filepath=filepath,
+        color="#9EACCB",
+        bbox=bbox)
+    st.session_state["frequency_map_2_ready"] = True
+
+    freq_multipliers = [0.5]
+    filepath = FREQUENCY_DIR / "reduced_service.png"
+    _ = transit_isochrone.make_isochrone(lat_lon, 
+        trip_times=trip_times, 
+        freq_multipliers=freq_multipliers,
+        filepath=filepath,
+        color="#7C94CB",
+        bbox=bbox)
+    st.session_state["frequency_map_3_ready"] = True
+
+
+def frequency_isochrone_download_button(st_col, address):
+    if address:
+        street_address = address.split(",")[0]
+    else:
+        street_address = None
+
+    all_three_ready = all([
+        st.session_state["frequency_map_1_ready"],
+        st.session_state["frequency_map_2_ready"],
+        st.session_state["frequency_map_3_ready"]
+    ])
+
+    filenames = [
+        "user_generated_frequency_maps/enhanced_service.png",
+        "user_generated_frequency_maps/scheduled_service.png",
+        "user_generated_frequency_maps/reduced_service.png"
+    ]
+
+    zip_filename = "frequency_maps.zip"
+    zipObj = ZipFile(zip_filename, "w")
+    if all_three_ready:
+        for filepath in filenames:
+            zipObj.write(filepath)
+    zipObj.close()
+
+    with open(zip_filename, "rb") as zip_file:
+        st_col.download_button("Download Maps", 
+            data=zip_file,
+            file_name=f"{street_address}.zip",
+            disabled=not all_three_ready,
+            key="frequency_map_downloads")
+
+
+def user_generated_thirty_minute_maps():
+    col1, col2, col3 = st.columns(3)
+
+    if st.session_state["frequency_map_1_ready"]:
+        st.markdown("###### Thirty Minute Trips")
+        with col3:
+            filename = FREQUENCY_DIR / "enhanced_service.png"
+            caption  = "Twice Scheduled Service"
+            st.image(str(filename), caption=caption)
+
+    if st.session_state["frequency_map_2_ready"]:
+        with col2:
+            filename = FREQUENCY_DIR / "scheduled_service.png"
+            caption  = "Scheduled Service"
+            st.image(str(filename), caption=caption)
+
+    if st.session_state["frequency_map_3_ready"]:
+        with col1:
+            filename = FREQUENCY_DIR / "reduced_service.png"
+            caption  = "Half Scheduled Service"
+            st.image(str(filename), caption=caption)
+
