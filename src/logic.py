@@ -396,3 +396,25 @@ def transit_isochrone_download_button(st_col, address):
             mime="image/png",
             disabled=not st.session_state["transit_map_ready"],
             key="transit_download")
+
+
+############################## Frequency Maps ##############################
+
+def thirty_minute_maps():
+    st.markdown("###### Thirty Minute Trips")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        filename = "plots/thirty_minute_reduced_service.png"
+        caption  = "Half Scheduled Service"
+        st.image(filename, caption=caption)
+
+    with col2:
+        filename = "plots/thirty_minute_scheduled_service.png"
+        caption  = "Scheduled Service"
+        st.image(filename, caption=caption)
+
+    with col3:
+        filename = "plots/thirty_minute_enhanced_service.png"
+        caption  = "Twice Scheduled Service"
+        st.image(filename, caption=caption)

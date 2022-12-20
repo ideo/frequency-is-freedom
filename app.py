@@ -79,32 +79,18 @@ if transit_address:
 
 
 lg.write_text("More Buses Take You More Places")
-st.write("")
+lg.thirty_minute_maps()
+lg.write_text("More Buses Take You More Places (II)", header=False)
+
 # st.markdown("###### Thirty Minute Trips")
-# col1, col2 = st.columns(2)
-# thirty_min_reduced = "plots/thirty_minute_reduced_service.png"
-# caption = """
-# How far the schedule says I can go and an estimate of how far I can actually
-# go from my apartment in thirty minutes.
-# """
-# col1.image(thirty_min_reduced, caption=caption)
-# thirty_min_enhanced = "plots/thirty_minute_enhanced_service.png"
-# caption = """
-# How far the schedule says I can go and an estimate of how far I could go if
-# service ran twice as often in thirty minutes.
-# """
-# col2.image(thirty_min_enhanced, caption=caption)
+# frequency_isochrone = "plots/frequency_isochrone_30_min_trips.png"
 
+# st.image(frequency_isochrone, caption=caption)
 
-
-
-st.markdown("###### Thirty Minute Trips")
-frequency_isochrone = "plots/frequency_isochrone_30_min_trips.png"
 caption = """
     Coverage area for service at half of what is scheduled, as scheduled, 
     twice as often as scheduled, and three times.
     """
-st.image(frequency_isochrone, caption=caption)
 
 st.write("")
 st.markdown("###### Fourty Five Minute Trips")

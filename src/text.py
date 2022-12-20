@@ -67,16 +67,19 @@ This is my Chicago: the city the CTA makes accessible to me. I can get as east a
 Truthfully, the map above is aspirational. It’s based off of the CTA’s published schedules, but the CTA has been running reduced service, sometimes as bad as running [half as many trains as the schedule says](https://blockclubchicago.org/2022/06/23/ghost-trains-and-buses-packed-platforms-35-alderpeople-want-city-council-hearing-on-deteriorating-cta-service/). That means waiting even longer and reaching even less.
         """,
         """
-When public transit runs less often, our world gets smaller. Below are three trips at increasing rates of service. The leftmost maps plot 50% reduced service. Next to those, we can see how far I should be able to get given the published schedules. And after that, we see the Chicago I could access if buses and trains ran twice and three times as often as the current schedules.
+When public transit runs less often, our world gets smaller. Below are three thirty-minute trips from my apartment at increasing rates of service. The leftmost map shows 50% reduced service, the reality that my neighbors and I have been dealing with. The rightmost map shows a beautiful fantasy land where all buses and trains run twice as often as the schedule says.
+        """,
+    ],
+
+"More Buses Take You More Places (II)": [
+        """
+These maps show how reduced service confines me to my neighborhood. I live a 15-minute walk to the closest L stop. When trains or buses run less than every 15 minutes, a 30-minute trip with public transit takes me barely further than just walking for 30 minutes. (Walking through Chicago's grid is what gives that first map it's diamond shape.)
         """,
         """
-These maps show how reduced service confines me to my neighborhood. I live a 15-minute walk to the closest L stop. When trains or buses run less than every 15 minutes, a 30-minute trip with public transit takes me barely further than just walking for 30 minutes.
+Below I explore longer trips and even more frequent service. Note how simple it would be to unlock more of the city. Tripling scheduled service doesn’t extend our reach much further than simply doubling it. We don’t have far to go; we just need double everything!
         """,
         """
-Note how simple it would be to unlock more of the city. Tripling scheduled service doesn’t extend our reach much further than just doubling it. I’m not asking for a million more buses and trains, just twice as many! I don’t view that as too much to ask, but rather as an investment in the CTA’s resiliency.
-        """,
-        """
-More transit riders means more fare revenue, and the best way to increase ridership is to run more buses and trains. Research from "157 US cities [has found] that increasing the frequency of service on current routes was about 20 percent more effective at increasing ridership than adding more routes."⁷ 
+Twice as many trains and buses may sound like a lot to ask, but not if we view them as investments in the CTA’s resiliency. More transit riders means more fare revenue, and the best way to increase ridership is to run more buses and trains. Research from "157 US cities [has found] that increasing the frequency of service on current routes was about 20 percent more effective at increasing ridership than adding more routes."⁷ 
         """,
         """
 I've never experienced true freedom like living somewhere where there's no need to check a bus schedule. Whenever you want to go somewhere, you simply get up and go. I want all Chicagoans to live that free.

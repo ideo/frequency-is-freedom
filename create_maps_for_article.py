@@ -4,7 +4,7 @@ import src.graphs as graphs
 from src.isochrones import WalkingIsochrone, TransitIsochrone, timer_func
 from src.filepaths import DATA_DIR
 
-from create_transit_graph import construct_transit_graph_for_requested_date
+# from create_transit_graph import construct_transit_graph_for_requested_date
 
 
 @timer_func
@@ -64,40 +64,44 @@ def thirty_minute_frequency_maps():
     transit_isochrone = TransitIsochrone(DATA_DIR, city)
 
     trip_times = [30]
-    freq_multipliers = [1, 2]
+    freq_multipliers = [2]
     filepath = "plots/thirty_minute_enhanced_service.png"
     bbox = transit_isochrone.make_isochrone(my_lat_lon, 
         trip_times=trip_times, 
         freq_multipliers=freq_multipliers,
         filepath=filepath,
-        color_start=0.75,
-        color_stop=0.5,
-        # color_start=0.9,
-        # color_stop=0.7,
-        cmap="GnBu")
+        # color="#57A5F2")
+        color="#4767AF")
 
-    freq_multipliers = [0.5, 1]
+    freq_multipliers = [1]
+    filepath = "plots/thirty_minute_scheduled_service.png"
+    _ = transit_isochrone.make_isochrone(my_lat_lon, 
+        trip_times=trip_times, 
+        freq_multipliers=freq_multipliers,
+        filepath=filepath,
+        # color="#3847CC",
+        color="#9EACCB",
+        bbox=bbox)
+
+    freq_multipliers = [0.5]
     filepath = "plots/thirty_minute_reduced_service.png"
     _ = transit_isochrone.make_isochrone(my_lat_lon, 
         trip_times=trip_times, 
         freq_multipliers=freq_multipliers,
         filepath=filepath,
-        color_start=0.5,
-        color_stop=0.25,
-        # color_start=0.7,
-        # color_stop=0.5,
-        cmap="GnBu",
+        # color="#2E158A",
+        color="#7C94CB",
         bbox=bbox)
 
 
 if __name__ == "__main__":
     city = "Chicago, Illinois"
-    construct_transit_graph_for_requested_date(city)
-    walking_isochrone_from_my_apartment()
-    transit_isochrone_from_my_apartment()
-    frequency_isochrones_from_my_apartment(trip_time=30)
-    frequency_isochrones_from_my_apartment(trip_time=45)
-    frequency_isochrones_from_my_apartment(trip_time=60)
+    # construct_transit_graph_for_requested_date(city)
+    # walking_isochrone_from_my_apartment()
+    # transit_isochrone_from_my_apartment()
+    # frequency_isochrones_from_my_apartment(trip_time=30)
+    # frequency_isochrones_from_my_apartment(trip_time=45)
+    # frequency_isochrones_from_my_apartment(trip_time=60)
     thirty_minute_frequency_maps()
 
 

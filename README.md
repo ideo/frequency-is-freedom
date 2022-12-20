@@ -25,9 +25,9 @@ The purpose of this project is to test the effect on the frequency of service, a
    poetry run python create_transit_graph.py
    ```
 
-   The script will prompt you to specify which date you want to pull schedules for. You can also specify a date from the command line. For example, for this article, I specified Monday, August 15th with:
+   The script will prompt you to specify which date you want to pull schedules for. You can also specify a date from the command line. For example, for this article, I specified Monday, August 22nd with:
    ```bash
-   poetry run python create_transit_graph.py -m 20220815
+   poetry run python create_transit_graph.py -m 20220822
    ```
 
 1. After creating the graph, you are ready to make some isochrones! A walking isochrone can me made like so:
