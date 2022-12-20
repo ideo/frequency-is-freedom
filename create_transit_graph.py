@@ -11,7 +11,7 @@ def construct_transit_graph_for_requested_date(city):
     gtfs.average_arrival_rates_per_stop(stop_times)
 
     # Match Bus Stops to OSMNX graph
-    gtfs.find_graph_node_IDs_for_transit_stop(stops, citywide_graph)
+    gtfs.find_graph_node_IDs_for_transit_stops(stops, citywide_graph)
 
     # Travel Time Between Transit Stops (this takes some time)
     gtfs.average_travel_times_per_route(routes, trips, stop_times)

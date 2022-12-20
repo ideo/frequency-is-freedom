@@ -35,8 +35,6 @@ GTFS_DTYPES = {
 
 ############################# Load & Clean Data #############################
 
-
-
 def load_clean_and_save_tables():
     print("Loading and cleaning raw GTFS tables.")
     # Load
@@ -96,22 +94,6 @@ def clean_stop_times_table(df):
     return df
 
 
-# def filter_to_weekday_servive(calendar, trips, stop_times):
-#     weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
-#     calendar["all_weekdays"] = calendar[weekdays].sum(axis=1) == 5
-
-#     # Weekday Service starting Aug. 15th
-#     wkdy_service = calendar[calendar["all_weekdays"]]
-#     wkdy_service = wkdy_service[wkdy_service["start_date"] == 20220815]
-
-#     # Filter trips and stop_times tables
-#     service_ids_to_include = wkdy_service["service_id"].values
-    # trips_filtered = trips[trips["service_id"].isin(service_ids_to_include)]
-    # trips_ids = trips_filtered["trip_id"].values
-    # stop_times_filtered = stop_times[stop_times["trip_id"].isin(trips_ids)]
-    # return trips_filtered, stop_times_filtered
-
-
 def convert_calendar_to_datetime(calendar, calendar_dates):
     frmt = "%Y%m%d"
     for col in ["start_date", "end_date"]:
@@ -124,7 +106,7 @@ def convert_calendar_to_datetime(calendar, calendar_dates):
 def choose_date(calendar):
     """Return datestamp to filter service IDs by"""
     start_date = calendar.start_date.min()
-    end_date = calendar.end_date.min()
+    end_date = calendar.end_date.max()
     frmt = "%A, %B %d, %Y"
 
     if len(sys.argv) == 1:
@@ -136,12 +118,12 @@ def choose_date(calendar):
         print(prompt)
 
         if start_date.year != end_date.year:
-            year = user_input("Enter the four-digit year:\t")
+            year = prompt_for_user_input("Enter the four-digit year:\t")
         else:
             year = start_date.year
         
-        month = user_input("Enter the month:\t\t")
-        day = user_input("Enter the day:\t\t\t")
+        month = prompt_for_user_input("Enter the month:\t\t")
+        day = prompt_for_user_input("Enter the day:\t\t\t")
 
         dt = datetime(year=year, month=month, day=day)
 
@@ -159,7 +141,7 @@ def choose_date(calendar):
     return dt
 
 
-def user_input(label):
+def prompt_for_user_input(label):
     value = None
     while value is None:
         value = input(label)
@@ -172,7 +154,10 @@ def user_input(label):
 
 def service_ids_for_date(dt, calendar, calendar_dates):
     # Calendar
+    # Date is on or between start and end dates
     service = calendar[(calendar["start_date"] <= dt) & (calendar["end_date"] >= dt)]
+
+    # Day of week lines up (some service only runs particular days)
     service = service[service[dt.strftime("%A").lower()] == 1]
     service_ids = list(service["service_id"].values)
 
@@ -251,39 +236,36 @@ def average_travel_times_per_route(routes, trips, stop_times):
     TKTKTK Explain. This is the big one.
     """
     print("Calculating travel times between stops per route.")
-    travel_times_per_route = load_isochrone_data("travel_times_per_route.pkl")
-    if travel_times_per_route is None:
-        travel_times_per_route = {}
 
+    travel_times_per_route = {}
     for route_id in routes["route_id"].values:
-        if route_id not in travel_times_per_route.keys():
-            print(f"Determining travel times for route {route_id}")
-            trip_ids = trips[trips["route_id"] == route_id]["trip_id"]
-            trip_ids = trip_ids.value_counts().index
+        print(f"Determining travel times for route {route_id}")
+        trip_ids = trips[trips["route_id"] == route_id]["trip_id"]
+        trip_ids = trip_ids.value_counts().index
 
-            if trip_ids.shape[0] > 0:
-                pairwise_dfs = []
-                for trip_id in tqdm(trip_ids):
-                    single_trip = stop_times[stop_times["trip_id"] == trip_id]
+        if trip_ids.shape[0] > 0:
+            pairwise_dfs = []
+            for trip_id in tqdm(trip_ids):
+                single_trip = stop_times[stop_times["trip_id"] == trip_id]
 
-                    # Remove duplicated stop IDs
-                    # Because why are there repeated stop IDs??
-                    single_trip.drop_duplicates(subset=["stop_id"], keep="first", inplace=True)
+                # Remove duplicated stop IDs
+                # Because why are there repeated stop IDs??
+                single_trip.drop_duplicates(subset=["stop_id"], keep="first", inplace=True)
 
-                    if single_trip.shape[0]:
-                        df = single_trip_pairwise_travel_times(single_trip)
-                        pairwise_dfs.append(df)
+                if single_trip.shape[0]:
+                    df = single_trip_pairwise_travel_times(single_trip)
+                    pairwise_dfs.append(df)
 
-                if pairwise_dfs:
-                    average_travel_times = pd.concat(pairwise_dfs).groupby(level=0).mean()
-                    travel_times_per_route[route_id] = average_travel_times
-                    save_isochrone_data(
-                        travel_times_per_route, 
-                        "travel_times_per_route.pkl")
-                else:
-                    print(f"No Stop Times for Trip IDs for route {route_id} in cleaned data.")
+            if pairwise_dfs:
+                average_travel_times = pd.concat(pairwise_dfs).groupby(level=0).mean()
+                travel_times_per_route[route_id] = average_travel_times
+                save_isochrone_data(
+                    travel_times_per_route, 
+                    "travel_times_per_route.pkl")
             else:
-                print(f"No trips for route {route_id} in cleaned data.")
+                print(f"No Stop Times for Trip IDs for route {route_id} in cleaned data.")
+        else:
+            print(f"No trips for route {route_id} in cleaned data.")
     print("✓")
 
 
@@ -323,7 +305,7 @@ def average_arrival_rates_per_stop(stop_times):
     save_isochrone_data(arrival_rates, "average_arrival_rates_per_stop.pkl")
 
 
-def find_graph_node_IDs_for_transit_stop(stops, citywide_graph):
+def find_graph_node_IDs_for_transit_stops(stops, citywide_graph):
     """
     We don't need to put the transit stops on the map, we simply need to find
     the graph node closest to each stop. For our purposes, they don't even need 
