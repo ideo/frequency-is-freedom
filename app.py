@@ -100,7 +100,9 @@ st.markdown("##### Generate Your Own Frequency Maps")
 frequency_address = lg.frequency_address_input()
 if frequency_address:
     lg.make_frequency_isochrones(frequency_address)
-    lg.user_generated_thirty_minute_maps() 
+    if st.session_state["frequency_map_3_ready"]:
+        st.markdown("###### Thirty Minute Trips")
+        lg.user_generated_thirty_minute_maps() 
 
 
 lg.write_text("Better Bus Service")

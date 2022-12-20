@@ -516,23 +516,16 @@ def frequency_isochrone_download_button(st_col, address):
 
 def user_generated_thirty_minute_maps():
     col1, col2, col3 = st.columns(3)
+    filename = FREQUENCY_DIR / "enhanced_service.png"
+    caption  = "Twice Scheduled Service"
+    col3.image(str(filename), caption=caption)
 
-    if st.session_state["frequency_map_1_ready"]:
-        st.markdown("###### Thirty Minute Trips")
-        with col3:
-            filename = FREQUENCY_DIR / "enhanced_service.png"
-            caption  = "Twice Scheduled Service"
-            st.image(str(filename), caption=caption)
+    filename = FREQUENCY_DIR / "scheduled_service.png"
+    caption  = "Scheduled Service"
+    col2.image(str(filename), caption=caption)
 
-    if st.session_state["frequency_map_2_ready"]:
-        with col2:
-            filename = FREQUENCY_DIR / "scheduled_service.png"
-            caption  = "Scheduled Service"
-            st.image(str(filename), caption=caption)
-
-    if st.session_state["frequency_map_3_ready"]:
-        with col1:
-            filename = FREQUENCY_DIR / "reduced_service.png"
-            caption  = "Half Scheduled Service"
-            st.image(str(filename), caption=caption)
+    filename = FREQUENCY_DIR / "reduced_service.png"
+    caption  = "Half Scheduled Service"
+    col1.image(str(filename), caption=caption)
+    print(st.session_state)
 
