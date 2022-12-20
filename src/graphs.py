@@ -5,16 +5,21 @@ import networkx as nx
 import streamlit as st
 
 from src.filepaths import DATA_DIR
+import src.utils as utils
 
 
 def graph_path(city):
-    filename = city.replace(",", "").replace(" ","_").lower() + ".pkl"
+    # filename = city.replace(",", "").replace(" ","_").lower() + ".pkl"
+    # filename = city.replace(",", "").replace(" ","_").lower() + ".gml"
+    filename = city.replace(",", "").replace(" ","_").lower() + ".pbz2"
     graph_path = DATA_DIR / filename
     return graph_path
 
 
 def load_citywide_graph(city):
-    citywide_graph = nx.read_gpickle(graph_path(city))
+    # citywide_graph = nx.read_gpickle(graph_path(city))
+    # citywide_graph = nx.read_gml(graph_path(city))
+    citywide_graph = utils.decompress_pickle(graph_path(city))
     return citywide_graph
 
 
@@ -32,7 +37,9 @@ def download_citywide_graph(city="Chicago, Illinois"):
             simplify=True)
 
         citywide_graph = add_walking_times_to_graph(citywide_graph)
-        nx.write_gpickle(citywide_graph, graph_path(city))
+        # nx.write_gpickle(citywide_graph, graph_path(city))
+        # nx.write_gml(citywide_graph, graph_path(city))
+        utils.compressed_pickle(citywide_graph, graph_path(city))
         print(f"✓\tSaved citywide graph to {graph_path(city)}")
     return citywide_graph
 

@@ -43,11 +43,6 @@ def load_clean_and_save_tables():
     stops = load_raw_gtfs_table("stops")
     routes = load_raw_gtfs_table("routes")
 
-    print("trips: ", trips.shape)
-    print("stop_times: ", stop_times.shape)
-    print("stops: ", stops.shape)
-    print("routes: ", routes.shape)
-
     # Filter & Clean
     service_ids = get_service_ids_for_requested_date()
     trips, stop_times = filter_by_service_ids(trips, stop_times, service_ids)
@@ -58,11 +53,6 @@ def load_clean_and_save_tables():
     save_prepared_gtfs_table(stop_times, "stop_times")
     save_prepared_gtfs_table(stops, "stops")
     save_prepared_gtfs_table(routes, "routes")
-
-    print("trips: ", trips.shape)
-    print("stop_times: ", stop_times.shape)
-    print("stops: ", stops.shape)
-    print("routes: ", routes.shape)
     return routes, trips, stop_times, stops
 
 
