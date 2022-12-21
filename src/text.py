@@ -19,7 +19,7 @@ Below is scheduled weekday service from the week of August 22nd, 2022, for two b
 
     "How Often Does the Bus Come? (II)": [
         """
-I was shocked to see these charts. The shapes make sense to me (both buses have peaks at rush hour), but an average of almost 10 buses per hour for the 66 bus down Chicago Ave is not at all what I experience. That’s one bus nearly every 6 minutes. I wish the bus ran that often, because how often the bus comes determines how long I’m stuck waiting for it.        """,
+I was shocked to see these charts. The shapes make sense to me (both buses have peaks at rush hour), but an average of almost 10 buses per hour for the 66 bus down Chicago Ave is not at all what I experience. That’s nearly one bus every 6 minutes. I wish the bus ran that often, because how often the bus comes determines how long I’m stuck waiting for it.        """,
     ],
 
     "How Long Do You Wait For The Bus?": [
