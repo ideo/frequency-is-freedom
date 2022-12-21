@@ -81,26 +81,13 @@ if transit_address:
 lg.write_text("More Buses Take You More Places")
 lg.thirty_minute_maps()
 lg.write_text("More Buses Take You More Places (II)", header=False)
-
-caption = """
-    Coverage area for service at half of what is scheduled, as scheduled, 
-    twice as often as scheduled, and three times.
-    """
-st.write("")
-st.markdown("###### Fourty Five Minute Trips")
-frequency_isochrone = "plots/frequency_isochrone_45_min_trips.png"
-st.image(frequency_isochrone, caption=caption)
-
-st.write("")
-st.markdown("###### One Hour Trips")
-frequency_isochrone = "plots/frequency_isochrone_60_min_trips.png"
-st.image(frequency_isochrone, caption=caption)
+lg.forty_five_and_one_hour_maps()
 
 st.markdown("##### Generate Your Own Frequency Maps")
 frequency_address = lg.frequency_address_input()
 if frequency_address:
     lg.make_frequency_isochrones(frequency_address)
-    if st.session_state["frequency_map_3_ready"]:
+    if st.session_state["frequency_maps_ready"]:
         st.markdown("###### Thirty Minute Trips")
         lg.user_generated_thirty_minute_maps() 
 

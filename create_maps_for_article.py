@@ -4,8 +4,6 @@ import src.graphs as graphs
 from src.isochrones import WalkingIsochrone, TransitIsochrone, timer_func
 from src.filepaths import DATA_DIR
 
-# from create_transit_graph import construct_transit_graph_for_requested_date
-
 
 @timer_func
 def walking_isochrone_from_my_apartment():
@@ -95,13 +93,11 @@ def thirty_minute_frequency_maps():
 
 
 if __name__ == "__main__":
-    city = "Chicago, Illinois"
-    # construct_transit_graph_for_requested_date(city)
-    # walking_isochrone_from_my_apartment()
-    # transit_isochrone_from_my_apartment()
-    # frequency_isochrones_from_my_apartment(trip_time=30)
-    # frequency_isochrones_from_my_apartment(trip_time=45)
-    # frequency_isochrones_from_my_apartment(trip_time=60)
+    walking_isochrone_from_my_apartment()
+    transit_isochrone_from_my_apartment()
+    frequency_isochrones_from_my_apartment(trip_time=30)
+    frequency_isochrones_from_my_apartment(trip_time=45)
+    frequency_isochrones_from_my_apartment(trip_time=60)
     thirty_minute_frequency_maps()
 
 

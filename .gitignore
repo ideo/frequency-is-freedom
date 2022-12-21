@@ -7,3 +7,6 @@ cache/
 .vscode/
 networkx_reference.pdf
 plots/old_plots/
+plots/record_keeping/
+user_generated_frequency_maps
+frequency_maps.zip

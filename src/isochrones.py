@@ -139,10 +139,10 @@ class TransitIsochrone:
         if freq_multipliers is None:
             freq_multipliers = [1.0]
             
-        # if len(freq_multipliers) == 1 and freq_multipliers[0] == 1:
-        #     reset_city_graph = False
-        # else:
-        #     reset_city_graph = True
+        if len(freq_multipliers) == 1:
+            reset_city_graph = False
+        else:
+            reset_city_graph = True
 
         trip_times = sorted(trip_times, reverse=True)
         freq_multipliers = sorted(freq_multipliers, reverse=True)
@@ -152,7 +152,7 @@ class TransitIsochrone:
         isochrones = defaultdict(dict)
         for trip_time in trip_times:
             for freq in freq_multipliers:
-                reset_city_graph = True
+                # reset_city_graph = True
                 graph = self.transit_isochrone(starting_lat_lon, trip_time, 
                                                freq_multiplier=freq,
                                                reset_city_graph=reset_city_graph)

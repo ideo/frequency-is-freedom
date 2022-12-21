@@ -76,7 +76,7 @@ When public transit runs less often, our world gets smaller. Below are three thi
 These maps show how reduced service confines me to my neighborhood. I live a 15-minute walk to the closest L stop. When trains or buses run less than every 15 minutes, a 30-minute trip with public transit takes me barely further than just walking for 30 minutes. (Walking through Chicago's grid is what gives that first map it's diamond shape.)
         """,
         """
-Below I explore longer trips and even more frequent service. Note how simple it would be to unlock more of the city. Tripling scheduled service doesn’t extend our reach much further than simply doubling it. We don’t have far to go; we just need double everything!
+Below I explore longer trips and even more frequent service. Note how simple it would be to unlock more of the city. Tripling scheduled service doesn’t extend our reach much further than simply doubling it. We don’t have far to go, folks. We just need twice of everything!
         """,
         """
 Twice as many trains and buses may sound like a lot to ask, but not if we view them as investments in the CTA’s resiliency. More transit riders means more fare revenue, and the best way to increase ridership is to run more buses and trains. Research from "157 US cities [has found] that increasing the frequency of service on current routes was about 20 percent more effective at increasing ridership than adding more routes."⁷ 
