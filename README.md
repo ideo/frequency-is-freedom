@@ -88,6 +88,53 @@ The purpose of this project is to test the effect on the frequency of service, a
    ```
    And then select the newly created kernel, `frequency-is-freedom`.
 
+
+#### Docker
+
+1. Download and run [Docker](https://www.docker.com/get-started) if you don't already have it.
+
+1. Build the docker image, and name it `freq-is-freedom-app`, with:
+    ```bash
+    docker build . -t freq-is-freedom-app
+    ```
+
+    That command uses the `Dockerfile` and `.dockerignore` to self-contained image that can be run from within a container. You can reference those files as templates if you are deploying a python app that uses `pipenv`.
+
+1. To test that it words, run the image from within a locally hosted container like so:
+    ```bash
+    docker run -p 8080:8080 --name app-container freq-is-freedom-app
+    ```
+
+If you need to take a few tries at those step (I sure did), the following command will delete all containers that are no longer running: 
+    ```bash
+    docker container prune
+    ```
+
+
+### Container Registry
+
+1. Install the [Google Could CLI](https://cloud.google.com/sdk/docs/install).
+
+1. Authenticate your CLI installation to this project with:
+    ```bash
+    gcloud init
+    ```
+    You will be prompted to specify this app's Google Cloud project, which is named `ideo-social-listenting`. Slack Joe Gambino if you need access.
+
+1. Build the image you created above within a container on the registry with the following command:
+    ```bash
+    gcloud builds submit --tag gcr.io/mobility-provocations/freq-is-freedom-app
+    ```
+    
+    The format of that url is `gcr.io/GOOGLE_CONSOLE_PROJECT_NAME/IMAGE_NAME`.
+
+    The first time you run the above command, it may fail if you don't first enable the container registry service. You shouldn't have to do this, as I've already done it, but including this here for completeness.
+    ```bash
+    gcloud services enable containerregistry.googleapis.com
+
+    ```
+
+
 ### Ideas for follow up projects
 - [ ] Calcualte the coverage area of the isochrones and then calculate statistics for what percentage of the city you can access.
 - [ ] Use OSMNX's tie to Open Street Maps to count how many of the city's restaruants, office buildings, greenspace, etc. transit makes accessible to you.
