@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import streamlit as st
 
 import src.logic as lg
@@ -59,6 +61,7 @@ if address:
         street_address = address.split(",")[0]
         caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
         filepath = "plots/user_generated_walking_isochrone.png"
+        # filepath = Path(filepath)
         st.image(filepath, caption=caption)
 
 

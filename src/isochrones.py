@@ -1,8 +1,8 @@
+from pathlib import Path
 from collections import defaultdict
 
 import osmnx as ox
 import networkx as nx
-
 
 import src.graphs as graphs
 import src.gtfs as gtfs
@@ -77,6 +77,7 @@ class WalkingIsochrone:
         if filepath is None:
             filepath = "plots/user_isochrone.png"
 
+        filepath = Path(filepath)
         fig, ax = ox.plot_graph(graph, 
             node_color=nc, edge_color=ec, node_size=ns,
             node_alpha=0.8, node_zorder=2, bgcolor=bgcolor, edge_linewidth=0.2,

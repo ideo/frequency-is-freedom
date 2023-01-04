@@ -279,10 +279,11 @@ def geocode_check(make_isochrone_func):
 def walking_address_input():
     col1, col2 = st.columns([7,2])
 
-    label = """
-        Enter an address below to generate a map of everywhere you can walk 
-        from that spot.
-    """
+    # label = """
+    #     Enter an address below to generate a map of everywhere you can walk 
+    #     from that spot.
+    # """
+    label = "Enter an address below to generate a map of everywhere you can walk from that spot."
     address = col1.text_input(label, key="address", 
         placeholder="Enter your Address")
 
@@ -354,10 +355,11 @@ def transit_address_input():
     # col1, col2, col3 = st.columns([7,2,3])
     col1, col2 = st.columns([7,2])
 
-    label = """
-        Enter an address below to generate a map of everywhere transit can take 
-        you from that spot.
-    """
+    # label = """
+    #     Enter an address below to generate a map of everywhere transit can take 
+    #     you from that spot.
+    # """
+    label = "Enter an address below to generate a map of everywhere transit can take you from that spot. This may take several minutes."
     address = col1.text_input(label, key="transit_address",
         placeholder="Enter your Address")
 
@@ -374,8 +376,8 @@ def make_transit_isochrone(address):
     transit_isochrone = TransitIsochrone(DATA_DIR, "Chicago, Illinois")
     lat_lon = ox.geocoder.geocode(address)
 
-    trip_times = [15, 30, 45, 60]
-    # trip_times = [15, 30, 45]
+    # trip_times = [15, 30, 45, 60]
+    trip_times = [15, 30, 45]
     freq_multipliers = [1]
     filepath = "plots/user_generated_transit_isochrone.png"
     transit_isochrone.make_isochrone(lat_lon, 

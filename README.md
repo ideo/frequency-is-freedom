@@ -89,7 +89,7 @@ The purpose of this project is to test the effect on the frequency of service, a
    And then select the newly created kernel, `frequency-is-freedom`.
 
 
-#### Docker
+### Docker
 
 1. Download and run [Docker](https://www.docker.com/get-started) if you don't already have it.
 
@@ -110,7 +110,6 @@ If you need to take a few tries at those step (I sure did), the following comman
     docker container prune
     ```
 
-
 ### Container Registry
 
 1. Install the [Google Could CLI](https://cloud.google.com/sdk/docs/install).
@@ -123,7 +122,7 @@ If you need to take a few tries at those step (I sure did), the following comman
 
 1. Build the image you created above within a container on the registry with the following command:
     ```bash
-    gcloud builds submit --tag gcr.io/mobility-provocations/freq-is-freedom-app
+    gcloud builds submit --tag gcr.io/mobility-373002/freq-is-freedom-app
     ```
     
     The format of that url is `gcr.io/GOOGLE_CONSOLE_PROJECT_NAME/IMAGE_NAME`.
@@ -131,9 +130,7 @@ If you need to take a few tries at those step (I sure did), the following comman
     The first time you run the above command, it may fail if you don't first enable the container registry service. You shouldn't have to do this, as I've already done it, but including this here for completeness.
     ```bash
     gcloud services enable containerregistry.googleapis.com
-
     ```
-
 
 ### Ideas for follow up projects
 - [ ] Calcualte the coverage area of the isochrones and then calculate statistics for what percentage of the city you can access.

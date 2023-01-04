@@ -5,7 +5,8 @@ FROM python:3.10-slim
 EXPOSE 8080
 
 # Environment Variables
-ENV PROJECT_DIR /app
+# ENV PROJECT_DIR /app
+ENV PROJECT_DIR /app/
 ENV PORT 8080
 ENV HOST 0.0.0.0
 ENV POETRY_VERSION=1.3.1
@@ -22,7 +23,8 @@ COPY poetry.lock pyproject.toml ${PROJECT_DIR}
 
 # Project initialization:
 # RUN poetry install
-RUN poetry install --without dev
+# RUN poetry install --without dev
+RUN poetry config virtualenvs.create false && poetry install --without dev
 
 # Creating folders, and files for a project:
 COPY . ${PROJECT_DIR}
