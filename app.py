@@ -61,7 +61,6 @@ if address:
         street_address = address.split(",")[0]
         caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
         filepath = "plots/user_generated_walking_isochrone.png"
-        # filepath = Path(filepath)
         st.image(filepath, caption=caption)
 
 
@@ -86,13 +85,13 @@ lg.thirty_minute_maps()
 lg.write_text("More Buses Take You More Places (II)", header=False)
 lg.forty_five_and_one_hour_maps()
 
-st.markdown("##### Generate Your Own Frequency Maps")
-frequency_address = lg.frequency_address_input()
-if frequency_address:
-    lg.make_frequency_isochrones(frequency_address)
-    if st.session_state["frequency_maps_ready"]:
-        st.markdown("###### Thirty Minute Trips")
-        lg.user_generated_thirty_minute_maps() 
+# st.markdown("##### Generate Your Own Frequency Maps")
+# frequency_address = lg.frequency_address_input()
+# if frequency_address:
+#     lg.make_frequency_isochrones(frequency_address)
+#     if st.session_state["frequency_maps_ready"]:
+#         st.markdown("###### Thirty Minute Trips")
+#         lg.user_generated_thirty_minute_maps() 
 
 
 lg.write_text("Better Bus Service")
