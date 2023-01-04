@@ -359,7 +359,7 @@ def transit_address_input():
     #     Enter an address below to generate a map of everywhere transit can take 
     #     you from that spot.
     # """
-    label = "Enter an address below to generate a map of everywhere transit can take you from that spot. This may take several minutes."
+    label = "Enter an address below to generate a map of everywhere transit can take you from that spot. This may take a few minutes."
     address = col1.text_input(label, key="transit_address",
         placeholder="Enter your Address")
 
