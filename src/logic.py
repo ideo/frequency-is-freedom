@@ -320,11 +320,8 @@ def make_walking_isochrone(address):
     st.session_state["walking_map_ready"] = True
 
 
-
 def address_is_in_chicago(address, chicago):
     lat_lon = ox.geocoder.geocode(address)
-    # lat_lon = geocode_gracefully(address)
-    # if lat_lon is not None:
     lat, lon = lat_lon[0], lat_lon[1]
     nearest_node = ox.distance.nearest_nodes(chicago, lon, lat)
     if not isinstance(nearest_node, int):
@@ -352,13 +349,7 @@ def walking_isochrone_download_button(st_col, street_address):
 
 
 def transit_address_input():
-    # col1, col2, col3 = st.columns([7,2,3])
     col1, col2 = st.columns([7,2])
-
-    # label = """
-    #     Enter an address below to generate a map of everywhere transit can take 
-    #     you from that spot.
-    # """
     label = "Enter an address below to generate a map of everywhere transit can take you from that spot. This may take a few minutes."
     address = col1.text_input(label, key="transit_address",
         placeholder="Enter your Address")
@@ -373,19 +364,25 @@ def transit_address_input():
 @st.experimental_memo
 def make_transit_isochrone(address):
     st.session_state["transit_map_ready"] = False
-    transit_isochrone = TransitIsochrone(DATA_DIR, "Chicago, Illinois")
-    lat_lon = ox.geocoder.geocode(address)
+    
+    chicago = graphs.load_citywide_graph("Chicago, Illinois")
+    in_chicago, lat_lng = address_is_in_chicago(address, chicago)
+    
+    if not in_chicago:
+        st.warning("Our apologies. We can only draw a transit map within the city of Chicago.")
 
-    # trip_times = [15, 30, 45, 60]
-    trip_times = [15, 30, 45]
-    freq_multipliers = [1]
-    filepath = "plots/user_generated_transit_isochrone.png"
-    transit_isochrone.make_isochrone(lat_lon, 
-        trip_times=trip_times, 
-        freq_multipliers=freq_multipliers,
-        filepath=filepath,
-        cmap="plasma")
-    st.session_state["transit_map_ready"] = True
+    else:
+        transit_isochrone = TransitIsochrone(DATA_DIR, "Chicago, Illinois")
+        # trip_times = [15, 30, 45, 60]
+        trip_times = [15, 30, 45]
+        freq_multipliers = [1]
+        filepath = "plots/user_generated_transit_isochrone.png"
+        transit_isochrone.make_isochrone(lat_lng, 
+            trip_times=trip_times, 
+            freq_multipliers=freq_multipliers,
+            filepath=filepath,
+            cmap="plasma")
+        st.session_state["transit_map_ready"] = True
 
 
 def transit_isochrone_download_button(st_col, address):
