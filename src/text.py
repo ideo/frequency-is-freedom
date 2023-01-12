@@ -1,10 +1,13 @@
 TEXT = {
     "Frequency is Freedom": [
         """
-“Frequency is freedom” is a phrase I learned when reading [Better Buses Better Cities](https://www.goodreads.com/en/book/show/44451608-better-buses-better-cities), and it has helped me articulate why I’ve felt a greater sense of freedom when I have lived and traveled abroad. Frequent transit service allowed me to go more places, to go places whenever I wanted to, and to still go places even when I was running late or forgot something (which seems to happen quite a bit). I spent less time waiting, so I got moving sooner and moved faster once I was on the go. I miss those freedoms, but I used to have those same freedoms here at home in Chicago.
+“Frequency is freedom” is a phrase I learned recently that perfectly articulates the world I want to live in. The impact of living with public transit that runs so frequently you don’t need to check a schedule goes beyond just wasting less time waiting at a bus stop. The feeling that you are no longer beholden to something external, that you can go wherever you want whenever you want, is liberating.
         """,
         """
-When ridership vanished at the beginning of the pandemic, the CTA was forced to cut service. Ridership plummetted from “1.4 million riders per day to a low of 225,000 riders per day”, [fare revenue dried up](https://www.chicagotribune.com/business/ct-biz-transportation-revenue-down-drivers-public-transit-20210325-u4yruab2gfei7myevume7kurim-story.html), and [the CTA ran fewer trains and buses](https://www.chicagotribune.com/business/ct-biz-cta-train-bus-schedule-wait-20211209-dd5aketifnefhnrtw6lsucleeq-story.html).¹ These days, as [the CTA struggles to hire enough bus drivers](https://blockclubchicago.org/2022/07/14/cta-leaders-vow-to-fix-unreliable-service-with-more-hiring-improved-train-and-bus-tracking/), service still runs less than scheduled. My own commute takes twice as long as it used to, which makes going into the office more of a pain. I miss the community of the office, but when I make the trek in I find it mostly empty because [my coworkers also all hate waiting forever for the bus or train](https://www.wsj.com/articles/dreaded-commute-to-the-city-is-keeping-offices-mostly-empty-11653989581).
+I have been lucky enough to have lived that free for a time. When I have lived and traveled abroad, frequent transit service made my world bigger. I could go more places, go places whenever I wanted to, and to still go places even when I was running late or forgot something (which seems to happen quite a bit). I miss those freedoms, but I used to have those same freedoms here at home in Chicago. The phrase “frequency is freedom”, which I learned while reading the excellent book [Better Buses Better Cities](https://www.goodreads.com/en/book/show/44451608-better-buses-better-cities), has helped me understand what I took for granted abroad and articulate what we need to fix at home.
+        """,
+        """
+When public transit ridership vanished at the beginning of the pandemic, like agencies across the country, the CTA was forced to cut service. Ridership plummeted from “1.4 million riders per day to a low of 225,000 riders per day”, [fare revenue dried up](https://www.chicagotribune.com/business/ct-biz-transportation-revenue-down-drivers-public-transit-20210325-u4yruab2gfei7myevume7kurim-story.html), and [the CTA ran fewer trains and buses](https://www.chicagotribune.com/business/ct-biz-cta-train-bus-schedule-wait-20211209-dd5aketifnefhnrtw6lsucleeq-story.html).¹ These days, as [the CTA struggles to hire enough bus drivers](https://blockclubchicago.org/2022/07/14/cta-leaders-vow-to-fix-unreliable-service-with-more-hiring-improved-train-and-bus-tracking/), service still runs less than scheduled. My own commute takes twice as long as it used to, which makes going into the office more of a pain. I miss the community of the office, but when I make the trek in I find it mostly empty because [my coworkers also all hate waiting forever for the bus or train](https://www.wsj.com/articles/dreaded-commute-to-the-city-is-keeping-offices-mostly-empty-11653989581).
         """,
     ],
 
@@ -13,13 +16,13 @@ When ridership vanished at the beginning of the pandemic, the CTA was forced to 
 Like nearly all transit agencies, the CTA publishes scheduled and real-time service data. While anyone who lives in the city knows that the bus never runs on schedule, we can look at this data to see the service the CTA intends to run. 
         """,
         """
-Below is scheduled weekday service from the week of August 22nd, 2022, for two bus stops near my apartment. (I’ve filtered this data to only show service between 6 am and 10 pm, but the CTA does run buses and trains all night on many routes, including the 66 bus shown here.)
+Below is scheduled weekday service from the week of August 22nd, 2022, for two bus stops near my apartment. (I’ve filtered this data to service between 6 am and 10 pm, but the CTA does run buses and trains all night on many routes, including the 66 bus shown here.)
         """,
     ],
 
     "How Often Does the Bus Come? (II)": [
         """
-I was shocked to see these charts. The shapes make sense to me (both buses have peaks at rush hour), but an average of almost 10 buses per hour for the 66 bus down Chicago Ave is not at all what I experience. That’s nearly one bus every 6 minutes. I wish the bus ran that often, because how often the bus comes determines how long I’m stuck waiting for it.        """,
+I was shocked to see these charts. The shapes make sense to me (both buses have peaks at rush hour), but an average of almost ten buses per hour for the 66 bus down Chicago Ave is not at all what I experience. That’s nearly one bus every six minutes. I wish the bus ran that often, because how often the bus comes determines how long I’m stuck waiting for it.        """,
     ],
 
     "How Long Do You Wait For The Bus?": [
@@ -94,7 +97,7 @@ The CTA is [hurting financially because of reduced ridership](https://experience
 Those familiar with the transit geography of Chicago may notice in the maps above that it's not the L train that unlocks the city for me – it's the bus. The bus is often stigmatized as only for people who cannot afford a car, but that doesn’t measure up against reality. Research across the US has confirmed that bus ridership levels are a result of service quality.⁷ People choose the bus when they learn they can rely upon the bus. When they can’t, they – even people without a car – figure something else out.
         """,
         """
-Something that I loved about Chicago pre-pandemic was that everyone, rich and poor, relied upon public transit. While friends from the suburbs would refuse to take the bus, no Chicagoan wasted time with that nonsense, because it was reliable and safe. [That’s no longer the case](https://blockclubchicago.org/2022/04/27/the-cta-boosted-unarmed-security-to-battle-violence-bad-behavior-on-trains-and-buses-but-riders-say-nothing-has-changed/), but the CTA can win us back. Kurt Luhrsen, vice president of bus operations for METRO, Houston’s transit agency, sums it up well: “You provide a good service, you’ll have customers. You don’t, you won't.”⁷
+Something that I loved about Chicago pre-pandemic was that everyone, rich and poor, relied upon public transit because it was safe and reliable. [That’s no longer the case](https://blockclubchicago.org/2022/04/27/the-cta-boosted-unarmed-security-to-battle-violence-bad-behavior-on-trains-and-buses-but-riders-say-nothing-has-changed/), but the CTA can win us back. Running more frequent service will break the cycle and entice more people onto transit. Kurt Luhrsen, vice president of bus operations for METRO, Houston’s transit agency, sums it up well: “You provide a good service, you’ll have customers. You don’t, you won't.”⁷
         """,
     ],
 
