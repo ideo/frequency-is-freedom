@@ -217,7 +217,7 @@ def plot_simulated_arrival_times(bus_arrivals, people_arrivals):
     }
     spec = {
         "title": "Two Hours of Simulated People Waiting for a Simulated Bus",
-        "height": 200,
+        "height": 250,
         "layer": [histogram_spec, rule_spec]
     }
     st.vega_lite_chart(data=df, spec=spec, use_container_width=True)

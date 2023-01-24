@@ -7,7 +7,6 @@ import src.logic as lg
 
 st.set_page_config(
     page_title="Frequency is Freedom", 
-    # page_icon="img/usdot_bus_icon.png",
     page_icon="oncoming_bus",
     )
 lg.initialize_session_state()
@@ -53,15 +52,15 @@ caption = "How far I can walk from my apartment in 15, 30, 45, and 60 minutes."
 st.image(walking_isochrone, caption=caption)
 lg.write_text("Geography", header=False)
 
-st.markdown("##### Generate Your Own Walking Map")
-address = lg.walking_address_input()
-if address:
-    lg.make_walking_isochrone(address)
-    if st.session_state["walking_map_ready"]:
-        street_address = address.split(",")[0]
-        caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
-        filepath = "plots/user_generated_walking_isochrone.png"
-        st.image(filepath, caption=caption)
+# st.markdown("##### Generate Your Own Walking Map")
+# address = lg.walking_address_input()
+# if address:
+#     lg.make_walking_isochrone(address)
+#     if st.session_state["walking_map_ready"]:
+#         street_address = address.split(",")[0]
+#         caption = f"Everywhere someone can walk in 15, 30, 45, and 60 minutes from {street_address}."
+#         filepath = "plots/user_generated_walking_isochrone.png"
+#         st.image(filepath, caption=caption)
 
 
 lg.write_text("How Far Can I Go with Public Transit?")
@@ -69,15 +68,15 @@ transit_isochrone = "plots/transit_isochrone_from_my_apartment.png"
 caption = "How far public transit can take me from my apartment in 15, 30, 45, and 60 minutes."
 st.image(transit_isochrone, caption=caption)
 
-st.markdown("##### Generate Your Own Transit Map")
-transit_address = lg.transit_address_input()
-if transit_address:
-    lg.make_transit_isochrone(transit_address)
-    if st.session_state["transit_map_ready"]:
-        street_address = transit_address.split(",")[0]
-        caption = f"Everywhere someone can take public transit in 15, 30, and 45 minutes from {street_address}."
-        filepath = "plots/user_generated_transit_isochrone.png"
-        st.image(filepath, caption=caption)
+# st.markdown("##### Generate Your Own Transit Map")
+# transit_address = lg.transit_address_input()
+# if transit_address:
+#     lg.make_transit_isochrone(transit_address)
+#     if st.session_state["transit_map_ready"]:
+#         street_address = transit_address.split(",")[0]
+#         caption = f"Everywhere someone can take public transit in 15, 30, and 45 minutes from {street_address}."
+#         filepath = "plots/user_generated_transit_isochrone.png"
+#         st.image(filepath, caption=caption)
 
 
 lg.write_text("More Buses Take You More Places")
