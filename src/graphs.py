@@ -3,9 +3,18 @@ import os
 import osmnx as ox
 import networkx as nx
 import streamlit as st
+import psutil
+import inspect
 
 from src.filepaths import DATA_DIR
 import src.utils as utils
+
+
+def print_memory():
+    process = psutil.Process(os.getpid())
+    usage = process.memory_info().rss
+    called_function = inspect.stack()[1][3]
+    print(f"Memory Usage within {called_function}: {usage / 1024 / 1024} MB")  # in bytes 
 
 
 def graph_path(city):
@@ -20,6 +29,7 @@ def load_citywide_graph(city):
     # citywide_graph = nx.read_gpickle(graph_path(city))
     # citywide_graph = nx.read_gml(graph_path(city))
     citywide_graph = utils.decompress_pickle(graph_path(city))
+    # print_memory()
     return citywide_graph
 
 

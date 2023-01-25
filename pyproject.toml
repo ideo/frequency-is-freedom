@@ -17,6 +17,8 @@ scikit-learn = "^1.1.2"
 geopy = "^2.2.0"
 tqdm = "^4.64.1"
 scipy = "^1.9.1"
+networkx = "2.8.8"
+psutil = "^5.9.4"
 
 [tool.poetry.dev-dependencies]
 watchdog = "^2.1.9"

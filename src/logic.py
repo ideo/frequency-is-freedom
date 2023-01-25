@@ -276,6 +276,12 @@ def geocode_check(make_isochrone_func):
 
 ############################### Walking Map ###############################
 
+def load_chicago_graph():
+    chicago = graphs.load_citywide_graph("Chicago, Illinois")
+    graphs.print_memory()
+    return chicago
+
+
 def walking_address_input():
     col1, col2 = st.columns([7,2])
 
@@ -299,25 +305,28 @@ def walking_address_input():
 
 @geocode_check
 @st.experimental_memo()
-def make_walking_isochrone(address):
+def make_walking_isochrone(address, _chicago):
     """
-    TKTK
+    Important: The underscore in `_chicago` tells Streamlit not to cache that
+    argument. The graph is unpickleable.
     """
     st.session_state["walking_map_ready"] = False
     
-    city = "Chicago, Illinois"
-    chicago = graphs.load_citywide_graph(city)
-    in_chicago, lat_lng = address_is_in_chicago(address, chicago)
+    # chicago = graphs.load_citywide_graph("Chicago, Illinois")
+    in_chicago, lat_lng = address_is_in_chicago(address, _chicago)
 
     if in_chicago:
-        graph = chicago
+        graph = _chicago
     else:
         graph, lat_lng = graphs.download_graph_from_address(address)
 
     filepath = "plots/user_generated_walking_isochrone.png"
     walking_isochrone = WalkingIsochrone(citywide_graph=graph)
     _ = walking_isochrone.make_isochrone(lat_lng, filepath=filepath)
+    graphs.print_memory()
     st.session_state["walking_map_ready"] = True
+    if not in_chicago:
+        del(graph)
 
 
 def address_is_in_chicago(address, chicago):
@@ -362,11 +371,11 @@ def transit_address_input():
 
 @geocode_check
 @st.experimental_memo
-def make_transit_isochrone(address):
+def make_transit_isochrone(address, _chicago):
     st.session_state["transit_map_ready"] = False
     
-    chicago = graphs.load_citywide_graph("Chicago, Illinois")
-    in_chicago, lat_lng = address_is_in_chicago(address, chicago)
+    # chicago = graphs.load_citywide_graph("Chicago, Illinois")
+    in_chicago, lat_lng = address_is_in_chicago(address, _chicago)
     
     if not in_chicago:
         st.warning("Our apologies. We can only draw a transit map within the city of Chicago.")
@@ -383,6 +392,7 @@ def make_transit_isochrone(address):
             filepath=filepath,
             cmap="plasma")
         st.session_state["transit_map_ready"] = True
+        graphs.print_memory()
 
 
 def transit_isochrone_download_button(st_col, address):
